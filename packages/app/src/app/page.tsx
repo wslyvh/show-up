@@ -15,7 +15,7 @@ export const DUMMY_EVENTS_DATA: EventMetadata[] = [
     end: dayjs('11-19-2023').hour(18).minute(0).second(0).format(),
     location: 'Devconnect, Istanbul',
     website: "https://devconnect.org/",
-    imageUrl: 'https://source.unsplash.com/random',
+    imageUrl: 'https://source.unsplash.com/random?event=1',
     links: [],
     tags: [],
 
