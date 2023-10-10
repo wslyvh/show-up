@@ -37,15 +37,15 @@ yarn-error.log*
 next-env.d.ts
 
 # hardhat
-**/contracts/node_modules
-**/contracts/.env
-**/contracts/coverage
-**/contracts/coverage.json
-**/contracts/typechain
-**/contracts/typechain-types
+**/protocol/node_modules
+**/protocol/.env
+**/protocol/coverage
+**/protocol/coverage.json
+**/protocol/typechain
+**/protocol/typechain-types
 
-**/contracts/cache
-**/contracts/artifacts
+**/protocol/cache
+**/protocol/artifacts
 
 # wagmi recommends to ignore their generated file
 # /src/abis.ts 
