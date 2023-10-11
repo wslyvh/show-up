@@ -1,9 +1,9 @@
-import { EventMetadata } from '@/utils/types'
+import { Record } from '@/utils/types'
 import { Card } from './Card'
 import { Tabs } from './Tabs'
 
 interface Props {
-    events: EventMetadata[]
+    events: Record[]
 }
 
 export function Overview(props: Props) {

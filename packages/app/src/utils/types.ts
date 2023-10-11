@@ -4,31 +4,47 @@ export interface State<T> {
   error?: string
 }
 
-export interface EventMetadata {
+export enum Status {
+  Active,
+  Cancelled,
+  Settled
+}
+
+export interface Record {
   id: string,
   createdAt: string | number,
   createdBy: Profile,
+  conditions: ConditionModule,
+  status: Status,
+  contentUri: string,
+  metadata?: EventMetadata,
 
+  attendees: Profile[],
+}
+
+export interface EventMetadata {
   appId?: string,
   title: string,
   description: string,
   start: string | number,
   end: string | number,
+  timezone: string,
   location: string,
   website: string,
   imageUrl: string,
   links: string[]
   tags: string[]
-
-  attendees: Profile[],
 }
 
 export interface Profile {
   address: string
 }
 
-export interface Condition {
+export interface ConditionModule {
+  type: 'BasicEther' | 'BasicERC20'
   address: string
-  date: string | number
-  limit: number
+  tokenAddress?: string
+  endDate: string | number
+  depositFee: number,
+  maxParticipants: number,
 }

@@ -23,8 +23,9 @@
     ]
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
-    "@web3modal/wagmi": "^3.0.2",
+    "@web3modal/wagmi": "^3.1.0",
     "dayjs": "^1.11.10",
     "iron-session": "^6.3.1",
     "next": "13.5.4",

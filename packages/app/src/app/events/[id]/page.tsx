@@ -5,7 +5,10 @@ import dayjs from "dayjs";
 import { DUMMY_EVENTS_DATA } from "@/app/page";
 
 export default function Page() {
-    const event = DUMMY_EVENTS_DATA[0]
+    const record = DUMMY_EVENTS_DATA[0]
+    const event = record.metadata
+    if (!event) return null
+
     const sameDay = dayjs(event.start).isSame(event.end, 'day')
 
     return <>
@@ -28,7 +31,7 @@ export default function Page() {
             </div>
 
             <div className='mt-2 p-8'>
-                <h1 className='text-xl text-white font-bold'>{event.title ?? `Event ${event.id}`}</h1>
+                <h1 className='text-xl text-white font-bold'>{event.title}</h1>
                 <div className='flex flex-col mt-4 gap-2'>
                     <p className='flex flex-row items-center gap-2'>
                         <CalendarDaysIcon className='h-5 w-5 text-info' /> {dayjs(event.start).format('ddd MMM DD · HH:mm')} -{' '}
@@ -38,7 +41,7 @@ export default function Page() {
                         <MapPinIcon className='h-5 w-5 text-info' /> {event.location}
                     </p>
                     <p className='flex flex-row items-center gap-2'>
-                        <UserIcon className='h-5 w-5  text-info' /> {event.attendees.length} going
+                        <UserIcon className='h-5 w-5  text-info' /> {record.attendees.length} going
                     </p>
                 </div>
 
