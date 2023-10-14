@@ -4,7 +4,8 @@ pragma solidity ^0.8.20;
 import 'hardhat/console.sol';
 
 import {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';
-import {IERC20} from './interfaces/IERC20.sol';
+import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+
 import {IShowHub} from './interfaces/IShowHub.sol';
 import './Constants.sol';
 
@@ -19,7 +20,7 @@ contract ShowHub is Ownable, IShowHub {
   }
 
   function createWithEther(string calldata contentUri, uint256 endDate, uint256 depositFee, uint256 maxParticipants) external {
-    console.log('[solidity] showhub.createWithEther %o', msg.sender);
+    console.log('[solidity] showhub.createWithEther', msg.sender);
     _create(contentUri, endDate, depositFee, maxParticipants, address(0));
   }
 
@@ -29,7 +30,7 @@ contract ShowHub is Ownable, IShowHub {
   }
 
   function _create(string calldata contentUri, uint256 endDate, uint256 depositFee, uint256 maxParticipants, address tokenAddress) internal {
-    console.log('[solidity] showhub.create %o endDate %o timestamp %o', msg.sender, endDate, block.timestamp);
+    console.log('[solidity] showhub.create %o', msg.sender);
     if (endDate < block.timestamp) revert InvalidDate();
 
     _records[_nextProjectId].id = _nextProjectId;
@@ -54,6 +55,8 @@ contract ShowHub is Ownable, IShowHub {
     verifyBeforeEndDate(id);
 
     _records[id].status = Status.Cancelled;
+
+    // TODO: Settle/disperse any funds to participants
 
     emit Cancelled(id, reason, msg.sender, block.timestamp);
   }
@@ -106,7 +109,6 @@ contract ShowHub is Ownable, IShowHub {
 
     uint256 totalDeposited = _records[id].depositFee * _records[id].totalParticipants;
     uint256 attendanceFee = totalDeposited / totalAttendees;
-    console.log('[solidity] showhub.settle | totalAttendees %o totalDeposited %o attendanceFee %o', totalAttendees, totalDeposited, attendanceFee);
 
     IERC20 token = IERC20(_records[id].tokenAddress);
     for (uint256 i = 0; i < participants.length; i++) {
@@ -117,14 +119,12 @@ contract ShowHub is Ownable, IShowHub {
       // Ether Sends
       if (_records[id].tokenAddress == address(0)) {
         console.log('[solidity] showhub.settle | Send %o Ether to %o', attendanceFee, participants[i]);
-
         payable(participants[i]).transfer(attendanceFee);
       }
 
       // ERC20 tokenTransfer
       if (_records[id].tokenAddress != address(0)) {
         console.log('[solidity] showhub.settle | Transfer %o Tokens to %o', attendanceFee, participants[i]);
-
         require(token.transfer(participants[i], attendanceFee));
       }
     }
@@ -133,27 +133,19 @@ contract ShowHub is Ownable, IShowHub {
   }
 
   function verifyValidRecord(uint256 id) internal view {
-    console.log('[solidity] showhub.checkValidRecord %o %o', id, msg.sender);
-
     if (_records[id].owner == address(0)) revert NotFound();
     if (_records[id].status != Status.Active) revert InactiveRecord();
   }
 
   function verifyValidOwner(uint256 id) internal view {
-    console.log('[solidity] showhub.checkValidRecordAndOwner %o RecordOwner %o | sender %o', id, _records[id].owner, msg.sender);
-
     if (_records[id].owner != msg.sender) revert AccessDenied();
   }
 
   function verifyBeforeEndDate(uint256 id) internal view {
-    console.log('[solidity] showhub.checkBeforeEndDate %o %o', id, msg.sender);
-
     if (_records[id].endDate < block.timestamp) revert InvalidDate();
   }
 
   function verifyAfterEndDate(uint256 id) internal view {
-    console.log('[solidity] showhub.checkBeforeEndDate %o %o', id, msg.sender);
-
     if (_records[id].endDate > block.timestamp) revert InvalidDate();
   }
 }

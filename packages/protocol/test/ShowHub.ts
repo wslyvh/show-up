@@ -1,5 +1,4 @@
 import { loadFixture, time } from '@nomicfoundation/hardhat-network-helpers'
-import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 import { assert, expect } from 'chai'
 import { BigNumber } from 'ethers'
 import { ethers } from 'hardhat'
@@ -130,7 +129,7 @@ describe('ShowHub', function () {
       const createTx = await showhub.createWithToken(defaultContentUri, tomorrow, defaultTokenFee, defaultMaxParticipants, token.address)
       expect(createTx).not.to.be.reverted
 
-      await token.approve(showhub.address, defaultTokenFee, { from: owner.address });
+      await token.approve(showhub.address, defaultTokenFee);
 
       const registerTx = await showhub.register(0, owner.address)
       expect(registerTx).not.to.be.reverted
@@ -146,7 +145,7 @@ describe('ShowHub', function () {
       const createTx = await showhub.createWithToken(defaultContentUri, tomorrow, defaultTokenFee, defaultMaxParticipants, token.address)
       expect(createTx).not.to.be.reverted
 
-      await token.approve(showhub.address, defaultTokenFee, { from: owner.address });
+      await token.approve(showhub.address, defaultTokenFee);
 
       const registerTx = await showhub.register(0, attendee1.address)
       expect(registerTx).not.to.be.reverted
@@ -161,7 +160,7 @@ describe('ShowHub', function () {
 
       await showhub.createWithToken(defaultContentUri, tomorrow, defaultTokenFee, defaultMaxParticipants, token.address)
 
-      await token.approve(showhub.address, defaultTokenFee.mul(3), { from: owner.address });
+      await token.approve(showhub.address, defaultTokenFee.mul(3));
 
       await showhub.register(0, owner.address)
       await showhub.register(0, attendee1.address)

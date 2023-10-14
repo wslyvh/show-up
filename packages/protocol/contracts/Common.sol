@@ -2,11 +2,16 @@
 pragma solidity ^0.8.20;
 
 error AccessDenied();
-error NotFound();
+error AlreadyRegistered();
+error AlreadyStarted();
 error InactiveRecord();
 error IncorrectValue();
-error LimitReached();
+error InvalidAddress();
 error InvalidDate();
+error LimitReached();
+error NoAttendees();
+error NotFound();
+error NotWhitelisted();
 
 enum Status {
   Active,
@@ -20,17 +25,5 @@ struct Record {
   Status status;
   string contentUri;
 
-  uint256 endDate;
-  uint256 depositFee;
-  uint256 maxParticipants;
-  address tokenAddress;
-
-  uint256 totalParticipants;
-  mapping(address => bool) participants;
-}
-
-struct Participant {
-  uint256 id;
-  address payable addr;
-  bool paid;
+  address conditionModule;
 }
