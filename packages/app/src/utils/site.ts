@@ -5,3 +5,5 @@ export const SITE_URL = 'https://show-up.vercel.app'
 
 export const SOCIAL_TWITTER = 'wslyvh'
 export const SOCIAL_GITHUB = 'wslyvh/show-up'
+
+export const DEFAULT_APP_ID = 'showup-test'

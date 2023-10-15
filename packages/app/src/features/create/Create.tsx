@@ -5,15 +5,17 @@ import { EventStep } from './Event'
 import { ConditionStep } from './Condition'
 import { ReviewStep } from './Review'
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
+import { useEventManagement } from '@/context/EventManagement'
 
 const steps = ['Event', 'Conditions', 'Review']
 
 export function CreateForm() {
+    const eventManagement = useEventManagement()
     const [message, setMessage] = useState()
     const [activeStep, setActiveStep] = useState(0)
 
-    function onStepChange() {
-        // validate data before moving to next step
+    async function submit() {
+        await eventManagement.create({ ...eventManagement })
     }
 
     return (
@@ -47,6 +49,10 @@ export function CreateForm() {
                 <button className='btn btn-outline btn-sm'
                     disabled={activeStep === steps.length - 1}
                     onClick={() => setActiveStep(activeStep + 1)}>Next</button>
+            </div>
+
+            <div className='flex justify-end mt-4'>
+                <button className='btn btn-sm btn-primary' onClick={submit}>Create Event</button>
             </div>
         </div>
     )

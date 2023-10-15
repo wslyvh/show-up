@@ -40,11 +40,19 @@ export interface Profile {
   address: string
 }
 
+export enum ConditionModuleType {
+  BasicEther = 'BasicEther',
+  BasicToken = 'BasicToken'
+}
+
 export interface ConditionModule {
-  type: 'BasicEther' | 'BasicERC20'
-  address: string
-  tokenAddress?: string
-  endDate: string | number
-  depositFee: number,
+  type: ConditionModuleType
+  address: String
+}
+
+export interface ConditionModuleData extends ConditionModule {
+  endDate: string | bigint,
+  depositFee: bigint,
   maxParticipants: number,
+  tokenAddress?: string // Only used for BasicToken module
 }

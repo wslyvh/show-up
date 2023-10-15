@@ -1,33 +1,24 @@
 'use client'
 
 import { SelectBox } from '@/components/SelectBox'
-import { DEFAULT_APP_ID } from '@/utils/showup'
-import { EventMetadata } from '@/utils/types'
-import dayjs from 'dayjs'
-import React, { ChangeEvent, useState } from 'react'
+import { useEventManagement } from '@/context/EventManagement'
+import React, { ChangeEvent } from 'react'
 
 export function EventStep() {
-    const [metadata, setMetadata] = useState<EventMetadata>({
-        appId: DEFAULT_APP_ID,
-        title: '',
-        description: '',
-        start: dayjs().hour(10).minute(0).second(0).format('YYYY-MM-DDTHH:mm:ss'),
-        end: dayjs().hour(13).minute(0).second(0).format('YYYY-MM-DDTHH:mm:ss'),
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        location: '',
-        website: '',
-        imageUrl: '',
-        links: [],
-        tags: [],
-    })
+    const eventManagement = useEventManagement()
 
-    async function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         if (!e.target.id) return
 
-        setMetadata((state) => {
-            return {
-                ...state,
-                [e.target.id]: e.target.value,
+        setMetadata(e.target.id, e.target.value)
+    }
+
+    function setMetadata(key: string, value: string) {
+        eventManagement.onChange({
+            ...eventManagement,
+            event: {
+                ...eventManagement.event,
+                [key]: value,
             }
         })
     }
@@ -44,7 +35,7 @@ export function EventStep() {
                     id='title'
                     type='text'
                     className='input input-sm input-bordered w-full'
-                    value={metadata.title}
+                    value={eventManagement.event.title}
                     onChange={handleChange}
                     required
                 />
@@ -57,7 +48,7 @@ export function EventStep() {
                 <textarea
                     id='description'
                     className='textarea textarea-sm textarea-bordered h-24 w-full'
-                    value={metadata.description}
+                    value={eventManagement.event.description}
                     onChange={handleChange}
                 />
             </div>
@@ -70,10 +61,10 @@ export function EventStep() {
                         </span>
                     </label>
                     <input
-                        id='startsAt'
+                        id='start'
                         type='datetime-local'
                         className='input input-sm input-bordered w-full'
-                        value={metadata.start}
+                        value={eventManagement.event.start}
                         onChange={handleChange}
                     />
                 </div>
@@ -87,7 +78,7 @@ export function EventStep() {
                         id='end'
                         type='datetime-local'
                         className='input input-sm input-bordered w-full'
-                        value={metadata.end}
+                        value={eventManagement.event.end}
                         onChange={handleChange}
                     />
                 </div>
@@ -101,15 +92,8 @@ export function EventStep() {
                 </label>
                 <SelectBox id='timezone'
                     options={Intl.supportedValuesOf('timeZone')}
-                    defaultValue={metadata.timezone}
-                    onChange={(value) => {
-                        setMetadata((state) => {
-                            return {
-                                ...state,
-                                timezone: value,
-                            }
-                        })
-                    }} />
+                    defaultValue={eventManagement.event.timezone}
+                    onChange={(value) => setMetadata('timezone', value)} />
             </div>
 
             <div className='form-control w-full'>
@@ -122,7 +106,7 @@ export function EventStep() {
                     id='location'
                     type='text'
                     className='input input-sm input-bordered w-full'
-                    value={metadata.location}
+                    value={eventManagement.event.location}
                     onChange={handleChange} />
             </div>
 
@@ -136,7 +120,7 @@ export function EventStep() {
                     id='website'
                     type='text'
                     className='input input-sm input-bordered w-full'
-                    value={metadata.website}
+                    value={eventManagement.event.website}
                     onChange={handleChange} />
             </div>
         </form>
