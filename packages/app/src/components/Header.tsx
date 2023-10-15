@@ -15,8 +15,8 @@ export function Header() {
       <div className='flex gap-4'>
         <Connect />
 
-        <Link href="/create">
-          <button className="btn glass btn-square btn-sm">
+        <Link href='/create'>
+          <button className='btn glass btn-square btn-sm'>
             <PlusIcon className='h-4 w-4' />
           </button>
         </Link>

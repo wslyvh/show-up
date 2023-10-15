@@ -1,4 +1,4 @@
-import { CreateForm } from "@/features/create/Create";
+import { CreateForm } from '@/features/create/Create'
 
 export default function Home() {
   return (

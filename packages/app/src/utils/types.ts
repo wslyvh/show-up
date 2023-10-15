@@ -7,31 +7,31 @@ export interface State<T> {
 export enum Status {
   Active,
   Cancelled,
-  Settled
+  Settled,
 }
 
 export interface Record {
-  id: string,
-  createdAt: string | number,
-  createdBy: Profile,
-  conditions: ConditionModuleData,
-  status: Status,
-  contentUri: string,
-  metadata?: EventMetadata,
+  id: string
+  createdAt: string | number
+  createdBy: Profile
+  conditions: ConditionModuleData
+  status: Status
+  contentUri: string
+  metadata?: EventMetadata
 
-  attendees: Profile[],
+  attendees: Profile[]
 }
 
 export interface EventMetadata {
-  appId?: string,
-  title: string,
-  description: string,
-  start: string | number,
-  end: string | number,
-  timezone: string,
-  location: string,
-  website: string,
-  imageUrl: string,
+  appId?: string
+  title: string
+  description: string
+  start: string | number
+  end: string | number
+  timezone: string
+  location: string
+  website: string
+  imageUrl: string
   links: string[]
   tags: string[]
 }
@@ -42,7 +42,7 @@ export interface Profile {
 
 export enum ConditionModuleType {
   BasicEther = 'BasicEther',
-  BasicToken = 'BasicToken'
+  BasicToken = 'BasicToken',
 }
 
 export interface ConditionModule {
@@ -51,8 +51,8 @@ export interface ConditionModule {
 }
 
 export interface ConditionModuleData extends ConditionModule {
-  endDate: string | bigint,
-  depositFee: bigint,
-  maxParticipants: number,
+  endDate: string | bigint
+  depositFee: bigint
+  maxParticipants: number
   tokenAddress?: string // Only used for BasicToken module
 }

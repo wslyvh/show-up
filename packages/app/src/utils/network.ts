@@ -2,7 +2,7 @@ import { mainnet, sepolia, polygon, optimism, arbitrum, hardhat } from '@wagmi/c
 
 export const ETH_CHAINS = [mainnet, sepolia, polygon, optimism, arbitrum, hardhat]
 
-export const AddressZero = "0x0000000000000000000000000000000000000000";
+export const AddressZero = '0x0000000000000000000000000000000000000000'
 
 export function GetNetworkColor(chain?: string) {
   if (chain === 'homestead') return 'green'
