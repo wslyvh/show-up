@@ -42,7 +42,7 @@ const config: HardhatUserConfig = {
     },
     sepolia: {
       chainId: 11155111,
-      url: 'https://rpc.sepolia.org/',
+      url: 'https://rpc-sepolia.rockx.com/', // https://rpc-sepolia.rockx.com/ || https://rpc.sepolia.org/
       accounts: [deployerKey as string],
     },
   },

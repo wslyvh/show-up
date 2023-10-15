@@ -23,11 +23,11 @@ async function main() {
     console.log('BasicEther:', basicEtherModule.address)
     console.log('BasicToken:', basicTokenModule.address)
 
-    if (network.config.chainId === 31337) {
-        const Token = await ethers.getContractFactory('Token')
-        const token = await Token.deploy()
-        console.log('Token:', token.address)
+    const Token = await ethers.getContractFactory('Token')
+    const token = await Token.deploy()
+    console.log('Token:', token.address)
 
+    if (network.config.chainId === 31337) {
         await token.mint(attendee1.address, defaultTokenMint)
         await token.mint(attendee2.address, defaultTokenMint)
         await token.mint(attendee3.address, defaultTokenMint)
