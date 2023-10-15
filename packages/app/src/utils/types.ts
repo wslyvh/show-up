@@ -14,7 +14,7 @@ export interface Record {
   id: string,
   createdAt: string | number,
   createdBy: Profile,
-  conditions: ConditionModule,
+  conditions: ConditionModuleData,
   status: Status,
   contentUri: string,
   metadata?: EventMetadata,

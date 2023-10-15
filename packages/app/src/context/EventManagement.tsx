@@ -3,13 +3,14 @@
 import { PropsWithChildren, createContext, useContext, useState, } from 'react'
 import { ConditionModule, ConditionModuleData, ConditionModuleType, EventMetadata } from '@/utils/types'
 import { useAccount, useNetwork } from 'wagmi'
+import { erc20ABI, prepareWriteContract, waitForTransaction } from '@wagmi/core'
 import { AddressZero } from '@/utils/network'
-import dayjs from 'dayjs'
-import { basicEtherAddress, basicTokenAddress, prepareWriteRegistry, writeRegistry } from '@/abis'
+import { basicEtherAddress, basicTokenAddress, prepareWriteRegistry, readBasicEther, readBasicToken, readRegistry, writeRegistry } from '@/abis'
 import { encodeAbiParameters, parseUnits } from 'viem/utils'
-import { Store, Upload, Verify } from '@/services/storage'
+import { Store, Upload } from '@/services/storage'
 import { Slugify } from '@/utils/format'
 import { DEFAULT_APP_ID } from '@/utils/site'
+import dayjs from 'dayjs'
 
 interface EventManagementState {
     event: EventMetadata
@@ -21,6 +22,7 @@ interface EventManagementState {
 interface EventManagementContext extends EventManagementState {
     onChange: (state: EventManagementState) => void
     create: (event: EventManagementState) => Promise<void>
+    attend: (id: string) => Promise<void>
     validateMetadata: () => boolean
     validateConditions: () => boolean
 }
@@ -31,6 +33,7 @@ const defaultState: EventManagementContext = {
     modules: [],
     onChange: () => { },
     create: async (state: EventManagementState) => { },
+    attend: async (id: string) => { },
     validateMetadata: () => false,
     validateConditions: () => false,
 }
@@ -71,6 +74,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
         ],
         onChange,
         create,
+        attend,
         validateMetadata,
         validateConditions,
     })
@@ -85,7 +89,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
     }
 
     async function create(state: EventManagementState) {
-        console.log('TEST Create Event', state)
+        console.log('Create Event', state)
 
         // TODO: Validate event data
         if (!account || !chain) return
@@ -131,6 +135,77 @@ export function EventManagementProvider(props: PropsWithChildren) {
         console.log('Create Event Tx', tx.hash)
 
         // Send to Transaction / Notification Context to track transaction: results.hash
+    }
+
+    async function attend(id: string) {
+        console.log('Attend Event', id)
+
+        // TODO: Should fetch record and condition modules from indexer
+        const record = await readRegistry({
+            functionName: 'getRecord',
+            args: [id],
+        }) as any // TODO: Fix types
+        const module = state.modules.find((m) => m.address === record.conditionModule)
+        if (!module) {
+            console.error('Condition Module not found')
+            return
+        }
+
+        if (module.type === ConditionModuleType.BasicEther) {
+            const conditionModule = await readBasicEther({
+                functionName: 'getConditions',
+                args: [id],
+            }) as ConditionModuleData
+
+            const params = encodeAbiParameters(
+                [{ type: 'address' }], [account]
+            )
+
+            const preparedWrite = await prepareWriteRegistry({
+                functionName: 'register',
+                args: [id, params],
+                value: conditionModule.depositFee,
+            })
+
+            const tx = await writeRegistry(preparedWrite)
+            console.log('Create Event Tx', tx.hash)
+
+            return
+        }
+
+        if (module.type === ConditionModuleType.BasicToken) {
+            const conditionModule = await readBasicToken({
+                functionName: 'getConditions',
+                args: [id],
+            }) as ConditionModuleData
+
+            const params = encodeAbiParameters(
+                [{ type: 'address' }], [account]
+            )
+
+            // Approve token first 
+            const approveConfig = await prepareWriteContract({
+                address: conditionModule.tokenAddress,
+                abi: erc20ABI,
+                functionName: 'approve',
+                args: [module.address, conditionModule.depositFee],
+            })
+            const approveTx = await writeRegistry(approveConfig)
+            const data = await waitForTransaction({
+                hash: approveTx.hash
+            })
+            console.log('Approve Tx', approveTx.hash, data)
+
+            const preparedWrite = await prepareWriteRegistry({
+                functionName: 'register',
+                args: [id, params],
+            })
+
+            const tx = await writeRegistry(preparedWrite)
+            console.log('Create Event Tx', tx.hash)
+
+            return
+        }
     }
 
     function validateMetadata() {

@@ -7,8 +7,6 @@ if (!process.env.NEXT_PUBLIC_WEB3_STORAGE_API_KEY) {
 const client = new Web3Storage({ token: process.env.NEXT_PUBLIC_WEB3_STORAGE_API_KEY ?? '' })
 
 export async function Store(name: string, serialized: string, verify: boolean = true) {
-    console.log('Store on web3.storage', name)
-
     return Upload(new File([Buffer.from(serialized)], name), verify)
 }
 
