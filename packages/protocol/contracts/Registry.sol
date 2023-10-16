@@ -22,7 +22,7 @@ contract Registry is Ownable, IRegistry {
     // TODO: Check if implements IConditionModule interface
     _conditionModules[conditionModule] = enable;
 
-    emit ConditionModuleWhitelisted(conditionModule, enable, block.timestamp);
+    emit ConditionModuleWhitelisted(conditionModule, enable, msg.sender, block.timestamp);
   }
 
   // Main Registry functions 
@@ -39,7 +39,7 @@ contract Registry is Ownable, IRegistry {
 
     IConditionModule(conditionModule).initialize(_recordCount, conditionModuleData);
 
-    emit Created(_recordCount, contentUri, msg.sender, block.timestamp);
+    emit Created(_recordCount, contentUri, conditionModuleData, msg.sender, block.timestamp);
     _recordCount++;
   }
 
@@ -51,7 +51,7 @@ contract Registry is Ownable, IRegistry {
 
     IConditionModule(_records[id].conditionModule).cancel(id, conditionModuleData);
 
-    emit Canceled(id, reason, msg.sender, block.timestamp);
+    emit Canceled(id, reason, conditionModuleData, msg.sender, block.timestamp);
   }
 
   function register(uint id, bytes calldata conditionModuleData) external payable {
@@ -59,7 +59,7 @@ contract Registry is Ownable, IRegistry {
 
     IConditionModule(_records[id].conditionModule).register{value:msg.value}(id, msg.sender, conditionModuleData);
 
-    emit Registered(id, msg.sender, block.timestamp);
+    emit Registered(id, conditionModuleData, msg.sender, block.timestamp);
   }
 
   function checkin(uint256 id, address[] calldata attendees, bytes calldata conditionModuleData) external {
@@ -68,7 +68,7 @@ contract Registry is Ownable, IRegistry {
 
     IConditionModule(_records[id].conditionModule).checkin(id, attendees, conditionModuleData);
 
-    emit CheckedIn(id, attendees, msg.sender, block.timestamp);
+    emit CheckedIn(id, attendees, conditionModuleData, msg.sender, block.timestamp);
   }
 
   function settle(uint id, bytes calldata conditionModuleData) external {
@@ -78,7 +78,7 @@ contract Registry is Ownable, IRegistry {
 
     IConditionModule(_records[id].conditionModule).settle(id, conditionModuleData);
 
-    emit Settled(id, msg.sender, block.timestamp);
+    emit Settled(id, conditionModuleData, msg.sender, block.timestamp);
   }
 
   // View functions
