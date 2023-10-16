@@ -53,7 +53,7 @@ export function ImageUpload(props: Props) {
                 .png format, with a recommended size of 1200:600 (2:1 ratio)
               </p>
             </div>
-            <input disabled id='dropzone-file' {...getInputProps()} />
+            <input id='dropzone-file' {...getInputProps()} />
           </label>
         </div>
       )}

@@ -5,7 +5,7 @@ import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import { useEventManagement } from '@/context/EventManagement'
 import { ConditionModuleData, ConditionModuleType, EventMetadata } from '@/utils/types'
 import { DEFAULT_APP_ID } from '@/utils/site'
-import { AddressZero, TOKENS } from '@/utils/network'
+import { AddressZero, DEFAULT_CHAIN_ID, TOKENS } from '@/utils/network'
 import { formatUnits, parseUnits } from 'viem'
 import { basicEtherAddress, basicTokenAddress } from '@/abis'
 import { SelectBox } from '@/components/SelectBox'
@@ -32,7 +32,7 @@ export function CreateForm() {
   })
   const [conditions, setConditions] = useState<ConditionModuleData>({
     type: ConditionModuleType.BasicEther,
-    address: (basicEtherAddress as any)[chain?.id ?? 11155111],
+    address: (basicEtherAddress as any)[chain?.id ?? DEFAULT_CHAIN_ID],
     endDate: '', // use event.endDate as default
     depositFee: parseUnits('0.02', 18),
     maxParticipants: 0,
@@ -72,14 +72,14 @@ export function CreateForm() {
       return setConditions((state) => ({
         ...state,
         type: ConditionModuleType.BasicEther,
-        address: (basicEtherAddress as any)[chain?.id ?? 11155111],
+        address: (basicEtherAddress as any)[chain?.id ?? DEFAULT_CHAIN_ID],
       }))
     }
 
     setConditions((state) => ({
       ...state,
       type: ConditionModuleType.BasicToken,
-      address: (basicTokenAddress as any)[chain?.id ?? 11155111],
+      address: (basicTokenAddress as any)[chain?.id ?? DEFAULT_CHAIN_ID],
       tokenAddress: value,
     }))
   }

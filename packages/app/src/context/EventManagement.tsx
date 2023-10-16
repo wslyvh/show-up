@@ -4,7 +4,7 @@ import { PropsWithChildren, createContext, useContext, useState } from 'react'
 import { ConditionModule, ConditionModuleData, ConditionModuleType, EventMetadata } from '@/utils/types'
 import { useAccount, useNetwork } from 'wagmi'
 import { erc20ABI, prepareWriteContract, waitForTransaction } from '@wagmi/core'
-import { AddressZero } from '@/utils/network'
+import { AddressZero, DEFAULT_CHAIN_ID } from '@/utils/network'
 import {
   basicEtherAddress,
   basicTokenAddress,
@@ -53,8 +53,8 @@ export function EventManagementProvider(props: PropsWithChildren) {
     ...defaultState,
     modules: [
       // TODO: Fetch modules onchain/indexer (or dynamic chainId)
-      { type: ConditionModuleType.BasicEther, address: (basicEtherAddress as any)[chain?.id ?? 11155111] },
-      { type: ConditionModuleType.BasicToken, address: (basicTokenAddress as any)[chain?.id ?? 11155111] },
+      { type: ConditionModuleType.BasicEther, address: (basicEtherAddress as any)[chain?.id ?? DEFAULT_CHAIN_ID] },
+      { type: ConditionModuleType.BasicToken, address: (basicTokenAddress as any)[chain?.id ?? DEFAULT_CHAIN_ID] },
     ],
     create,
     attend,
@@ -63,6 +63,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
   })
 
   async function create(event: EventMetadata, conditions: ConditionModuleData, image?: File) {
+    console.log('Create Event on', chain?.id)
     if (!account || !chain) {
       setState({ ...state, loading: false, message: 'Not connected.' })
       return
@@ -81,12 +82,12 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
     // Upload Cover image
     if (image) {
-      const cid = await Upload(image, true)
+      const cid = await Upload(image)
       event.imageUrl = `ipfs://${cid}` // TODO: Does this override?
     }
 
     // Upload Metadata
-    const cid = await Store(Slugify(event.title), JSON.stringify(event), true)
+    const cid = await Store(Slugify(event.title), JSON.stringify(event))
     const contentUrl = `ipfs://${cid}`
 
     // Encode Condition module (owner, endDate, depositFee, maxParticipants, tokenAddress)
@@ -94,24 +95,32 @@ export function EventManagementProvider(props: PropsWithChildren) {
       [{ type: 'address' }, { type: 'uint256' }, { type: 'uint256' }, { type: 'uint256' }, { type: 'address' }],
       [
         account,
-        BigInt(dayjs(event.end).add(1, 'day').valueOf()),
-        conditions.depositFee || 0,
+        BigInt(dayjs(event.end).valueOf()),
+        BigInt(conditions.depositFee || 0),
         BigInt(conditions.maxParticipants || 0),
-        conditions.tokenAddress ?? AddressZero,
+        conditions.tokenAddress ?? AddressZero
       ]
     )
 
-    const preparedWrite = await prepareWriteRegistry({
-      functionName: 'create',
-      args: [contentUrl, getModuleAddress(conditions.type), params],
-    })
+    try {
+      const preparedWrite = await prepareWriteRegistry({
+        chainId: chain.id as any,
+        functionName: 'create',
+        args: [contentUrl, getModuleAddress(conditions.type), params],
+      })
 
-    const tx = await writeRegistry(preparedWrite)
-    console.log('Create Event Tx', tx.hash)
+      const tx = await writeRegistry(preparedWrite)
+      console.log('Create Event Tx', tx.hash)
 
-    // Send to Transaction / Notification Context to track transaction: results.hash
+      // Send to Transaction / Notification Context to track transaction: results.hash
 
-    setState({ ...state, loading: false, message: '' })
+      setState({ ...state, loading: false, message: '' })
+    } catch (e) {
+      console.log('Unable to create event')
+      console.error(e)
+
+      setState({ ...state, loading: false, message: 'Error creating event.' })
+    }
   }
 
   async function attend(id: string) {
@@ -200,7 +209,12 @@ export function EventManagementProvider(props: PropsWithChildren) {
   }
 
   function getModuleAddress(type: ConditionModuleType) {
-    return state.modules.find((m) => m.type === type)?.address
+    const module = state.modules.find((m) => m.type === type)
+    if (!module) {
+      console.error('Condition Module not found', type)
+    }
+
+    return module?.address
   }
 
   if (typeof window === 'undefined') {
