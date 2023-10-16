@@ -261,6 +261,19 @@ export class Record extends Entity {
     this.set("contentUri", Value.fromString(value));
   }
 
+  get ipfsHash(): string {
+    let value = this.get("ipfsHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set ipfsHash(value: string) {
+    this.set("ipfsHash", Value.fromString(value));
+  }
+
   get metadata(): string | null {
     let value = this.get("metadata");
     if (!value || value.kind == ValueKind.NULL) {
@@ -470,5 +483,174 @@ export class Participants extends Entity {
 
   set record(value: Bytes) {
     this.set("record", Value.fromBytes(value));
+  }
+}
+
+export class EventMetadata extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save EventMetadata entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type EventMetadata must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("EventMetadata", id.toString(), this);
+    }
+  }
+
+  static load(id: string): EventMetadata | null {
+    return changetype<EventMetadata | null>(store.get("EventMetadata", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get appId(): string | null {
+    let value = this.get("appId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set appId(value: string | null) {
+    if (!value) {
+      this.unset("appId");
+    } else {
+      this.set("appId", Value.fromString(<string>value));
+    }
+  }
+
+  get title(): string {
+    let value = this.get("title");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set title(value: string) {
+    this.set("title", Value.fromString(value));
+  }
+
+  get description(): string | null {
+    let value = this.get("description");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set description(value: string | null) {
+    if (!value) {
+      this.unset("description");
+    } else {
+      this.set("description", Value.fromString(<string>value));
+    }
+  }
+
+  get start(): string {
+    let value = this.get("start");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set start(value: string) {
+    this.set("start", Value.fromString(value));
+  }
+
+  get end(): string {
+    let value = this.get("end");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set end(value: string) {
+    this.set("end", Value.fromString(value));
+  }
+
+  get timezone(): string {
+    let value = this.get("timezone");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set timezone(value: string) {
+    this.set("timezone", Value.fromString(value));
+  }
+
+  get location(): string {
+    let value = this.get("location");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set location(value: string) {
+    this.set("location", Value.fromString(value));
+  }
+
+  get website(): string | null {
+    let value = this.get("website");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set website(value: string | null) {
+    if (!value) {
+      this.unset("website");
+    } else {
+      this.set("website", Value.fromString(<string>value));
+    }
+  }
+
+  get imageUrl(): string | null {
+    let value = this.get("imageUrl");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set imageUrl(value: string | null) {
+    if (!value) {
+      this.unset("imageUrl");
+    } else {
+      this.set("imageUrl", Value.fromString(<string>value));
+    }
   }
 }

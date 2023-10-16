@@ -6,6 +6,7 @@ import {
   Registered as RegisteredEvent,
   Settled as SettledEvent
 } from "../generated/Registry/Registry"
+import { EventMetadata as EventMetadataTemplate } from '../generated/templates'
 import { Bytes, BigInt, log } from "@graphprotocol/graph-ts";
 import { Record, ConditionModule, Participants, User } from "../generated/schema"
 
@@ -69,6 +70,13 @@ export function handleCreated(event: CreatedEvent): void {
   entity.status = 'Active'
   entity.conditionModule = event.params.conditionModule
   entity.contentUri = event.params.contentUri.toString()
+
+  if (entity.contentUri.startsWith('ipfs://')) {
+    const ipfsHash = event.params.contentUri.replace('ipfs://', '')
+    entity.ipfsHash = ipfsHash
+    EventMetadataTemplate.create(ipfsHash)
+  }
+
   entity.blockNumber = event.block.number
   entity.transactionHash = event.transaction.hash
 

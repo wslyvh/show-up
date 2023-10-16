@@ -35,3 +35,16 @@ dataSources:
         - event: Settled(indexed uint256,bytes,address,uint256)
           handler: handleSettled
       file: ./src/registry.ts
+templates:
+  - kind: file/ipfs
+    name: EventMetadata
+    mapping:
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/metadata.ts
+      handler: handleEventMetadata
+      entities:
+        - EventMetadata
+      abis:
+        - name: Registry
+          file: ./abis/Registry.json
