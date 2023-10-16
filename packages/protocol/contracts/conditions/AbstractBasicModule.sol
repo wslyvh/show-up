@@ -68,13 +68,20 @@ contract AbstractBasicModule is IConditionModule {
         _registrations[recordId].totalRegistrations++;
     }
 
-    function checkin(uint256 recordId, address[] calldata attendees, bytes calldata data) external virtual {
-        for (uint256 i = 0; i < attendees.length; i++) {
-            if (!_registrations[recordId].registrations[attendees[i]]) continue;
+    function checkin(uint256 recordId, address[] calldata attendees, bytes calldata data) external virtual returns(address[] memory) {
+        address[] memory registrations = new address[](attendees.length);
 
+        for (uint256 i = 0; i < attendees.length; i++) {
+            if (!_registrations[recordId].registrations[attendees[i]]) {
+                continue;
+            }
+
+            registrations[i] = attendees[i];
             _registrations[recordId].attendees[_registrations[recordId].totalAttendees] = attendees[i];
             _registrations[recordId].totalAttendees++;
         }
+
+        return registrations;
     }
 
     function settle(uint256 recordId, bytes calldata data) external virtual {

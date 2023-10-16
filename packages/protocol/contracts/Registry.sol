@@ -66,9 +66,9 @@ contract Registry is Ownable, IRegistry {
     verifyValidRecord(id);
     verifyValidOwner(id);
 
-    IConditionModule(_records[id].conditionModule).checkin(id, attendees, conditionModuleData);
+    address[] memory registrations = IConditionModule(_records[id].conditionModule).checkin(id, attendees, conditionModuleData);
 
-    emit CheckedIn(id, attendees, conditionModuleData, msg.sender, block.timestamp);
+    emit CheckedIn(id, registrations, conditionModuleData, msg.sender, block.timestamp);
   }
 
   function settle(uint id, bytes calldata conditionModuleData) external {
