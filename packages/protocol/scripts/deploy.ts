@@ -1,4 +1,4 @@
-import { ethers, network, run } from 'hardhat'
+import { ethers, network } from 'hardhat'
 import { defaultContentUri, defaultDepositFee, defaultMaxParticipants, defaultTokenMint } from '../test/utils/types'
 import { time } from '@nomicfoundation/hardhat-network-helpers'
 
@@ -43,26 +43,26 @@ export async function main() {
         const nextWeek = (await ethers.provider.getBlock('latest')).timestamp + time.duration.days(7)
 
         console.log('Create Events with basic condition modules..')
+
         const paramsEther = ethers.utils.defaultAbiCoder.encode(
             ["address", 'uint256', 'uint256', 'uint256', 'address'],
             [owner.address, nextWeek, defaultDepositFee, defaultMaxParticipants, ethers.constants.AddressZero])
-        await registry.create(defaultContentUri, basicEtherModule.address, paramsEther)
-
+        await registry.create(defaultContentUri, basicEtherModule.address, paramsEther, { gasLimit: 300000 })
         const paramsToken = ethers.utils.defaultAbiCoder.encode(
             ["address", 'uint256', 'uint256', 'uint256', 'address'],
             [owner.address, tomorrow, defaultDepositFee, defaultMaxParticipants, token.address])
-        await registry.create(defaultContentUri, basicTokenModule.address, paramsToken)
+        await registry.create(defaultContentUri, basicTokenModule.address, paramsToken, { gasLimit: 300000 })
 
         console.log('Register for Token event..')
         await token.approve(basicTokenModule.address, defaultDepositFee);
-        await registry.register(1, owner.address, [])
+        await registry.register(1, owner.address, [], { gasLimit: 200000 })
 
         console.log('Create and cancel event..', nextWeek)
         const paramsEtherCancel = ethers.utils.defaultAbiCoder.encode(
             ["address", 'uint256', 'uint256', 'uint256', 'address'],
             [owner.address, nextWeek, defaultDepositFee, defaultMaxParticipants, ethers.constants.AddressZero])
-        await registry.create(defaultContentUri, basicEtherModule.address, paramsEtherCancel)
-        await registry.cancel(2, 'Cancelled by owner', [])
+        await registry.create(defaultContentUri, basicEtherModule.address, paramsEtherCancel, { gasLimit: 300000 })
+        await registry.cancel(2, 'Cancelled by owner', [], { gasLimit: 100000 })
     }
 
     // TODO: Verify contracts

@@ -14,6 +14,10 @@ const etherscanApiKey = process.env.ETHERSCAN_API_KEY ?? ''
 if (!etherscanApiKey) {
   console.warn('ETHERSCAN_API_KEY not found in .env file. Will skip Etherscan verification')
 }
+const infuraApiKey = process.env.INFURA_API_KEY ?? ''
+if (!infuraApiKey) {
+  console.warn('INFURA_API_KEY not found in .env file.')
+}
 
 const config: HardhatUserConfig = {
   defaultNetwork: 'hardhat',
@@ -42,7 +46,7 @@ const config: HardhatUserConfig = {
     },
     sepolia: {
       chainId: 11155111,
-      url: 'https://rpc-sepolia.rockx.com/', // https://rpc-sepolia.rockx.com/ || https://rpc.sepolia.org/
+      url: infuraApiKey ? `https://sepolia.infura.io/v3/${infuraApiKey}` : 'https://rpc.sepolia.org/', // https://rpc-sepolia.rockx.com/ || https://rpc.sepolia.org/
       accounts: [deployerKey as string],
     },
   },

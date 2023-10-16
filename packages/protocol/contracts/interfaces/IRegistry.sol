@@ -8,10 +8,10 @@ interface IRegistry {
     event ConditionModuleWhitelisted(address indexed conditionModule, bool indexed whitelisted, address sender, uint256 timestamp);
 
     // Registry events
-    event Created(uint256 indexed id, string indexed contentUri, address indexed conditionModule, bytes data, address sender, uint256 timestamp);
-    event Canceled(uint256 indexed id, string indexed reason, bytes data, address sender, uint256 timestamp);
+    event Created(uint256 indexed id, string contentUri, address indexed conditionModule, bytes data, address sender, uint256 timestamp);
+    event Canceled(uint256 indexed id, string reason, bytes data, address sender, uint256 timestamp);
     event Registered(uint256 indexed id, address indexed participant, bytes data, address sender, uint256 timestamp);
-    event CheckedIn(uint256 indexed id, address[] indexed attendees, bytes data, address sender, uint256 timestamp);    
+    event CheckedIn(uint256 indexed id, address[] attendees, bytes data, address sender, uint256 timestamp);    
     event Settled(uint256 indexed id, bytes data, address sender, uint256 timestamp);
 
     // Hub functions
