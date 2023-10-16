@@ -11,7 +11,7 @@ import { Bytes, BigInt, log } from "@graphprotocol/graph-ts";
 import { Record, ConditionModule, Participants, User } from "../generated/schema"
 
 export function handleCanceled(event: CanceledEvent): void {
-  log.debug('ShowUp.Protocol - handleCanceled for {}', [event.params.id.toString()])
+  log.warning('ShowUp.Protocol - handleCanceled for {}', [event.params.id.toString()])
 
   let record = Record.load(bigIntToBytes(event.params.id))
 
@@ -25,7 +25,7 @@ export function handleCanceled(event: CanceledEvent): void {
 }
 
 export function handleCheckedIn(event: CheckedInEvent): void {
-  log.debug('ShowUp.Protocol - handleCheckedIn for {}', [event.params.id.toString()])
+  log.warning('ShowUp.Protocol - handleCheckedIn for {}', [event.params.id.toString()])
   let record = Record.load(bigIntToBytes(event.params.id))
 
   if (record) {
@@ -42,7 +42,7 @@ export function handleCheckedIn(event: CheckedInEvent): void {
 }
 
 export function handleConditionModuleWhitelisted(event: ConditionModuleWhitelistedEvent): void {
-  log.debug('ShowUp.Protocol - handleConditionModuleWhitelisted for {}', [event.params.conditionModule.toHexString()])
+  log.warning('ShowUp.Protocol - handleConditionModuleWhitelisted for {}', [event.params.conditionModule.toHexString()])
   let module = ConditionModule.load(event.params.conditionModule)
   if (module == null) {
     module = new ConditionModule(event.params.conditionModule)
@@ -58,7 +58,7 @@ export function handleConditionModuleWhitelisted(event: ConditionModuleWhitelist
 }
 
 export function handleCreated(event: CreatedEvent): void {
-  log.debug('ShowUp.Protocol - handleCreated for {}', [event.params.id.toString()])
+  log.warning('ShowUp.Protocol - handleCreated for {}', [event.params.id.toString()])
   let entity = new Record(bigIntToBytes(event.params.id))
 
   entity.recordId = event.params.id
@@ -71,7 +71,7 @@ export function handleCreated(event: CreatedEvent): void {
   if (entity.contentUri.startsWith('ipfs://')) {
     const ipfsHash = event.params.contentUri.replace('ipfs://', '')
     entity.ipfsHash = ipfsHash
-    log.debug('ShowUp.Protocol - create EventMetadataTemplate {}', [ipfsHash])
+    log.warning('ShowUp.Protocol - create EventMetadataTemplate {}', [ipfsHash])
     EventMetadataTemplate.create(ipfsHash)
   }
 
@@ -82,7 +82,7 @@ export function handleCreated(event: CreatedEvent): void {
 }
 
 export function handleRegistered(event: RegisteredEvent): void {
-  log.debug('ShowUp.Protocol - handleRegistered for {}', [event.params.id.toString()])
+  log.warning('ShowUp.Protocol - handleRegistered for {}', [event.params.id.toString()])
   let record = Record.load(bigIntToBytes(event.params.id))
 
   if (record) {
@@ -112,7 +112,7 @@ export function handleRegistered(event: RegisteredEvent): void {
 }
 
 export function handleSettled(event: SettledEvent): void {
-  log.debug('ShowUp.Protocol - handleSettled for {}', [event.params.id.toString()])
+  log.warning('ShowUp.Protocol - handleSettled for {}', [event.params.id.toString()])
   let entity = Record.load(bigIntToBytes(event.params.id))
 
   if (entity) {

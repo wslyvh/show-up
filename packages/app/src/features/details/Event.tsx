@@ -3,13 +3,13 @@
 import { DateCard } from '@/components/Date'
 import { CalendarDaysIcon, MapPinIcon, UserIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
-import { ConditionModuleData, EventMetadata } from '@/utils/types'
+import { EventMetadata, Record } from '@/utils/types'
 import dayjs from 'dayjs'
 import { useEventManagement } from '@/context/EventManagement'
 
 interface Props {
+  record: Record
   event: EventMetadata
-  conditions: ConditionModuleData
 }
 
 export function EventDetails(props: Props) {
@@ -50,7 +50,7 @@ export function EventDetails(props: Props) {
             <MapPinIcon className='h-5 w-5 text-info' /> {props.event.location}
           </p>
           <p className='flex flex-row items-center gap-2'>
-            <UserIcon className='h-5 w-5  text-info' /> {props.conditions.maxParticipants} going
+            <UserIcon className='h-5 w-5  text-info' /> {props.record.participants.length} going
           </p>
         </div>
 

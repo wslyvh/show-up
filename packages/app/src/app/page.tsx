@@ -1,6 +1,11 @@
 import { Overview } from '@/features/overview/Overview'
-import { MOCKS_EVENTS } from '@/utils/mocks'
+import { GetRecords } from '@/services/protocol'
+import { Status } from '@/utils/types'
 
-export default function Home() {
-  return <Overview events={MOCKS_EVENTS} />
+export default async function Home() {
+  const records = await GetRecords({
+    status: Status.Active
+  })
+
+  return <Overview events={records} />
 }

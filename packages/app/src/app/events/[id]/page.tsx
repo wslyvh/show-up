@@ -1,16 +1,18 @@
 import { EventDetails } from '@/features/details/Event'
-import { MOCKS_EVENTS } from '@/utils/mocks'
+import { GetRecord } from '@/services/protocol'
+import { Status } from '@/utils/types'
 
-// TODO: handle data fetching from indexer
+export default async function Page({ params }: { params: { id: string } }) {
+  const record = await GetRecord({
+    id: params.id,
+    status: Status.Active
+  })
 
-export default function Page() {
-  const record = MOCKS_EVENTS[0]
-  const event = record.metadata
-  if (!event) return null
+  if (!record || !record.metadata) return null
 
   return (
     <>
-      <EventDetails event={event} conditions={record.conditions} />
+      <EventDetails record={record} event={record.metadata} />
     </>
   )
 }

@@ -13,13 +13,24 @@ export enum Status {
 export interface Record {
   id: string
   createdAt: string | number
-  createdBy: Profile
-  conditions: ConditionModuleData
+  createdBy: string
+  updatedAt?: string | number
   status: Status
+  message?: string
+  conditionModule: string
   contentUri: string
+  ipfsHash: string
   metadata?: EventMetadata
 
-  attendees: Profile[]
+  participants: Participant[]
+}
+
+export interface Participant {
+  id: string
+  createdAt: string | number
+  createdBy: string
+  address: string
+  checkedIn: boolean
 }
 
 export interface EventMetadata {
