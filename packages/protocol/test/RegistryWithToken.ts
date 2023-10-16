@@ -91,8 +91,7 @@ describe('RegistryWithToken', function () {
       // Need to approve the condition module to transfer tokens
       await token.approve(basicTokenModule.address, defaultTokenFee);
 
-      const params = ethers.utils.defaultAbiCoder.encode(["address"], [owner.address])
-      const registerTx = await registry.register(0, params)
+      const registerTx = await registry.register(0, owner.address, [])
       expect(registerTx).not.to.be.reverted
 
       const timestamp = await time.latest();
@@ -115,8 +114,7 @@ describe('RegistryWithToken', function () {
       // Need to approve the condition module to transfer tokens
       await token.approve(basicTokenModule.address, defaultTokenFee);
 
-      const params = ethers.utils.defaultAbiCoder.encode(["address"], [attendee1.address])
-      const registerTx = await registry.register(0, params)
+      const registerTx = await registry.register(0, attendee1.address, [])
       expect(registerTx).not.to.be.reverted
 
       const timestamp = await time.latest();
@@ -131,8 +129,8 @@ describe('RegistryWithToken', function () {
       await token.connect(attendee1).approve(basicTokenModule.address, defaultTokenFee);
       await token.connect(attendee2).approve(basicTokenModule.address, defaultTokenFee);
 
-      await registry.connect(attendee1).register(0, ethers.utils.defaultAbiCoder.encode(["address"], [attendee1.address]))
-      await registry.connect(attendee2).register(0, ethers.utils.defaultAbiCoder.encode(["address"], [attendee2.address]))
+      await registry.connect(attendee1).register(0, attendee1.address, [])
+      await registry.connect(attendee2).register(0, attendee2.address, [])
 
       const attendees = [attendee1.address, attendee2.address]
       const checkinTx = await registry.checkin(0, attendees, [])
@@ -162,8 +160,8 @@ describe('RegistryWithToken', function () {
       await token.connect(attendee1).approve(basicTokenModule.address, defaultTokenFee);
       await token.connect(attendee2).approve(basicTokenModule.address, defaultTokenFee);
 
-      await registry.connect(attendee1).register(0, ethers.utils.defaultAbiCoder.encode(["address"], [attendee1.address]))
-      await registry.connect(attendee2).register(0, ethers.utils.defaultAbiCoder.encode(["address"], [attendee2.address]))
+      await registry.connect(attendee1).register(0, attendee1.address, [])
+      await registry.connect(attendee2).register(0, attendee2.address, [])
 
       // Try to check-in 3 attendees
       const attendees = [owner.address, attendee1.address, attendee2.address]
@@ -181,9 +179,9 @@ describe('RegistryWithToken', function () {
 
       await token.approve(basicTokenModule.address, defaultTokenFee.mul(3));
 
-      await registry.register(0, ethers.utils.defaultAbiCoder.encode(["address"], [owner.address]))
-      await registry.register(0, ethers.utils.defaultAbiCoder.encode(["address"], [attendee1.address]))
-      await registry.register(0, ethers.utils.defaultAbiCoder.encode(["address"], [attendee2.address]))
+      await registry.register(0, owner.address, [])
+      await registry.register(0, attendee1.address, [])
+      await registry.register(0, attendee2.address, [])
 
       // Only check-in attendees
       const attendees = [attendee1.address, attendee2.address]

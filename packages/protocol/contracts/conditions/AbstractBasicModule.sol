@@ -50,16 +50,15 @@ contract AbstractBasicModule is IConditionModule {
         if(_registrations[recordId].totalAttendees > 0) revert AlreadyStarted();
     }
 
-    function register(uint256 recordId, address from, bytes calldata data) external payable virtual {
+    function register(uint256 recordId, address participant, address sender, bytes calldata data) external payable virtual {
         // Derived contract should check depositFee and handle totalDepositAmount as the deposits depend on the module implementation
         // e.g. if(_conditions[recordId].depositFee != msg.value) revert IncorrectValue();
         // e.g. _registrations[recordId].totalDepositAmount += msg.value;
 
-        this._register(recordId, data);
+        this._register(recordId, participant);
     }
 
-    function _register(uint256 recordId, bytes calldata data) public payable virtual {
-        (address participant) = abi.decode(data, (address));
+    function _register(uint256 recordId, address participant) public payable virtual {
         if(_conditions[recordId].maxParticipants > 0 && _conditions[recordId].maxParticipants == _registrations[recordId].totalRegistrations) revert LimitReached();
         if(_registrations[recordId].registrations[participant]) revert AlreadyRegistered();
         if(_conditions[recordId].endDate < block.timestamp) revert InvalidDate();

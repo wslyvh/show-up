@@ -77,8 +77,7 @@ describe('RegistryWithEther', function () {
       const { registry, basicEtherModule, owner } = await loadFixture(deployFixture)
       await loadFixture(createFixture)
 
-      const params = ethers.utils.defaultAbiCoder.encode(["address"], [owner.address])
-      const registerTx = await registry.register(0, params, { value: defaultDepositFee })
+      const registerTx = await registry.register(0, owner.address, [], { value: defaultDepositFee })
       expect(registerTx).not.to.be.reverted
 
       const timestamp = await time.latest();
@@ -98,8 +97,7 @@ describe('RegistryWithEther', function () {
       const { registry, owner, attendee1 } = await loadFixture(deployFixture)
       await loadFixture(createFixture)
 
-      const params = ethers.utils.defaultAbiCoder.encode(["address"], [attendee1.address])
-      const registerTx = await registry.register(0, params, { value: defaultDepositFee })
+      const registerTx = await registry.register(0, attendee1.address, [], { value: defaultDepositFee })
       expect(registerTx).not.to.be.reverted
 
       const timestamp = await time.latest();
@@ -111,8 +109,8 @@ describe('RegistryWithEther', function () {
       const { registry, basicEtherModule, owner, attendee1, attendee2 } = await loadFixture(deployFixture)
       await loadFixture(createFixture)
 
-      await registry.connect(attendee1).register(0, ethers.utils.defaultAbiCoder.encode(["address"], [attendee1.address]), { value: defaultDepositFee })
-      await registry.connect(attendee2).register(0, ethers.utils.defaultAbiCoder.encode(["address"], [attendee2.address]), { value: defaultDepositFee })
+      await registry.connect(attendee1).register(0, attendee1.address, [], { value: defaultDepositFee })
+      await registry.connect(attendee2).register(0, attendee2.address, [], { value: defaultDepositFee })
 
       const attendees = [attendee1.address, attendee2.address]
       const checkinTx = await registry.checkin(0, attendees, [])
@@ -139,8 +137,8 @@ describe('RegistryWithEther', function () {
       await loadFixture(createFixture)
 
       // Only register 2 attendees
-      await registry.connect(attendee1).register(0, ethers.utils.defaultAbiCoder.encode(["address"], [attendee1.address]), { value: defaultDepositFee })
-      await registry.connect(attendee2).register(0, ethers.utils.defaultAbiCoder.encode(["address"], [attendee2.address]), { value: defaultDepositFee })
+      await registry.connect(attendee1).register(0, attendee1.address, [], { value: defaultDepositFee })
+      await registry.connect(attendee2).register(0, attendee2.address, [], { value: defaultDepositFee })
 
       // Try to check-in 3 attendees
       const attendees = [owner.address, attendee1.address, attendee2.address]
@@ -156,14 +154,9 @@ describe('RegistryWithEther', function () {
       const { registry, nextWeek, owner, attendee1, attendee2 } = await loadFixture(deployFixture)
       await loadFixture(createFixture)
 
-      const ownerParams = ethers.utils.defaultAbiCoder.encode(["address"], [owner.address])
-      await registry.connect(owner).register(0, ownerParams, { value: defaultDepositFee })
-
-      const a1Params = ethers.utils.defaultAbiCoder.encode(["address"], [attendee1.address])
-      await registry.connect(attendee1).register(0, a1Params, { value: defaultDepositFee })
-
-      const a2Params = ethers.utils.defaultAbiCoder.encode(["address"], [attendee2.address])
-      await registry.connect(attendee2).register(0, a2Params, { value: defaultDepositFee })
+      await registry.connect(owner).register(0, owner.address, [], { value: defaultDepositFee })
+      await registry.connect(attendee1).register(0, attendee1.address, [], { value: defaultDepositFee })
+      await registry.connect(attendee2).register(0, attendee2.address, [], { value: defaultDepositFee })
 
       // Only check-in attendees
       const attendees = [attendee1.address, attendee2.address]

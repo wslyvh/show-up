@@ -28,15 +28,15 @@ contract BasicToken is AbstractBasicModule {
         }
     }
 
-    function register(uint256 recordId, address from, bytes calldata data) external payable virtual override {
-        super._register(recordId, data);
+    function register(uint256 recordId, address participant, address sender, bytes calldata data) external payable virtual override {
+        super._register(recordId, participant);
 
         if(msg.value > 0) revert IncorrectValue();
 
         _registrations[recordId].totalDepositAmount += _conditions[recordId].depositFee;
 
         IERC20 token = IERC20(_conditions[recordId].tokenAddress);
-        require(token.transferFrom(from, address(this), _conditions[recordId].depositFee));
+        require(token.transferFrom(sender, address(this), _conditions[recordId].depositFee));
     }
 
     function settle(uint256 recordId, bytes calldata data) external virtual override {

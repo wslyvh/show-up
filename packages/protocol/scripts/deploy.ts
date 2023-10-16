@@ -55,7 +55,7 @@ export async function main() {
 
         console.log('Register for Token event..')
         await token.approve(basicTokenModule.address, defaultDepositFee);
-        await registry.register(1, ethers.utils.defaultAbiCoder.encode(["address"], [owner.address]))
+        await registry.register(1, owner.address, [])
 
         console.log('Create and cancel event..', nextWeek)
         const paramsEtherCancel = ethers.utils.defaultAbiCoder.encode(

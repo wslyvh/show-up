@@ -54,12 +54,12 @@ contract Registry is Ownable, IRegistry {
     emit Canceled(id, reason, conditionModuleData, msg.sender, block.timestamp);
   }
 
-  function register(uint id, bytes calldata conditionModuleData) external payable {
+  function register(uint id, address participant, bytes calldata conditionModuleData) external payable {
     verifyValidRecord(id);
 
-    IConditionModule(_records[id].conditionModule).register{value:msg.value}(id, msg.sender, conditionModuleData);
+    IConditionModule(_records[id].conditionModule).register{value:msg.value}(id, participant, msg.sender, conditionModuleData);
 
-    emit Registered(id, conditionModuleData, msg.sender, block.timestamp);
+    emit Registered(id, participant, conditionModuleData, msg.sender, block.timestamp);
   }
 
   function checkin(uint256 id, address[] calldata attendees, bytes calldata conditionModuleData) external {

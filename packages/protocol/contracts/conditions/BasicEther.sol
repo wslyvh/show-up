@@ -26,8 +26,8 @@ contract BasicEther is AbstractBasicModule {
         }
     }
 
-    function register(uint256 recordId, address from, bytes calldata data) external payable virtual override {
-        super._register(recordId, data);
+    function register(uint256 recordId, address participant, address sender, bytes calldata data) external payable virtual override {
+        super._register(recordId, participant);
 
         if(_conditions[recordId].depositFee != msg.value) revert IncorrectValue();
 
