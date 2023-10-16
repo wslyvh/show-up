@@ -128,6 +128,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
     // TODO: Should fetch record and condition modules from indexer
     const record = (await readRegistry({
+      chainId: chain?.id as any,
       functionName: 'getRecord',
       args: [id],
     })) as any // TODO: Fix types
@@ -139,6 +140,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
     if (module.type === ConditionModuleType.BasicEther) {
       const conditionModule = (await readBasicEther({
+        chainId: chain?.id as any,
         functionName: 'getConditions',
         args: [id],
       })) as ConditionModuleData
@@ -146,6 +148,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
       const params = encodeAbiParameters([{ type: 'address' }], [account])
 
       const preparedWrite = await prepareWriteRegistry({
+        chainId: chain?.id as any,
         functionName: 'register',
         args: [id, params],
         value: conditionModule.depositFee,
@@ -159,6 +162,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
     if (module.type === ConditionModuleType.BasicToken) {
       const conditionModule = (await readBasicToken({
+        chainId: chain?.id as any,
         functionName: 'getConditions',
         args: [id],
       })) as ConditionModuleData
@@ -167,6 +171,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
       // Approve token first
       const approveConfig = await prepareWriteContract({
+        chainId: chain?.id as any,
         address: conditionModule.tokenAddress,
         abi: erc20ABI,
         functionName: 'approve',
@@ -179,6 +184,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
       console.log('Approve Tx', approveTx.hash, data)
 
       const preparedWrite = await prepareWriteRegistry({
+        chainId: chain?.id as any,
         functionName: 'register',
         args: [id, params],
       })
