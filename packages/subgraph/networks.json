@@ -1,8 +1,8 @@
 {
   "sepolia": {
     "Registry": {
-      "address": "0x31154816A0d880915B5D4c38d476326b69FFf011",
-      "startBlock": 4500268
+      "address": "0x15F14dC83AD5824458343c63e3BCa145e2fE8758",
+      "startBlock": 4501650
     }
   }
 }

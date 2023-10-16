@@ -27,8 +27,8 @@ export class Canceled__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get reason(): Bytes {
-    return this._event.parameters[1].value.toBytes();
+  get reason(): string {
+    return this._event.parameters[1].value.toString();
   }
 
   get data(): Bytes {
@@ -61,8 +61,8 @@ export class CheckedIn__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get attendees(): Bytes {
-    return this._event.parameters[1].value.toBytes();
+  get attendees(): Array<Address> {
+    return this._event.parameters[1].value.toAddressArray();
   }
 
   get data(): Bytes {
@@ -125,8 +125,8 @@ export class Created__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get contentUri(): Bytes {
-    return this._event.parameters[1].value.toBytes();
+  get contentUri(): string {
+    return this._event.parameters[1].value.toString();
   }
 
   get conditionModule(): Address {
@@ -185,16 +185,20 @@ export class Registered__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
+  get participant(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
   get data(): Bytes {
-    return this._event.parameters[1].value.toBytes();
+    return this._event.parameters[2].value.toBytes();
   }
 
   get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
+    return this._event.parameters[3].value.toAddress();
   }
 
   get timestamp(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
+    return this._event.parameters[4].value.toBigInt();
   }
 }
 
@@ -486,8 +490,12 @@ export class RegisterCall__Inputs {
     return this._call.inputValues[0].value.toBigInt();
   }
 
+  get participant(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
   get conditionModuleData(): Bytes {
-    return this._call.inputValues[1].value.toBytes();
+    return this._call.inputValues[2].value.toBytes();
   }
 }
 

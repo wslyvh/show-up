@@ -4,27 +4,44 @@ enum Status {
   Settled
 }
 
-type Record @entity(immutable: true) {
-  id: Bytes! # uint256
-  recordId: BigInt! # uint256
-  createdAt: BigInt! # uint256
+type ConditionModule @entity {
+  id: Bytes! # address
+  createdAt: BigInt!
   createdBy: Bytes! # address
-  updatedAt: BigInt # uint256
-  message: String
-
-  conditionModule: Bytes! # address
-  status: Status! # enum Status
-  contentUri: String! # string
-  metadata: String # string
+  whitelisted: Boolean! # true
   blockNumber: BigInt!
   transactionHash: Bytes!
 }
 
-type ConditionModule @entity(immutable: true) {
-  id: Bytes! # address
-  createdAt: BigInt! # uint256
-  createdBy: Bytes! # address
-  whitelisted: Boolean! # bool
+type Record @entity {
+  id: Bytes!
+  recordId: BigInt!
+  createdAt: BigInt!
+  createdBy: Bytes!
+  updatedAt: BigInt
+  message: String
+
+  conditionModule: Bytes! # address
+  status: Status! # Active
+  contentUri: String!
+  metadata: String
+  participants: [Participants!]! @derivedFrom(field: "record")
+
   blockNumber: BigInt!
   transactionHash: Bytes!
+}
+
+type User @entity {
+  id: Bytes! # address
+  participations: [Participants!] @derivedFrom(field: "user")
+}
+
+type Participants @entity {
+  id: String! # Set to `record.id.concat(user.id)`
+  createdAt: BigInt!
+  createdBy: Bytes!
+  address: Bytes! # address
+  checkedIn: Boolean! # false
+  user: User!
+  record: Record!
 }
