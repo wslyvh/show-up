@@ -39,7 +39,7 @@ contract Registry is Ownable, IRegistry {
 
     IConditionModule(conditionModule).initialize(_recordCount, conditionModuleData);
 
-    emit Created(_recordCount, contentUri, conditionModuleData, msg.sender, block.timestamp);
+    emit Created(_recordCount, contentUri, conditionModule, conditionModuleData, msg.sender, block.timestamp);
     _recordCount++;
   }
 
