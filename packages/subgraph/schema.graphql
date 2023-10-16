@@ -1,0 +1,30 @@
+enum Status {
+  Active
+  Cancelled
+  Settled
+}
+
+type Record @entity(immutable: true) {
+  id: Bytes! # uint256
+  recordId: BigInt! # uint256
+  createdAt: BigInt! # uint256
+  createdBy: Bytes! # address
+  updatedAt: BigInt # uint256
+  message: String
+
+  conditionModule: Bytes! # address
+  status: Status! # enum Status
+  contentUri: String! # string
+  metadata: String # string
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+}
+
+type ConditionModule @entity(immutable: true) {
+  id: Bytes! # address
+  createdAt: BigInt! # uint256
+  createdBy: Bytes! # address
+  whitelisted: Boolean! # bool
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+}

@@ -47,6 +47,10 @@ next-env.d.ts
 **/protocol/cache
 **/protocol/artifacts
 
+# subgraph
+**/subgraph/node_modules
+**/subgraph/build
+
 # wagmi recommends to ignore their generated file
 # /src/abis.ts 
 

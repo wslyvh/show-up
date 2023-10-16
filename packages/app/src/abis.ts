@@ -168,7 +168,7 @@ export const abstractBasicModuleABI = [
 
 /**
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11Da75e50fD52876a2Ce1d37add2E704F5868572)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x2bA34b3D60CB325C224faeA4Bd1BC9815C9a60f9)
  */
 export const basicEtherABI = [
   { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
@@ -320,16 +320,16 @@ export const basicEtherABI = [
 
 /**
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11Da75e50fD52876a2Ce1d37add2E704F5868572)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x2bA34b3D60CB325C224faeA4Bd1BC9815C9a60f9)
  */
 export const basicEtherAddress = {
   31337: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
-  11155111: '0x11Da75e50fD52876a2Ce1d37add2E704F5868572',
+  11155111: '0x2bA34b3D60CB325C224faeA4Bd1BC9815C9a60f9',
 } as const
 
 /**
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11Da75e50fD52876a2Ce1d37add2E704F5868572)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x2bA34b3D60CB325C224faeA4Bd1BC9815C9a60f9)
  */
 export const basicEtherConfig = { address: basicEtherAddress, abi: basicEtherABI } as const
 
@@ -339,7 +339,7 @@ export const basicEtherConfig = { address: basicEtherAddress, abi: basicEtherABI
 
 /**
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x8C3ae0911C64944e06Fa64778b59514EABAadefB)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x00E0F139108303444bD4808e05f28ed88B34e1b6)
  */
 export const basicTokenABI = [
   { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
@@ -491,16 +491,16 @@ export const basicTokenABI = [
 
 /**
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x8C3ae0911C64944e06Fa64778b59514EABAadefB)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x00E0F139108303444bD4808e05f28ed88B34e1b6)
  */
 export const basicTokenAddress = {
   31337: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
-  11155111: '0x8C3ae0911C64944e06Fa64778b59514EABAadefB',
+  11155111: '0x00E0F139108303444bD4808e05f28ed88B34e1b6',
 } as const
 
 /**
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x8C3ae0911C64944e06Fa64778b59514EABAadefB)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x00E0F139108303444bD4808e05f28ed88B34e1b6)
  */
 export const basicTokenConfig = { address: basicTokenAddress, abi: basicTokenABI } as const
 
@@ -1075,6 +1075,7 @@ export const iRegistryABI = [
     inputs: [
       { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
       { name: 'contentUri', internalType: 'string', type: 'string', indexed: true },
+      { name: 'conditionModule', internalType: 'address', type: 'address', indexed: true },
       { name: 'data', internalType: 'bytes', type: 'bytes', indexed: false },
       { name: 'sender', internalType: 'address', type: 'address', indexed: false },
       { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
@@ -1348,7 +1349,7 @@ export const ownableABI = [
 
 /**
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x09B8Fdf05D49Acfe3A181e4000207ae5c5475405)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x31154816A0d880915B5D4c38d476326b69FFf011)
  */
 export const registryABI = [
   { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
@@ -1403,6 +1404,7 @@ export const registryABI = [
     inputs: [
       { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
       { name: 'contentUri', internalType: 'string', type: 'string', indexed: true },
+      { name: 'conditionModule', internalType: 'address', type: 'address', indexed: true },
       { name: 'data', internalType: 'bytes', type: 'bytes', indexed: false },
       { name: 'sender', internalType: 'address', type: 'address', indexed: false },
       { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
@@ -1549,16 +1551,16 @@ export const registryABI = [
 
 /**
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x09B8Fdf05D49Acfe3A181e4000207ae5c5475405)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x31154816A0d880915B5D4c38d476326b69FFf011)
  */
 export const registryAddress = {
   31337: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
-  11155111: '0x09B8Fdf05D49Acfe3A181e4000207ae5c5475405',
+  11155111: '0x31154816A0d880915B5D4c38d476326b69FFf011',
 } as const
 
 /**
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x09B8Fdf05D49Acfe3A181e4000207ae5c5475405)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x31154816A0d880915B5D4c38d476326b69FFf011)
  */
 export const registryConfig = { address: registryAddress, abi: registryABI } as const
 
@@ -1709,7 +1711,7 @@ export const showHubABI = [
 
 /**
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xaf14ED028FBb4646111443D4a6FDbfb5De7a077e)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x08A0926023D4dD51eAc65031fd4ba5c1B06A052E)
  */
 export const tokenABI = [
   { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
@@ -1887,16 +1889,16 @@ export const tokenABI = [
 
 /**
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xaf14ED028FBb4646111443D4a6FDbfb5De7a077e)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x08A0926023D4dD51eAc65031fd4ba5c1B06A052E)
  */
 export const tokenAddress = {
   31337: '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
-  11155111: '0xaf14ED028FBb4646111443D4a6FDbfb5De7a077e',
+  11155111: '0x08A0926023D4dD51eAc65031fd4ba5c1B06A052E',
 } as const
 
 /**
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xaf14ED028FBb4646111443D4a6FDbfb5De7a077e)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x08A0926023D4dD51eAc65031fd4ba5c1B06A052E)
  */
 export const tokenConfig = { address: tokenAddress, abi: tokenABI } as const
 
@@ -1952,7 +1954,7 @@ export function prepareWriteAbstractBasicModule<
  * Wraps __{@link getContract}__ with `abi` set to __{@link basicEtherABI}__.
  *
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11Da75e50fD52876a2Ce1d37add2E704F5868572)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x2bA34b3D60CB325C224faeA4Bd1BC9815C9a60f9)
  */
 export function getBasicEther(
   config: Omit<GetContractArgs, 'abi' | 'address'> & { chainId?: keyof typeof basicEtherAddress }
@@ -1968,7 +1970,7 @@ export function getBasicEther(
  * Wraps __{@link readContract}__ with `abi` set to __{@link basicEtherABI}__.
  *
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11Da75e50fD52876a2Ce1d37add2E704F5868572)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x2bA34b3D60CB325C224faeA4Bd1BC9815C9a60f9)
  */
 export function readBasicEther<
   TAbi extends readonly unknown[] = typeof basicEtherABI,
@@ -1989,7 +1991,7 @@ export function readBasicEther<
  * Wraps __{@link writeContract}__ with `abi` set to __{@link basicEtherABI}__.
  *
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11Da75e50fD52876a2Ce1d37add2E704F5868572)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x2bA34b3D60CB325C224faeA4Bd1BC9815C9a60f9)
  */
 export function writeBasicEther<
   TFunctionName extends string,
@@ -2017,7 +2019,7 @@ export function writeBasicEther<
  * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link basicEtherABI}__.
  *
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11Da75e50fD52876a2Ce1d37add2E704F5868572)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x2bA34b3D60CB325C224faeA4Bd1BC9815C9a60f9)
  */
 export function prepareWriteBasicEther<
   TAbi extends readonly unknown[] = typeof basicEtherABI,
@@ -2038,7 +2040,7 @@ export function prepareWriteBasicEther<
  * Wraps __{@link getContract}__ with `abi` set to __{@link basicTokenABI}__.
  *
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x8C3ae0911C64944e06Fa64778b59514EABAadefB)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x00E0F139108303444bD4808e05f28ed88B34e1b6)
  */
 export function getBasicToken(
   config: Omit<GetContractArgs, 'abi' | 'address'> & { chainId?: keyof typeof basicTokenAddress }
@@ -2054,7 +2056,7 @@ export function getBasicToken(
  * Wraps __{@link readContract}__ with `abi` set to __{@link basicTokenABI}__.
  *
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x8C3ae0911C64944e06Fa64778b59514EABAadefB)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x00E0F139108303444bD4808e05f28ed88B34e1b6)
  */
 export function readBasicToken<
   TAbi extends readonly unknown[] = typeof basicTokenABI,
@@ -2075,7 +2077,7 @@ export function readBasicToken<
  * Wraps __{@link writeContract}__ with `abi` set to __{@link basicTokenABI}__.
  *
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x8C3ae0911C64944e06Fa64778b59514EABAadefB)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x00E0F139108303444bD4808e05f28ed88B34e1b6)
  */
 export function writeBasicToken<
   TFunctionName extends string,
@@ -2103,7 +2105,7 @@ export function writeBasicToken<
  * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link basicTokenABI}__.
  *
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x8C3ae0911C64944e06Fa64778b59514EABAadefB)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x00E0F139108303444bD4808e05f28ed88B34e1b6)
  */
 export function prepareWriteBasicToken<
   TAbi extends readonly unknown[] = typeof basicTokenABI,
@@ -2428,7 +2430,7 @@ export function prepareWriteOwnable<
  * Wraps __{@link getContract}__ with `abi` set to __{@link registryABI}__.
  *
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x09B8Fdf05D49Acfe3A181e4000207ae5c5475405)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x31154816A0d880915B5D4c38d476326b69FFf011)
  */
 export function getRegistry(
   config: Omit<GetContractArgs, 'abi' | 'address'> & { chainId?: keyof typeof registryAddress }
@@ -2444,7 +2446,7 @@ export function getRegistry(
  * Wraps __{@link readContract}__ with `abi` set to __{@link registryABI}__.
  *
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x09B8Fdf05D49Acfe3A181e4000207ae5c5475405)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x31154816A0d880915B5D4c38d476326b69FFf011)
  */
 export function readRegistry<
   TAbi extends readonly unknown[] = typeof registryABI,
@@ -2463,7 +2465,7 @@ export function readRegistry<
  * Wraps __{@link writeContract}__ with `abi` set to __{@link registryABI}__.
  *
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x09B8Fdf05D49Acfe3A181e4000207ae5c5475405)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x31154816A0d880915B5D4c38d476326b69FFf011)
  */
 export function writeRegistry<
   TFunctionName extends string,
@@ -2491,7 +2493,7 @@ export function writeRegistry<
  * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link registryABI}__.
  *
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x09B8Fdf05D49Acfe3A181e4000207ae5c5475405)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x31154816A0d880915B5D4c38d476326b69FFf011)
  */
 export function prepareWriteRegistry<
   TAbi extends readonly unknown[] = typeof registryABI,
@@ -2552,7 +2554,7 @@ export function prepareWriteShowHub<
  * Wraps __{@link getContract}__ with `abi` set to __{@link tokenABI}__.
  *
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xaf14ED028FBb4646111443D4a6FDbfb5De7a077e)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x08A0926023D4dD51eAc65031fd4ba5c1B06A052E)
  */
 export function getToken(config: Omit<GetContractArgs, 'abi' | 'address'> & { chainId?: keyof typeof tokenAddress }) {
   return getContract({ abi: tokenABI, address: tokenAddress[config.chainId as keyof typeof tokenAddress], ...config })
@@ -2562,7 +2564,7 @@ export function getToken(config: Omit<GetContractArgs, 'abi' | 'address'> & { ch
  * Wraps __{@link readContract}__ with `abi` set to __{@link tokenABI}__.
  *
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xaf14ED028FBb4646111443D4a6FDbfb5De7a077e)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x08A0926023D4dD51eAc65031fd4ba5c1B06A052E)
  */
 export function readToken<TAbi extends readonly unknown[] = typeof tokenABI, TFunctionName extends string = string>(
   config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & { chainId?: keyof typeof tokenAddress }
@@ -2578,7 +2580,7 @@ export function readToken<TAbi extends readonly unknown[] = typeof tokenABI, TFu
  * Wraps __{@link writeContract}__ with `abi` set to __{@link tokenABI}__.
  *
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xaf14ED028FBb4646111443D4a6FDbfb5De7a077e)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x08A0926023D4dD51eAc65031fd4ba5c1B06A052E)
  */
 export function writeToken<
   TFunctionName extends string,
@@ -2606,7 +2608,7 @@ export function writeToken<
  * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link tokenABI}__.
  *
  * -
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xaf14ED028FBb4646111443D4a6FDbfb5De7a077e)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x08A0926023D4dD51eAc65031fd4ba5c1B06A052E)
  */
 export function prepareWriteToken<
   TAbi extends readonly unknown[] = typeof tokenABI,

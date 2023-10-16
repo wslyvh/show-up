@@ -1,0 +1,36 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Registry
+    network: sepolia
+    source:
+      address: "0x31154816A0d880915B5D4c38d476326b69FFf011"
+      abi: Registry
+      startBlock: 4500268
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Record
+        - ConditionModule
+      abis:
+        - name: Registry
+          file: ./abis/Registry.json
+      eventHandlers:
+        - event: Canceled(indexed uint256,indexed string,bytes,address,uint256)
+          handler: handleCanceled
+        - event: CheckedIn(indexed uint256,indexed address[],bytes,address,uint256)
+          handler: handleCheckedIn
+        - event: ConditionModuleWhitelisted(indexed address,indexed bool,address,uint256)
+          handler: handleConditionModuleWhitelisted
+        - event: Created(indexed uint256,indexed string,indexed
+            address,bytes,address,uint256)
+          handler: handleCreated
+        - event: Registered(indexed uint256,bytes,address,uint256)
+          handler: handleRegistered
+        - event: Settled(indexed uint256,bytes,address,uint256)
+          handler: handleSettled
+      file: ./src/registry.ts
