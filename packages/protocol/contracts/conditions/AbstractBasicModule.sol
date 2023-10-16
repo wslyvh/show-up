@@ -46,7 +46,7 @@ contract AbstractBasicModule is IConditionModule {
     }
 
     function _cancel(uint256 recordId, bytes calldata data) public virtual {
-        if(_conditions[recordId].endDate > block.timestamp) revert InvalidDate();
+        if(_conditions[recordId].endDate < block.timestamp) revert InvalidDate();
         if(_registrations[recordId].totalAttendees > 0) revert AlreadyStarted();
     }
 

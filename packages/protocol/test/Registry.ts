@@ -59,7 +59,7 @@ describe('Registry', function () {
 
   describe('Deployment', function () {
     it('Should deploy a new instance', async function () {
-      const { registry, basicEtherModule, owner } = await loadFixture(deployFixture)
+      const { registry, basicEtherModule, owner, token } = await loadFixture(deployFixture)
 
       assert.isNotNull(registry)
       assert.isNotNull(basicEtherModule)
@@ -68,15 +68,26 @@ describe('Registry', function () {
       const isWhitelisted = await registry.isConditionModuleWhitelisted(basicEtherModule.address)
       expect(isWhitelisted).to.be.true
     })
+
+    it('Should add modules to whitelist', async function () {
+      const { registry, owner, token } = await loadFixture(deployFixture)
+
+      const tokenTx = await registry.whitelistConditionModule(token.address, true) // token; invalid module, but should emit event
+      expect(tokenTx).not.to.be.reverted
+
+      const timestamp = await time.latest();
+      expect(tokenTx).to.emit(registry, "ConditionModuleWhitelisted")
+        .withArgs(token.address, true, owner, timestamp)
+
+      const isWhitelisted = await registry.isConditionModuleWhitelisted(token.address)
+      expect(isWhitelisted).to.be.true
+    })
   })
 
   describe('State', function () {
     it('Should allow owner to cancel', async function () {
-      const { registry, nextWeek, owner } = await loadFixture(deployFixture)
+      const { registry, owner } = await loadFixture(deployFixture)
       await loadFixture(createEtherFixture)
-
-      // update timestamp to next week. Can only cancel events that have not started yet
-      await time.increaseTo(nextWeek);
 
       const reason = 'Cancelled by owner'
       const cancelTx = await registry.cancel(0, reason, [])
@@ -86,8 +97,12 @@ describe('Registry', function () {
         .withArgs(0, reason, owner, timestamp)
     })
 
+    // Should not allow to cancel if already cancelled
+    // Should not allow to cancel if already has attendees
+    // Should not allow to cancel if endDate has passed 
+
     it('Should disperse Ether funds when cancelling an event with registrations ', async function () {
-      const { registry, nextWeek, attendee1, attendee2 } = await loadFixture(deployFixture)
+      const { registry, attendee1, attendee2 } = await loadFixture(deployFixture)
       await loadFixture(createEtherFixture)
 
       await registry.connect(attendee1).register(0, ethers.utils.defaultAbiCoder.encode(["address"], [attendee1.address]), { value: defaultDepositFee })
@@ -96,8 +111,6 @@ describe('Registry', function () {
       const attendee1BalanceBefore = await attendee1.getBalance()
       const attendee2BalanceBefore = await attendee2.getBalance()
 
-      // Update timestamp to next week. Can only cancel events that have not started yet
-      await time.increaseTo(nextWeek);
       await registry.cancel(0, 'Cancelled by owner', [])
 
       const attendee1BalanceAfter = await attendee1.getBalance()
@@ -108,7 +121,7 @@ describe('Registry', function () {
     })
 
     it('Should disperse Token funds when cancelling an event with registrations ', async function () {
-      const { registry, nextWeek, attendee1, attendee2, basicTokenModule, token } = await loadFixture(deployFixture)
+      const { registry, attendee1, attendee2, basicTokenModule, token } = await loadFixture(deployFixture)
       await loadFixture(createTokenFixture)
 
       await token.connect(attendee1).approve(basicTokenModule.address, defaultTokenFee);
@@ -120,8 +133,6 @@ describe('Registry', function () {
       const attendee1BalanceBefore = await token.balanceOf(attendee1.address)
       const attendee2BalanceBefore = await token.balanceOf(attendee2.address)
 
-      // Update timestamp to next week. Can only cancel events that have not started yet
-      await time.increaseTo(nextWeek);
       await registry.cancel(0, 'Cancelled by owner', [])
 
       const attendee1BalanceAfter = await token.balanceOf(attendee1.address)
@@ -132,7 +143,7 @@ describe('Registry', function () {
     })
 
     it('Should allow to register when no max. participants is set', async function () {
-      const { registry, tomorrow, nextWeek, owner, basicEtherModule } = await loadFixture(deployFixture)
+      const { registry, tomorrow, owner, basicEtherModule } = await loadFixture(deployFixture)
 
       const params = ethers.utils.defaultAbiCoder.encode(
         ["address", 'uint256', 'uint256', 'uint256', 'address'],
@@ -213,26 +224,21 @@ describe('Registry', function () {
     })
 
     it('Should reject if cancelling an event that has attendees checked in ', async function () {
-      const { registry, basicEtherModule, nextWeek, attendee1, attendee2 } = await loadFixture(deployFixture)
+      const { registry, basicEtherModule, attendee1, attendee2 } = await loadFixture(deployFixture)
       await loadFixture(createEtherFixture)
 
       await registry.connect(attendee1).register(0, ethers.utils.defaultAbiCoder.encode(["address"], [attendee1.address]), { value: defaultDepositFee })
       await registry.connect(attendee2).register(0, ethers.utils.defaultAbiCoder.encode(["address"], [attendee2.address]), { value: defaultDepositFee })
       await registry.checkin(0, [attendee1.address, attendee2.address], [])
 
-      // Update timestamp to next week. Can only cancel events that have not started yet
-      await time.increaseTo(nextWeek);
-
       await expect(registry.cancel(0, 'Cancelled by owner', []))
         .to.be.revertedWithCustomError(basicEtherModule, 'AlreadyStarted')
     })
 
     it('Should reject if registering for a cancelled event', async function () {
-      const { registry, nextWeek, attendee1 } = await loadFixture(deployFixture)
+      const { registry, attendee1 } = await loadFixture(deployFixture)
       await loadFixture(createEtherFixture)
 
-      // update timestamp to next week. Can only cancel events that have not started yet
-      await time.increaseTo(nextWeek);
       await registry.cancel(0, 'Cancelled by attendee', [])
 
       await expect(registry.register(0, attendee1.address, { value: defaultDepositFee }))
@@ -240,11 +246,8 @@ describe('Registry', function () {
     })
 
     it('Should reject if checking in for a cancelled event', async function () {
-      const { registry, nextWeek, owner } = await loadFixture(deployFixture)
+      const { registry, owner } = await loadFixture(deployFixture)
       await loadFixture(createEtherFixture)
-
-      // update timestamp to next week. Can only cancel events that have not started yet
-      await time.increaseTo(nextWeek);
 
       await registry.cancel(0, 'Cancelled by attendee', [])
 
@@ -254,11 +257,8 @@ describe('Registry', function () {
     })
 
     it('Should reject if settling a cancelled event', async function () {
-      const { registry, nextWeek } = await loadFixture(deployFixture)
+      const { registry } = await loadFixture(deployFixture)
       await loadFixture(createEtherFixture)
-
-      // update timestamp to next week. Can only cancel events that have not started yet
-      await time.increaseTo(nextWeek);
 
       await registry.cancel(0, 'Cancelled by attendee', [])
 
@@ -267,12 +267,9 @@ describe('Registry', function () {
     })
 
     it('Should reject if settling an invalid id', async function () {
-      const { registry, nextWeek } = await loadFixture(deployFixture)
+      const { registry } = await loadFixture(deployFixture)
 
       await loadFixture(createEtherFixture)
-
-      // update timestamp to next week. Can only cancel events that have not started yet
-      await time.increaseTo(nextWeek);
 
       await registry.cancel(0, 'Cancelled by attendee', [])
 

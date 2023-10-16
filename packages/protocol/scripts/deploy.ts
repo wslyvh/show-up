@@ -1,7 +1,10 @@
 import { ethers, network, run } from 'hardhat'
-import { defaultTokenMint } from '../test/utils/types'
+import { defaultContentUri, defaultDepositFee, defaultMaxParticipants, defaultTokenMint } from '../test/utils/types'
+import { time } from '@nomicfoundation/hardhat-network-helpers'
 
-async function main() {
+const CREATE_TEST_RECORDS = false
+
+export async function main() {
     console.log('Deploying Show Up Protocol..')
     const [owner, attendee1, attendee2, attendee3, attendee4, attendee5] = await ethers.getSigners()
 
@@ -33,6 +36,33 @@ async function main() {
         await token.mint(attendee3.address, defaultTokenMint)
         await token.mint(attendee4.address, defaultTokenMint)
         await token.mint(attendee5.address, defaultTokenMint)
+    }
+
+    if (CREATE_TEST_RECORDS) {
+        const tomorrow = (await ethers.provider.getBlock('latest')).timestamp + time.duration.days(1)
+        const nextWeek = (await ethers.provider.getBlock('latest')).timestamp + time.duration.days(7)
+
+        console.log('Create Events with basic condition modules..')
+        const paramsEther = ethers.utils.defaultAbiCoder.encode(
+            ["address", 'uint256', 'uint256', 'uint256', 'address'],
+            [owner.address, nextWeek, defaultDepositFee, defaultMaxParticipants, ethers.constants.AddressZero])
+        await registry.create(defaultContentUri, basicEtherModule.address, paramsEther)
+
+        const paramsToken = ethers.utils.defaultAbiCoder.encode(
+            ["address", 'uint256', 'uint256', 'uint256', 'address'],
+            [owner.address, tomorrow, defaultDepositFee, defaultMaxParticipants, token.address])
+        await registry.create(defaultContentUri, basicTokenModule.address, paramsToken)
+
+        console.log('Register for Token event..')
+        await token.approve(basicTokenModule.address, defaultDepositFee);
+        await registry.register(1, ethers.utils.defaultAbiCoder.encode(["address"], [owner.address]))
+
+        console.log('Create and cancel event..', nextWeek)
+        const paramsEtherCancel = ethers.utils.defaultAbiCoder.encode(
+            ["address", 'uint256', 'uint256', 'uint256', 'address'],
+            [owner.address, nextWeek, defaultDepositFee, defaultMaxParticipants, ethers.constants.AddressZero])
+        await registry.create(defaultContentUri, basicEtherModule.address, paramsEtherCancel)
+        await registry.cancel(2, 'Cancelled by owner', [])
     }
 
     // TODO: Verify contracts
