@@ -17,7 +17,7 @@ dataSources:
         - ConditionModule
         - Record
         - User
-        - Participants
+        - Participant
       abis:
         - name: Registry
           file: ./abis/Registry.json
@@ -37,14 +37,14 @@ dataSources:
       file: ./src/registry.ts
 templates:
   - kind: file/ipfs
-    name: EventMetadata
+    name: EventMetaData
     mapping:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/metadata.ts
-      handler: handleEventMetadata
+      handler: handleEventMetaData
       entities:
-        - EventMetadata
+        - EventMetaData
       abis:
         - name: Registry
           file: ./abis/Registry.json

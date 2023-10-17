@@ -25,9 +25,9 @@ type Record @entity {
   contentUri: String!
 
   ipfsHash: String!
-  metadata: EventMetadata
+  metadata: EventMetaData
 
-  participants: [Participants!]! @derivedFrom(field: "record")
+  participants: [Participant!]! @derivedFrom(field: "record")
 
   blockNumber: BigInt!
   transactionHash: Bytes!
@@ -35,10 +35,10 @@ type Record @entity {
 
 type User @entity {
   id: Bytes! # address
-  participations: [Participants!] @derivedFrom(field: "user")
+  participations: [Participant!] @derivedFrom(field: "user")
 }
 
-type Participants @entity {
+type Participant @entity {
   id: String! # Set to `record.id.concat(user.id)`
   createdAt: BigInt!
   createdBy: Bytes!
@@ -48,7 +48,7 @@ type Participants @entity {
   record: Record!
 }
 
-type EventMetadata @entity {
+type EventMetaData @entity {
   id: ID!
   appId: String
   title: String!

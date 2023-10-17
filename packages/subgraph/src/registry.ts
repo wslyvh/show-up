@@ -6,9 +6,9 @@ import {
   Registered as RegisteredEvent,
   Settled as SettledEvent
 } from "../generated/Registry/Registry"
-import { EventMetadata as EventMetadataTemplate } from '../generated/templates'
+import { EventMetaData as EventMetadataTemplate } from '../generated/templates'
 import { Bytes, BigInt, log } from "@graphprotocol/graph-ts";
-import { Record, ConditionModule, Participants, User } from "../generated/schema"
+import { Record, ConditionModule, Participant, User } from "../generated/schema"
 
 export function handleCanceled(event: CanceledEvent): void {
   log.warning('ShowUp.Protocol - handleCanceled for {}', [event.params.id.toString()])
@@ -32,7 +32,7 @@ export function handleCheckedIn(event: CheckedInEvent): void {
     for (let i = 0; i < event.params.attendees.length; i++) {
       const attendee = event.params.attendees[i];
       const participantKey = event.params.id.toString().concat(".").concat(attendee.toHexString());
-      let participant = Participants.load(participantKey);
+      let participant = Participant.load(participantKey);
       if (participant) {
         participant.checkedIn = true;
         participant.save();
@@ -59,26 +59,26 @@ export function handleConditionModuleWhitelisted(event: ConditionModuleWhitelist
 
 export function handleCreated(event: CreatedEvent): void {
   log.warning('ShowUp.Protocol - handleCreated for {}', [event.params.id.toString()])
-  let entity = new Record(bigIntToBytes(event.params.id))
+  let record = new Record(bigIntToBytes(event.params.id))
 
-  entity.recordId = event.params.id
-  entity.createdAt = event.block.timestamp
-  entity.createdBy = event.params.sender
-  entity.status = 'Active'
-  entity.conditionModule = event.params.conditionModule
-  entity.contentUri = event.params.contentUri.toString()
+  record.recordId = event.params.id
+  record.createdAt = event.block.timestamp
+  record.createdBy = event.params.sender
+  record.status = 'Active'
+  record.conditionModule = event.params.conditionModule
+  record.contentUri = event.params.contentUri.toString()
 
-  if (entity.contentUri.startsWith('ipfs://')) {
+  if (record.contentUri.startsWith('ipfs://')) {
     const ipfsHash = event.params.contentUri.replace('ipfs://', '')
-    entity.ipfsHash = ipfsHash
+    record.ipfsHash = ipfsHash
     log.warning('ShowUp.Protocol - create EventMetadataTemplate {}', [ipfsHash])
-    EventMetadataTemplate.create(ipfsHash)
+    EventMetadataTemplate.create("bafkreignteurfbjxn3u6ve6f2dmxdckgvbdoxne345e2cv3azshsm54oym")
   }
 
-  entity.blockNumber = event.block.number
-  entity.transactionHash = event.transaction.hash
+  record.blockNumber = event.block.number
+  record.transactionHash = event.transaction.hash
 
-  entity.save()
+  record.save()
 }
 
 export function handleRegistered(event: RegisteredEvent): void {
@@ -93,9 +93,9 @@ export function handleRegistered(event: RegisteredEvent): void {
     }
 
     const participantKey = event.params.id.toString().concat(".").concat(event.params.participant.toHexString());
-    let participant = Participants.load(participantKey);
+    let participant = Participant.load(participantKey);
     if (!participant) {
-      participant = new Participants(participantKey);
+      participant = new Participant(participantKey);
     }
 
     participant.createdAt = event.block.timestamp;
@@ -113,13 +113,13 @@ export function handleRegistered(event: RegisteredEvent): void {
 
 export function handleSettled(event: SettledEvent): void {
   log.warning('ShowUp.Protocol - handleSettled for {}', [event.params.id.toString()])
-  let entity = Record.load(bigIntToBytes(event.params.id))
+  let record = Record.load(bigIntToBytes(event.params.id))
 
-  if (entity) {
-    entity.status = 'Settled'
-    entity.updatedAt = event.block.timestamp
+  if (record) {
+    record.status = 'Settled'
+    record.updatedAt = event.block.timestamp
 
-    entity.save()
+    record.save()
   }
 }
 

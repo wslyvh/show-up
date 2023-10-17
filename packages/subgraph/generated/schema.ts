@@ -372,7 +372,7 @@ export class User extends Entity {
   }
 }
 
-export class Participants extends Entity {
+export class Participant extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -380,18 +380,18 @@ export class Participants extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save Participants entity without an ID");
+    assert(id != null, "Cannot save Participant entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Participants must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Participant must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("Participants", id.toString(), this);
+      store.set("Participant", id.toString(), this);
     }
   }
 
-  static load(id: string): Participants | null {
-    return changetype<Participants | null>(store.get("Participants", id));
+  static load(id: string): Participant | null {
+    return changetype<Participant | null>(store.get("Participant", id));
   }
 
   get id(): string {
@@ -486,7 +486,7 @@ export class Participants extends Entity {
   }
 }
 
-export class EventMetadata extends Entity {
+export class EventMetaData extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -494,18 +494,18 @@ export class EventMetadata extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save EventMetadata entity without an ID");
+    assert(id != null, "Cannot save EventMetaData entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type EventMetadata must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type EventMetaData must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("EventMetadata", id.toString(), this);
+      store.set("EventMetaData", id.toString(), this);
     }
   }
 
-  static load(id: string): EventMetadata | null {
-    return changetype<EventMetadata | null>(store.get("EventMetadata", id));
+  static load(id: string): EventMetaData | null {
+    return changetype<EventMetaData | null>(store.get("EventMetaData", id));
   }
 
   get id(): string {

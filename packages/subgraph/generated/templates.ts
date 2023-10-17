@@ -2,12 +2,12 @@
 
 import { DataSourceTemplate, DataSourceContext } from "@graphprotocol/graph-ts";
 
-export class EventMetadata extends DataSourceTemplate {
+export class EventMetaData extends DataSourceTemplate {
   static create(cid: string): void {
-    DataSourceTemplate.create("EventMetadata", [cid]);
+    DataSourceTemplate.create("EventMetaData", [cid]);
   }
 
   static createWithContext(cid: string, context: DataSourceContext): void {
-    DataSourceTemplate.createWithContext("EventMetadata", [cid], context);
+    DataSourceTemplate.createWithContext("EventMetaData", [cid], context);
   }
 }
