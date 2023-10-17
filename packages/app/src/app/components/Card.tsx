@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { MapPinIcon, UserIcon } from '@heroicons/react/24/outline'
-import Link from 'next/link'
 import { Record } from '@/utils/types'
+import { LinkComponent } from '@/components/LinkComponent'
 
 interface Props {
   event: Record
@@ -9,7 +9,7 @@ interface Props {
 
 export function Card({ event }: Props) {
   return (
-    <Link href={`/events/${event.id}`}>
+    <LinkComponent href={`/events/${event.id}`}>
       <div className='flex rounded-lg bg-neutral text-neutral-content p-4 hover:ring hover:ring-1'>
         <div className='w-full'>
           <p className='uppercase text-secondary text-sm'>
@@ -35,6 +35,6 @@ export function Card({ event }: Props) {
           </div>
         </div>
       </div>
-    </Link>
+    </LinkComponent>
   )
 }

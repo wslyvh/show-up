@@ -30,6 +30,7 @@
     "dayjs": "^1.11.10",
     "iron-session": "^6.3.1",
     "next": "13.5.4",
+    "qrcode.react": "^3.1.0",
     "react": "^18",
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",

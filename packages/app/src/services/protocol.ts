@@ -1,8 +1,9 @@
-import { ConditionModule, ConditionModuleData, ConditionModuleType, Record, Status } from "@/utils/types"
+import { ConditionModule, ConditionModuleData, ConditionModuleType, EventMetadata, Participant, Record, Status } from "@/utils/types"
 import dayjs from "dayjs"
 
 const TEST_MODE = true
 const baseUri = 'https://api.studio.thegraph.com/query/43964/show-up-sepolia/version/latest'
+const ipfsGateway = 'https://cloudflare-ipfs.com/ipfs'
 
 interface GetRecordsWhere {
     id?: string
@@ -15,13 +16,13 @@ interface GetConditionModulesWhere {
     enabled?: boolean
 }
 
-export async function GetRecord(params?: GetRecordsWhere) {
-    const result = await GetRecords(params)
-    return result[0] ?? undefined
+export async function GetRecord(id: string) {
+    const result = await GetRecords({ id: id })
+    return result.length > 0 ? result[0] : undefined
 }
 
 export async function GetRecords(params?: GetRecordsWhere) {
-    if (TEST_MODE) return MOCKS_EVENTS;
+    if (TEST_MODE) return MOCKS_EVENTS.filter((i) => params?.id ? i.id === params.id : true)
 
     const response = await fetch(baseUri, {
         method: 'POST',
@@ -80,27 +81,58 @@ export async function GetRecords(params?: GetRecordsWhere) {
     const results: Record[] = data.records.map((i: any) => {
         // console.log('Record', i)
 
-        return {
-            id: i.recordId,
-            createdAt: dayjs(i.createdAt).valueOf(),
-            createdBy: i.createdBy,
-            updatedAt: i.updatedAt ? dayjs(i.updatedAt).valueOf() : undefined,
-            status: i.status,
-            message: i.message ?? '',
-            conditionModule: i.conditionModule,
-            contentUri: i.contentUri,
-            ipfsHash: i.ipfsHash,
-            metadata: i.metadata,
-            participants: i.participants.map((p: any) => {
-                return {
-                    id: p.id,
-                    createdAt: dayjs(p.createdAt).valueOf(),
-                    createdBy: p.createdBy,
-                    address: p.address,
-                    checkedIn: p.checkedIn,
+        return toRecord(i)
+    })
+
+    return results
+}
+
+export async function GetParticipations(address: string) {
+    const response = await fetch(baseUri, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            query: `{
+                users(where: {id: "${address}"}) {
+                    id
+                    participations {
+                        id
+                        record {
+                            id
+                            recordId
+                            createdAt
+                            createdBy
+                            updatedAt
+                            status
+                            message
+                            conditionModule
+                            contentUri
+                            ipfsHash
+                            metadata {
+                                appId
+                                title
+                                description
+                            }
+                        }
+                    }
                 }
-            }),
-        } as Record
+            }`,
+        }),
+    })
+    if (!response.ok) {
+        throw new Error('Failed to fetch records')
+    }
+
+    const { data } = await response.json()
+    const results: Record[] = data.users.flatMap((user: any) => {
+        // console.log('User', user)
+        return user.participations.flatMap((i: any) => {
+            // console.log('Participation', i)
+
+            return toRecord(i.record)
+        })
     })
 
     return results
@@ -142,6 +174,42 @@ export async function GetConditionModules(params?: GetConditionModulesWhere) {
     return results as ConditionModule[]
 }
 
+function toRecord(data: any) {
+    return {
+        id: data.recordId,
+        createdAt: dayjs(data.createdAt).valueOf(),
+        createdBy: data.createdBy,
+        updatedAt: data.updatedAt ? dayjs(data.updatedAt).valueOf() : undefined,
+        status: data.status,
+        message: data.message ?? '',
+        conditionModule: data.conditionModule,
+        contentUri: data.contentUri,
+        ipfsHash: data.ipfsHash,
+        metadata: toMetadata(data.metadata),
+        participants: data.participants?.map((p: any) => toParticipant(p)) ?? [],
+    } as Record
+}
+
+function toMetadata(metadata: any) {
+    if (!metadata) return undefined
+
+    return {
+        ...metadata,
+        imageUrl: metadata?.imageUrl?.includes('ipfs://') ?
+            `${ipfsGateway}/${metadata.imageUrl.replace('ipfs://', '')}` :
+            metadata?.imageUrl ?? '',
+    } as EventMetadata
+}
+
+function toParticipant(data: any) {
+    return {
+        id: data.id,
+        createdAt: dayjs(data.createdAt).valueOf(),
+        createdBy: data.createdBy,
+        address: data.address,
+        checkedIn: data.checkedIn,
+    } as Participant
+}
 
 export const MOCKS_EVENTS: Record[] = [
     {
@@ -214,7 +282,7 @@ export const MOCKS_EVENTS: Record[] = [
             location: 'Online',
             timezone: 'Europe/Amsterdam',
             website: 'https://showup.events/',
-            imageUrl: 'https://source.unsplash.com/random?event=3',
+            imageUrl: 'https://cloudflare-ipfs.com/ipfs/bafkreif2a4fjasfh63j65g3u5ami4ras4ce2vxzs3zncdusy43it4qxgba',
             links: [],
             tags: [],
         },
