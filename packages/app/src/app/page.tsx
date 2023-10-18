@@ -4,7 +4,7 @@ import { Overview } from './components/Overview'
 
 export default async function Home() {
   const records = await GetRecords({
-    status: Status.Active
+    status: Status.Active,
   })
 
   return <Overview events={records} />

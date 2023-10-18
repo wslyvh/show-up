@@ -1,3 +1,11 @@
+type _Schema_
+  @fulltext(
+    name: "eventSearch"
+    language: en
+    algorithm: rank
+    include: [{ entity: "Event", fields: [{ name: "title" }, { name: "description" }, { name: "location" }] }]
+  )
+
 enum Status {
   Active
   Cancelled
@@ -15,21 +23,22 @@ type ConditionModule @entity {
 }
 
 type Record @entity {
-  id: Bytes!
-  recordId: BigInt!
+  id: String!
   createdAt: BigInt!
   createdBy: Bytes!
   updatedAt: BigInt
-  message: String
-  conditionModule: Bytes! # address
+  blockNumber: BigInt!
+  transactionHash: Bytes!
   status: Status! # Active
+  message: String
+
+  conditionModule: Bytes! # address
+  condition: Condition
+
   contentUri: String!
   metadata: Event
 
   participants: [Participant!]! @derivedFrom(field: "record")
-
-  blockNumber: BigInt!
-  transactionHash: Bytes!
 }
 
 type User @entity {
@@ -58,4 +67,15 @@ type Event @entity {
   location: String!
   website: String
   imageUrl: String
+}
+
+type Condition @entity(immutable: true) {
+  id: String! # Set to `record.id.concat(conditionModule.id)`
+  address: Bytes! # address
+  name: String!
+  owner: Bytes! # address
+  endDate: BigInt!
+  depositFee: BigInt!
+  maxParticipants: BigInt!
+  tokenAddress: Bytes! # address
 }

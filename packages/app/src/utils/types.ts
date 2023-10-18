@@ -17,7 +17,10 @@ export interface Record {
   updatedAt?: string | number
   status: Status
   message?: string
+
   conditionModule: string
+  condition?: ConditionModuleData,
+
   contentUri: string
   metadata?: EventMetadata
 
@@ -58,6 +61,7 @@ export enum ConditionModuleType {
 export interface ConditionModule {
   type: ConditionModuleType
   address: String
+  whitelisted?: boolean
 }
 
 export interface ConditionModuleData extends ConditionModule {

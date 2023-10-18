@@ -6,7 +6,8 @@
     "build": "hardhat compile",
     "deploy": "npx hardhat run scripts/deploy.ts",
     "deploy:nft": "npx hardhat run scripts/nft.ts",
-    "create:test": "npx hardhat run scripts/create.ts",
+    "run:node": "hardhat node",
+    "run:create": "npx hardhat run scripts/create.ts",
     "coverage": "hardhat coverage",
     "test": "REPORT_GAS=true hardhat test"
   },
