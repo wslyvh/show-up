@@ -1,9 +1,9 @@
 import { json, Bytes, dataSource, log } from '@graphprotocol/graph-ts'
-import { EventMetaData } from '../generated/schema';
+import { Event } from '../generated/schema';
 
-export function handleEventMetaData(content: Bytes): void {
-    log.warning('ShowUp.Protocol - EventMetaData', [])
-    let metadata = new EventMetaData(dataSource.stringParam())
+export function handleEventMetadata(content: Bytes): void {
+    log.debug('ShowUp.Protocol - EventMetaData', [])
+    let metadata = new Event(dataSource.stringParam())
     const value = json.fromBytes(content).toObject()
 
     if (value) {
@@ -27,7 +27,6 @@ export function handleEventMetaData(content: Bytes): void {
         if (website) metadata.website = website.toString()
         if (imageUrl) metadata.imageUrl = imageUrl.toString()
 
-        log.warning('ShowUp.Protocol - save EventMetaData | {}', [metadata.id])
         metadata.save()
     }
 

@@ -6,21 +6,23 @@ dataSources:
     name: Registry
     network: sepolia
     source:
-      address: '0x15F14dC83AD5824458343c63e3BCa145e2fE8758'
+      address: '0xfD4712Ed09b1d98354dC0153fd3eF7e374F71443'
       abi: Registry
-      startBlock: 4501650
+      startBlock: 4512495
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - ConditionModule
         - Record
-        - User
         - Participant
+        - User
+        - ConditionModule
       abis:
         - name: Registry
           file: ./abis/Registry.json
+        - name: IConditionModule
+          file: ./abis/IConditionModule.json
       eventHandlers:
         - event: Canceled(indexed uint256,string,bytes,address,uint256)
           handler: handleCanceled
@@ -37,14 +39,14 @@ dataSources:
       file: ./src/registry.ts
 templates:
   - kind: file/ipfs
-    name: EventMetaData
+    name: Event
     mapping:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/metadata.ts
-      handler: handleEventMetaData
+      handler: handleEventMetadata
       entities:
-        - EventMetaData
+        - Event
       abis:
         - name: Registry
           file: ./abis/Registry.json

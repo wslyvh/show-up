@@ -6,6 +6,7 @@ enum Status {
 
 type ConditionModule @entity {
   id: Bytes! # address
+  name: String!
   createdAt: BigInt!
   createdBy: Bytes! # address
   whitelisted: Boolean! # true
@@ -23,9 +24,7 @@ type Record @entity {
   conditionModule: Bytes! # address
   status: Status! # Active
   contentUri: String!
-
-  ipfsHash: String!
-  metadata: EventMetaData
+  metadata: Event
 
   participants: [Participant!]! @derivedFrom(field: "record")
 
@@ -48,7 +47,7 @@ type Participant @entity {
   record: Record!
 }
 
-type EventMetaData @entity {
+type Event @entity {
   id: ID!
   appId: String
   title: String!

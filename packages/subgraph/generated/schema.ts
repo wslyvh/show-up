@@ -48,6 +48,19 @@ export class ConditionModule extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
+  get name(): string {
+    let value = this.get("name");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
+  }
+
   get createdAt(): BigInt {
     let value = this.get("createdAt");
     if (!value || value.kind == ValueKind.NULL) {
@@ -259,19 +272,6 @@ export class Record extends Entity {
 
   set contentUri(value: string) {
     this.set("contentUri", Value.fromString(value));
-  }
-
-  get ipfsHash(): string {
-    let value = this.get("ipfsHash");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set ipfsHash(value: string) {
-    this.set("ipfsHash", Value.fromString(value));
   }
 
   get metadata(): string | null {
@@ -486,7 +486,7 @@ export class Participant extends Entity {
   }
 }
 
-export class EventMetaData extends Entity {
+export class Event extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -494,18 +494,18 @@ export class EventMetaData extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save EventMetaData entity without an ID");
+    assert(id != null, "Cannot save Event entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type EventMetaData must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Event must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("EventMetaData", id.toString(), this);
+      store.set("Event", id.toString(), this);
     }
   }
 
-  static load(id: string): EventMetaData | null {
-    return changetype<EventMetaData | null>(store.get("EventMetaData", id));
+  static load(id: string): Event | null {
+    return changetype<Event | null>(store.get("Event", id));
   }
 
   get id(): string {

@@ -6,12 +6,13 @@ import {
   Registered as RegisteredEvent,
   Settled as SettledEvent
 } from "../generated/Registry/Registry"
-import { EventMetaData as EventMetadataTemplate } from '../generated/templates'
+import { IConditionModule } from "../generated/Registry/IConditionModule"
+import { Event as EventMetadataTemplate } from '../generated/templates'
 import { Bytes, BigInt, log } from "@graphprotocol/graph-ts";
 import { Record, ConditionModule, Participant, User } from "../generated/schema"
 
 export function handleCanceled(event: CanceledEvent): void {
-  log.warning('ShowUp.Protocol - handleCanceled for {}', [event.params.id.toString()])
+  log.debug('ShowUp.Protocol - handleCanceled for {}', [event.params.id.toString()])
 
   let record = Record.load(bigIntToBytes(event.params.id))
 
@@ -25,7 +26,7 @@ export function handleCanceled(event: CanceledEvent): void {
 }
 
 export function handleCheckedIn(event: CheckedInEvent): void {
-  log.warning('ShowUp.Protocol - handleCheckedIn for {}', [event.params.id.toString()])
+  log.debug('ShowUp.Protocol - handleCheckedIn for {}', [event.params.id.toString()])
   let record = Record.load(bigIntToBytes(event.params.id))
 
   if (record) {
@@ -42,10 +43,15 @@ export function handleCheckedIn(event: CheckedInEvent): void {
 }
 
 export function handleConditionModuleWhitelisted(event: ConditionModuleWhitelistedEvent): void {
-  log.warning('ShowUp.Protocol - handleConditionModuleWhitelisted for {}', [event.params.conditionModule.toHexString()])
+  log.debug('ShowUp.Protocol - handleConditionModuleWhitelisted for {}', [event.params.conditionModule.toHexString()])
   let module = ConditionModule.load(event.params.conditionModule)
   if (module == null) {
     module = new ConditionModule(event.params.conditionModule)
+
+    let contract = IConditionModule.bind(event.params.conditionModule)
+    if (contract) {
+      module.name = contract.name()
+    }
   }
 
   module.createdAt = event.block.timestamp
@@ -58,7 +64,7 @@ export function handleConditionModuleWhitelisted(event: ConditionModuleWhitelist
 }
 
 export function handleCreated(event: CreatedEvent): void {
-  log.warning('ShowUp.Protocol - handleCreated for {}', [event.params.id.toString()])
+  log.debug('ShowUp.Protocol - handleCreated for {}', [event.params.id.toString()])
   let record = new Record(bigIntToBytes(event.params.id))
 
   record.recordId = event.params.id
@@ -70,9 +76,9 @@ export function handleCreated(event: CreatedEvent): void {
 
   if (record.contentUri.startsWith('ipfs://')) {
     const ipfsHash = event.params.contentUri.replace('ipfs://', '')
-    record.ipfsHash = ipfsHash
-    log.warning('ShowUp.Protocol - create EventMetadataTemplate {}', [ipfsHash])
-    EventMetadataTemplate.create("bafkreignteurfbjxn3u6ve6f2dmxdckgvbdoxne345e2cv3azshsm54oym")
+    record.metadata = ipfsHash
+    log.debug('ShowUp.Protocol - create EventMetadataTemplate {}', [ipfsHash])
+    EventMetadataTemplate.create(ipfsHash)
   }
 
   record.blockNumber = event.block.number
@@ -82,7 +88,7 @@ export function handleCreated(event: CreatedEvent): void {
 }
 
 export function handleRegistered(event: RegisteredEvent): void {
-  log.warning('ShowUp.Protocol - handleRegistered for {}', [event.params.id.toString()])
+  log.debug('ShowUp.Protocol - handleRegistered for {}', [event.params.id.toString()])
   let record = Record.load(bigIntToBytes(event.params.id))
 
   if (record) {
@@ -112,7 +118,7 @@ export function handleRegistered(event: RegisteredEvent): void {
 }
 
 export function handleSettled(event: SettledEvent): void {
-  log.warning('ShowUp.Protocol - handleSettled for {}', [event.params.id.toString()])
+  log.debug('ShowUp.Protocol - handleSettled for {}', [event.params.id.toString()])
   let record = Record.load(bigIntToBytes(event.params.id))
 
   if (record) {
