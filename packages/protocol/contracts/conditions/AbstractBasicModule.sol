@@ -28,6 +28,8 @@ contract AbstractBasicModule is IConditionModule {
     mapping(uint256 => Conditions) internal _conditions;
     mapping(uint256 => Registrations) internal _registrations;
 
+    string internal _name;
+
     constructor() { }
 
     function initialize(uint256 recordId, bytes calldata data) external virtual {
@@ -129,5 +131,9 @@ contract AbstractBasicModule is IConditionModule {
 
     function isRegistered(uint256 recordId, address participant) external view returns (bool) {
         return _registrations[recordId].registrations[participant];
+    }
+
+    function name() external view returns (string memory) {
+        return _name;
     }
 }

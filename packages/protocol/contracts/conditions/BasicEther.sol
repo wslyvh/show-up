@@ -7,7 +7,10 @@ import {AbstractBasicModule} from './AbstractBasicModule.sol';
 import '../Common.sol';
 
 contract BasicEther is AbstractBasicModule {
-    constructor() AbstractBasicModule() { }
+
+    constructor() AbstractBasicModule() { 
+        _name = "BasicEther";
+    }
 
     function initialize(uint256 recordId, bytes calldata data) external virtual override {
         Conditions memory conditions = abi.decode(data, (Conditions));

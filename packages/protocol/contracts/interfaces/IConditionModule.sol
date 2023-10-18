@@ -9,4 +9,6 @@ interface IConditionModule {
     function register(uint256 recordId, address participant, address sender, bytes calldata data) external payable;
     function checkin(uint256 recordId, address[] calldata attendees, bytes calldata data) external returns(address[] memory);
     function settle(uint256 recordId, bytes calldata data) external;
+
+    function name() external view returns (string memory);
 }

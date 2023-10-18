@@ -8,7 +8,9 @@ import {AbstractBasicModule} from './AbstractBasicModule.sol';
 import '../Common.sol';
 
 contract BasicToken is AbstractBasicModule {
-    constructor() AbstractBasicModule() { }
+    constructor() AbstractBasicModule() { 
+        _name = "BasicToken";
+    }
 
     function initialize(uint256 recordId, bytes calldata data) external virtual override {
         Conditions memory conditions = abi.decode(data, (Conditions));
