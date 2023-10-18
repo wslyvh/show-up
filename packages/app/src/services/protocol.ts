@@ -46,7 +46,6 @@ export async function GetRecords(params?: GetRecordsWhere) {
                     message
                     conditionModule
                     contentUri
-                    ipfsHash
                     metadata {
                         appId
                         title
@@ -109,7 +108,6 @@ export async function GetParticipations(address: string) {
                             message
                             conditionModule
                             contentUri
-                            ipfsHash
                             metadata {
                                 appId
                                 title
@@ -150,6 +148,7 @@ export async function GetConditionModules(params?: GetConditionModulesWhere) {
                     ${params && params.enabled === true ? `whitelisted: ${params.enabled}` : 'whitelisted: false'}
                 }) {
                     id
+                    name
                     createdAt
                     createdBy
                     whitelisted
@@ -184,7 +183,6 @@ function toRecord(data: any) {
         message: data.message ?? '',
         conditionModule: data.conditionModule,
         contentUri: data.contentUri,
-        ipfsHash: data.ipfsHash,
         metadata: toMetadata(data.metadata),
         participants: data.participants?.map((p: any) => toParticipant(p)) ?? [],
     } as Record
@@ -219,7 +217,6 @@ export const MOCKS_EVENTS: Record[] = [
         conditionModule: '0xBasicEtherModule',
         status: Status.Active,
         contentUri: 'ipfs://0xC1d1',
-        ipfsHash: '0xC1d1',
         metadata: {
             appId: 'ShowUp',
             title: 'Devconnect',
@@ -250,7 +247,6 @@ export const MOCKS_EVENTS: Record[] = [
         conditionModule: '0xBasicEtherModule',
         status: Status.Active,
         contentUri: 'ipfs://0xC1d2',
-        ipfsHash: '0xC1d2',
         metadata: {
             title: 'Show Up Event',
             description: 'Earn $$ by showing up at events',
@@ -273,7 +269,6 @@ export const MOCKS_EVENTS: Record[] = [
         status: Status.Cancelled,
         message: 'Event cancelled by organizer',
         contentUri: 'ipfs://0xC1dd3',
-        ipfsHash: '0xC1dd3',
         metadata: {
             title: 'Test Event',
             description: 'Lorem ipsum dolor sit amet..',

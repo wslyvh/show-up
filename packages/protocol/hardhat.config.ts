@@ -49,6 +49,12 @@ const config: HardhatUserConfig = {
       url: infuraApiKey ? `https://sepolia.infura.io/v3/${infuraApiKey}` : 'https://rpc.sepolia.org/', // https://rpc-sepolia.rockx.com/ || https://rpc.sepolia.org/
       accounts: [deployerKey as string],
     },
+    scrollSepolia: {
+      chainId: 534351,
+      url: 'https://scroll-sepolia.blockpi.network/v1/rpc/public', // 'https://sepolia-rpc.scroll.io/',
+      accounts: [deployerKey as string],
+      gasPrice: 15000000,
+    },
   },
 }
 

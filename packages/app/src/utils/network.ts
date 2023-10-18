@@ -1,8 +1,9 @@
-import { mainnet, sepolia, polygon, optimism, arbitrum, hardhat } from '@wagmi/core/chains'
+import { sepolia, hardhat, scroll } from '@wagmi/core/chains'
+import { scrollSepolia } from 'viem/chains'
 
 export const DEFAULT_CHAIN_ID = 11155111 // 11155111 Sepolia // Hardhat 31337
 
-export const ETH_CHAINS = [mainnet, sepolia, polygon, optimism, arbitrum, hardhat]
+export const ETH_CHAINS = [sepolia, hardhat, scrollSepolia, scroll]
 
 export const AddressZero = '0x0000000000000000000000000000000000000000'
 

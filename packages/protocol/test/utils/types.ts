@@ -6,7 +6,7 @@ export enum Status {
     Settled = 2,
 }
 
-export const defaultContentUri = 'ipfs://0xCID...'
+export const defaultContentUri = 'ipfs://bafkreifaa2qgrp2vbiyoz3uido6bgblw4risehacnoujqhpkodeawhfo4e'
 export const defaultDepositFee = ethers.utils.parseUnits('0.02', 18) // 0.02 ether
 export const defaultTokenFee = BigNumber.from('2000000000000000000') // 2 ether
 export const defaultTokenMint = BigNumber.from('100000000000000000000') // 100 ether

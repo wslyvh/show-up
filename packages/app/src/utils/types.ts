@@ -19,7 +19,6 @@ export interface Record {
   message?: string
   conditionModule: string
   contentUri: string
-  ipfsHash: string
   metadata?: EventMetadata
 
   participants: Participant[]
