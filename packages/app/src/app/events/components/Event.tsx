@@ -7,6 +7,7 @@ import { EventMetadata, Record, Status } from '@/utils/types'
 import dayjs from 'dayjs'
 import { useEventManagement } from '@/context/EventManagement'
 import { Alert } from '@/components/Alert'
+import { useAccount } from 'wagmi'
 
 interface Props {
   record: Record
@@ -14,13 +15,18 @@ interface Props {
 }
 
 export function EventDetails(props: Props) {
+  const { address } = useAccount()
   const eventManagement = useEventManagement()
   const sameDay = dayjs(props.event.start).isSame(props.event.end, 'day')
-  const cancelled = props.record.status === Status.Cancelled // && endDate < now
+  const isCancelled = Status[props.record.status.valueOf()] == Status.Cancelled.toString()
+  const isActive = props.record.status === Status.Active && dayjs().isBefore(props.event.end)
+  const isAdmin = props.record.createdBy.toLowerCase() === address.toLowerCase()
+  const isParticipant = props.record.participants.map(i => i.address.toLowerCase()).includes(address.toLowerCase())
+  console.log('Conditions', sameDay, isActive, isCancelled, isAdmin, isParticipant)
 
   return (
     <>
-      {cancelled && <Alert type='error' message='This event has been cancelled' className='my-4' />}
+      {isCancelled && <Alert type='error' message={props.record.message || 'This event has been cancelled'} className='my-4' />}
 
       <div className='flex flex-col bg-neutral rounded-lg'>
         <div className='w-full h-[240px]'>
@@ -52,14 +58,20 @@ export function EventDetails(props: Props) {
             </p>
             <p className='flex flex-row items-center gap-2'>
               <UserIcon className='h-5 w-5  text-info' /> {props.record.participants.length} going
+              {props.record.condition?.maxParticipants > 0 && (
+                <>
+                  <span> · </span>
+                  <span className='text-accent'>{props.record.condition?.maxParticipants - props.record.participants.length} left</span>
+                </>
+              )}
             </p>
           </div>
 
           <div className='relative'>
             <div className='absolute right-8 -top-8'>
               <button type='button'
-                disabled={cancelled}
-                onClick={() => eventManagement.attend(props.record.id)}
+                disabled={!isActive}
+                onClick={() => eventManagement.Register(props.record.id, props.record.condition)}
                 className='btn btn-accent btn-outline btn-sm'>
                 &nbsp;Attend&nbsp;
               </button>

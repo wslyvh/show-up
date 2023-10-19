@@ -19,7 +19,7 @@ export interface Record {
   message?: string
 
   conditionModule: string
-  condition?: ConditionModuleData,
+  condition: ConditionModuleData,
 
   contentUri: string
   metadata?: EventMetadata

@@ -89,7 +89,7 @@ export function CreateForm() {
   }
 
   async function submit() {
-    await eventManagement.create(event, conditions, image)
+    await eventManagement.Create(event, conditions, image)
   }
 
   return (

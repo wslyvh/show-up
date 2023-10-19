@@ -1,23 +1,17 @@
 'use client'
 
-import { PropsWithChildren, createContext, useContext, useState } from 'react'
+import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { ConditionModule, ConditionModuleData, ConditionModuleType, EventMetadata } from '@/utils/types'
 import { useAccount, useNetwork } from 'wagmi'
 import { erc20ABI, prepareWriteContract, waitForTransaction } from '@wagmi/core'
-import { AddressZero, DEFAULT_CHAIN_ID } from '@/utils/network'
-import {
-  basicEtherAddress,
-  basicTokenAddress,
-  prepareWriteRegistry,
-  readBasicEther,
-  readBasicToken,
-  readRegistry,
-  writeRegistry,
-} from '@/abis'
+import { AddressZero } from '@/utils/network'
+import { prepareWriteRegistry, writeRegistry } from '@/abis'
 import { encodeAbiParameters } from 'viem/utils'
 import { Store, Upload } from '@/services/storage'
 import { Slugify } from '@/utils/format'
 import { DEFAULT_APP_ID } from '@/utils/site'
+import { GetConditionModules } from '@/services/protocol'
+import { useNotifications } from './Notification'
 import dayjs from 'dayjs'
 
 interface EventManagementContext {
@@ -25,8 +19,11 @@ interface EventManagementContext {
   loading: boolean
   message: string
   modules: ConditionModule[]
-  create: (event: EventMetadata, conditions: ConditionModuleData, image?: File) => Promise<void>
-  attend: (id: string) => Promise<void>
+  Create: (event: EventMetadata, conditions: ConditionModuleData, image?: File) => Promise<void>
+  Cancel: (id: string) => Promise<void>
+  Register: (id: string, module: ConditionModuleData, participant?: string) => Promise<void>
+  Checkin: (id: string, attendees: string[]) => Promise<void>
+  Settle: (id: string) => Promise<void>
   validateMetadata: (event: EventMetadata) => boolean
   validateConditions: (conditions: ConditionModuleData) => boolean
 }
@@ -36,8 +33,11 @@ const defaultState: EventManagementContext = {
   loading: false,
   message: '',
   modules: [],
-  create: () => Promise.resolve(),
-  attend: () => Promise.resolve(),
+  Create: () => Promise.resolve(),
+  Cancel: () => Promise.resolve(),
+  Register: () => Promise.resolve(),
+  Checkin: () => Promise.resolve(),
+  Settle: () => Promise.resolve(),
   validateMetadata: () => false,
   validateConditions: () => false,
 }
@@ -49,20 +49,32 @@ const EventManagementContext = createContext(defaultState)
 export function EventManagementProvider(props: PropsWithChildren) {
   const { address: account } = useAccount()
   const { chain } = useNetwork()
+  const notifications = useNotifications()
   const [state, setState] = useState<EventManagementContext>({
     ...defaultState,
-    modules: [
-      // TODO: Fetch modules onchain/indexer (or dynamic chainId)
-      { type: ConditionModuleType.BasicEther, address: (basicEtherAddress as any)[chain?.id ?? DEFAULT_CHAIN_ID] },
-      { type: ConditionModuleType.BasicToken, address: (basicTokenAddress as any)[chain?.id ?? DEFAULT_CHAIN_ID] },
-    ],
-    create,
-    attend,
+    modules: [],
+    Create,
+    Cancel,
+    Register,
+    Checkin,
+    Settle,
     validateMetadata,
     validateConditions,
   })
 
-  async function create(event: EventMetadata, conditions: ConditionModuleData, image?: File) {
+  useEffect(() => {
+    async function getModules() {
+      const modules = await GetConditionModules({
+        enabled: true,
+      })
+
+      setState({ ...state, modules })
+    }
+
+    getModules()
+  }, [])
+
+  async function Create(event: EventMetadata, conditions: ConditionModuleData, image?: File) {
     console.log('Create Event on', chain?.id)
     if (!account || !chain) {
       setState({ ...state, loading: false, message: 'Not connected.' })
@@ -77,17 +89,16 @@ export function EventManagementProvider(props: PropsWithChildren) {
       return
     }
 
-    // Create Event
     setState({ ...state, loading: true, message: '' })
 
     // Upload Cover image
     if (image) {
-      const cid = await Upload(image)
-      event.imageUrl = `ipfs://${cid}` // TODO: Does this override?
+      const cid = await Upload(image, true)
+      event.imageUrl = `ipfs://${cid}`
     }
 
     // Upload Metadata
-    const cid = await Store(Slugify(event.title), JSON.stringify(event))
+    const cid = await Store(Slugify(event.title), JSON.stringify(event), true)
     const contentUrl = `ipfs://${cid}`
 
     // Encode Condition module (owner, endDate, depositFee, maxParticipants, tokenAddress)
@@ -103,97 +114,175 @@ export function EventManagementProvider(props: PropsWithChildren) {
     )
 
     try {
-      const preparedWrite = await prepareWriteRegistry({
+      const createConfig = await prepareWriteRegistry({
         chainId: chain.id as any,
         functionName: 'create',
-        args: [contentUrl, getModuleAddress(conditions.type), params],
+        args: [contentUrl, conditions.address, params],
       })
 
-      const tx = await writeRegistry(preparedWrite)
-      console.log('Create Event Tx', tx.hash)
-
-      // Send to Transaction / Notification Context to track transaction: results.hash
+      const createTx = await writeRegistry(createConfig)
+      await sendTransactionNotification(createTx.hash)
 
       setState({ ...state, loading: false, message: '' })
     } catch (e) {
-      console.log('Unable to create event')
       console.error(e)
-
-      setState({ ...state, loading: false, message: 'Error creating event.' })
+      setState({ ...state, loading: false, message: 'Unable to create event' })
     }
   }
 
-  async function attend(id: string) {
-    console.log('Attend Event', id)
-
-    // TODO: Should fetch record and condition modules from indexer
-    const record = (await readRegistry({
-      chainId: chain?.id as any,
-      functionName: 'getRecord',
-      args: [id],
-    })) as any // TODO: Fix types
-    const module = state.modules.find((m) => m.address === record.conditionModule)
-    if (!module) {
-      console.error('Condition Module not found')
+  async function Cancel(id: string, reason: string = '') {
+    console.log('Cancel Event', id)
+    if (!account || !chain) {
+      setState({ ...state, loading: false, message: 'Not connected.' })
       return
     }
 
-    if (module.type === ConditionModuleType.BasicEther) {
-      const conditionModule = (await readBasicEther({
-        chainId: chain?.id as any,
-        functionName: 'getConditions',
-        args: [id],
-      })) as ConditionModuleData
+    setState({ ...state, loading: true, message: '' })
 
-      const params = encodeAbiParameters([{ type: 'address' }], [account])
-
-      const preparedWrite = await prepareWriteRegistry({
-        chainId: chain?.id as any,
-        functionName: 'register',
-        args: [id, params],
-        value: conditionModule.depositFee,
+    try {
+      const cancelConfig = await prepareWriteRegistry({
+        chainId: chain.id as any,
+        functionName: 'cancel',
+        args: [id, reason, '0x'],
       })
 
-      const tx = await writeRegistry(preparedWrite)
-      console.log('Create Event Tx', tx.hash)
+      const cancelTx = await writeRegistry(cancelConfig)
+      await sendTransactionNotification(cancelTx.hash)
 
+      setState({ ...state, loading: false, message: '' })
+    } catch (e) {
+      console.error(e)
+      setState({ ...state, loading: false, message: 'Unable to cancel event' })
+    }
+  }
+
+  async function Register(id: string, module: ConditionModuleData, participant = account) {
+    console.log(`Register ${participant} for Event ${id}`)
+    if (!participant || !chain) {
+      setState({ ...state, loading: false, message: 'Not connected.' })
       return
     }
 
-    if (module.type === ConditionModuleType.BasicToken) {
-      const conditionModule = (await readBasicToken({
-        chainId: chain?.id as any,
-        functionName: 'getConditions',
-        args: [id],
-      })) as ConditionModuleData
+    setState({ ...state, loading: true, message: '' })
 
-      const params = encodeAbiParameters([{ type: 'address' }], [account])
+    try {
+      if (module.type === ConditionModuleType.BasicEther) {
+        const params = encodeAbiParameters([{ type: 'address' }], [participant])
+        const registerConfig = await prepareWriteRegistry({
+          chainId: chain?.id as any,
+          functionName: 'register',
+          args: [id, participant, params],
+          value: module.depositFee,
+        })
 
-      // Approve token first
-      const approveConfig = await prepareWriteContract({
-        chainId: chain?.id as any,
-        address: conditionModule.tokenAddress,
-        abi: erc20ABI,
-        functionName: 'approve',
-        args: [module.address, conditionModule.depositFee],
-      })
-      const approveTx = await writeRegistry(approveConfig)
-      const data = await waitForTransaction({
-        hash: approveTx.hash,
-      })
-      console.log('Approve Tx', approveTx.hash, data)
+        const registerTx = await writeRegistry(registerConfig)
+        await sendTransactionNotification(registerTx.hash)
 
-      const preparedWrite = await prepareWriteRegistry({
-        chainId: chain?.id as any,
-        functionName: 'register',
-        args: [id, params],
-      })
+        setState({ ...state, loading: false, message: '' })
+        return
+      }
 
-      const tx = await writeRegistry(preparedWrite)
-      console.log('Create Event Tx', tx.hash)
+      if (module.type === ConditionModuleType.BasicToken) {
+        const params = encodeAbiParameters([{ type: 'address' }], [participant])
 
+        // Approve token
+        const approveConfig = await prepareWriteContract({
+          chainId: chain?.id as any,
+          address: module.tokenAddress,
+          abi: erc20ABI,
+          functionName: 'approve',
+          args: [module.address, module.depositFee],
+        })
+
+        const approveTx = await writeRegistry(approveConfig)
+        await sendTransactionNotification(approveTx.hash)
+
+        await waitForTransaction({ hash: approveTx.hash })
+
+        const registerConfig = await prepareWriteRegistry({
+          chainId: chain?.id as any,
+          functionName: 'register',
+          args: [id, params],
+        })
+
+        const registerTx = await writeRegistry(registerConfig)
+        await sendTransactionNotification(registerTx.hash)
+
+        setState({ ...state, loading: false, message: '' })
+        return
+      }
+    } catch (e) {
+      console.error(e)
+      setState({ ...state, loading: false, message: 'Unable to register for event' })
+    }
+  }
+
+  async function Checkin(id: string, attendees: string[]) {
+    console.log('Checkin for Event', id, attendees)
+
+    if (!account || !chain) {
+      setState({ ...state, loading: false, message: 'Not connected.' })
       return
     }
+
+    setState({ ...state, loading: true, message: '' })
+
+    try {
+      const checkinConfig = await prepareWriteRegistry({
+        chainId: chain.id as any,
+        functionName: 'checkin',
+        args: [id, attendees, '0x'],
+      })
+
+      const checkinTx = await writeRegistry(checkinConfig)
+      await sendTransactionNotification(checkinTx.hash)
+
+      setState({ ...state, loading: false, message: '' })
+    } catch (e) {
+      console.error(e)
+      setState({ ...state, loading: false, message: 'Error checking in to event' })
+    }
+  }
+
+  async function Settle(id: string) {
+    console.log('Settle Event', id)
+
+    if (!account || !chain) {
+      setState({ ...state, loading: false, message: 'Not connected.' })
+      return
+    }
+
+    setState({ ...state, loading: true, message: '' })
+
+    try {
+      const settleConfig = await prepareWriteRegistry({
+        chainId: chain.id as any,
+        functionName: 'settle',
+        args: [id, '0x'],
+      })
+
+      const settleTx = await writeRegistry(settleConfig)
+      await sendTransactionNotification(settleTx.hash)
+
+      setState({ ...state, loading: false, message: '' })
+    } catch (e) {
+      console.error(e)
+      setState({ ...state, loading: false, message: 'Error checking in to event' })
+    }
+  }
+
+  async function sendTransactionNotification(hash: string) {
+    await notifications.Add({
+      created: Date.now(),
+      type: 'info',
+      message: 'Transaction sent',
+      from: account,
+      cta: {
+        label: 'View transaction',
+        href: `${chain?.blockExplorers?.default.url}/tx/${hash}`,
+      },
+      data: { hash },
+    })
   }
 
   function validateMetadata(event: EventMetadata) {
@@ -214,14 +303,6 @@ export function EventManagementProvider(props: PropsWithChildren) {
     return true
   }
 
-  function getModuleAddress(type: ConditionModuleType) {
-    const module = state.modules.find((m) => m.type === type)
-    if (!module) {
-      console.error('Condition Module not found', type)
-    }
-
-    return module?.address
-  }
 
   if (typeof window === 'undefined') {
     return <>{props.children}</>

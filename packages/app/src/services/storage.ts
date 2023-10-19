@@ -47,6 +47,12 @@ export async function Verify(cid: string, includeGateways: boolean = false) {
 
   if (includeGateways) {
     try {
+      const graph = await fetch(`https://api.thegraph.com/ipfs/api/v0/cat?arg=${cid}`)
+      if (graph.status !== 200) console.error('Unable to fetch from the Graph API')
+    } catch (e) {
+      console.error('Unable to fetch from the Graph API')
+    }
+    try {
       const ipfs = await fetch(`https://ipfs.io/ipfs/${cid}`)
       if (ipfs.status !== 200) console.error('Unable to fetch from IPFS Gateway')
     } catch (e) {

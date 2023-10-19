@@ -20,8 +20,13 @@ export function Card({ event }: Props) {
             <MapPinIcon className='h-5 w-5' /> {event.metadata?.location}
           </div>
           <div className='flex flex-row items-center gap-1 text-sm mt-2'>
-            <UserIcon className='h-5 w-5' /> {event.participants.length} going ·{' '}
-            <span className='text-accent'>3 left</span>
+            <UserIcon className='h-5 w-5' /> {event.participants.length} going
+            {event.condition?.maxParticipants > 0 && (
+              <>
+                <span> · </span>
+                <span className='text-accent'>{event.condition?.maxParticipants - event.participants.length} left</span>
+              </>
+            )}
           </div>
         </div>
 

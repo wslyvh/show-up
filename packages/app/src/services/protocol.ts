@@ -31,7 +31,7 @@ export async function GetRecords(params?: GetRecordsWhere) {
             query: `{
                 records(first: ${params?.id ? '1' : '100'}, where: {
                     ${params?.id ? `id: "${params.id}"` : ''},
-                    ${params?.status ? `status: "${Status[params.status]}"` : ''}, 
+                    ${params?.status !== undefined ? `status: ${Status[params.status.valueOf()]}` : ''}, 
                     ${params?.createdBy ? `createdBy: "${params.createdBy}"` : ''}
                     ${params?.past == true ?
                     `condition_: {endDate_lte: "${dayjs().unix()}"}` :
@@ -178,7 +178,7 @@ export async function GetConditionModules(params?: GetConditionModulesWhere) {
     const { data } = await response.json()
     const results = data.conditionModules.map((i: any) => {
         return {
-            type: data.name,
+            type: i.name,
             address: i.id,
             whitelisted: i.whitelisted,
         } as ConditionModule

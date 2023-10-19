@@ -12,7 +12,7 @@ export function Overview(props: Props) {
       <Tabs options={['Upcoming', 'Past']} />
 
       <div className='flex flex-col gap-2'>
-        {props.events.map((event) => (
+        {props.events.filter(i => !!i.metadata).map((event) => (
           <Card key={event.id} event={event} />
         ))}
       </div>
