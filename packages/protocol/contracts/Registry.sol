@@ -73,6 +73,7 @@ contract Registry is Ownable, IRegistry {
 
   function settle(uint id, bytes calldata conditionModuleData) external {
     verifyValidRecord(id);
+    verifyValidOwner(id);
 
     _records[id].status = Status.Settled; 
 
