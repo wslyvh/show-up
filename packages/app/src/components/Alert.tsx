@@ -1,5 +1,10 @@
 import React from 'react'
-import { CheckCircleIcon, ExclamationCircleIcon, ExclamationTriangleIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
+import {
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon,
+  InformationCircleIcon,
+} from '@heroicons/react/24/outline'
 
 interface Props {
   type: 'success' | 'info' | 'warning' | 'error'

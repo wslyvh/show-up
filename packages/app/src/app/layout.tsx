@@ -14,18 +14,18 @@ export const metadata: Metadata = {
     template: `%s · ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
-  manifest: "/manifest.json",
+  manifest: '/manifest.json',
   appleWebApp: {
     title: SITE_NAME,
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: 'default',
   },
   openGraph: {
-    type: "website",
+    type: 'website',
     siteName: SITE_NAME,
   },
   twitter: {
-    card: "summary",
+    card: 'summary',
   },
 }
 

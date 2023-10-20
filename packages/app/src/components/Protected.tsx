@@ -1,8 +1,8 @@
 'use client'
 
 import React, { PropsWithChildren, useEffect, useState } from 'react'
-import { useRouter } from "next/navigation"
-import { useAccount } from "wagmi"
+import { useRouter } from 'next/navigation'
+import { useAccount } from 'wagmi'
 
 export function Protected(props: PropsWithChildren) {
   const router = useRouter()
@@ -14,8 +14,5 @@ export function Protected(props: PropsWithChildren) {
     }
   }, [isConnected])
 
-  return <>
-    {props.children}
-  </>
+  return <>{props.children}</>
 }
-

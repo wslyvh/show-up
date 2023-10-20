@@ -1,41 +1,43 @@
-import { ConditionModule, ConditionModuleData, EventMetadata, Participant, Record, Status } from "@/utils/types"
-import dayjs from "dayjs"
+import { ConditionModule, ConditionModuleData, EventMetadata, Participant, Record, Status } from '@/utils/types'
+import dayjs from 'dayjs'
 
 const baseUri = 'https://api.studio.thegraph.com/query/43964/show-up-sepolia/version/latest'
 const ipfsGateway = 'https://cloudflare-ipfs.com/ipfs'
 
 interface GetRecordsWhere {
-    id?: string
-    status?: Status
-    createdBy?: string
-    checkedIn?: boolean
-    past?: boolean
+  id?: string
+  status?: Status
+  createdBy?: string
+  checkedIn?: boolean
+  past?: boolean
 }
 
 interface GetConditionModulesWhere {
-    enabled?: boolean
+  enabled?: boolean
 }
 
 export async function GetRecord(id: string) {
-    const result = await GetRecords({ id: id })
-    return result.length > 0 ? result[0] : undefined
+  const result = await GetRecords({ id: id })
+  return result.length > 0 ? result[0] : undefined
 }
 
 export async function GetRecords(params?: GetRecordsWhere) {
-    const response = await fetch(baseUri, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            query: `{
+  const response = await fetch(baseUri, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: `{
                 records(first: ${params?.id ? '1' : '100'}, where: {
                     ${params?.id ? `id: "${params.id}"` : ''},
                     ${params?.status !== undefined ? `status: ${Status[params.status.valueOf()]}` : ''}, 
                     ${params?.createdBy ? `createdBy: "${params.createdBy}"` : ''}
-                    ${params?.past == true ?
-                    `condition_: {endDate_lte: "${dayjs().unix()}"}` :
-                    `condition_: {endDate_gte: "${dayjs().unix()}"}`}
+                    ${
+                      params?.past == true
+                        ? `condition_: {endDate_lte: "${dayjs().unix()}"}`
+                        : `condition_: {endDate_gte: "${dayjs().unix()}"}`
+                    }
                 })
                 {
                     id
@@ -77,29 +79,29 @@ export async function GetRecords(params?: GetRecordsWhere) {
                     transactionHash
                 }
             }`,
-        }),
-    })
+    }),
+  })
 
-    if (!response.ok) {
-        throw new Error('Failed to fetch records')
-    }
+  if (!response.ok) {
+    throw new Error('Failed to fetch records')
+  }
 
-    const { data } = await response.json()
-    const results: Record[] = data.records.map((i: any) => {
-        return toRecord(i)
-    })
+  const { data } = await response.json()
+  const results: Record[] = data.records.map((i: any) => {
+    return toRecord(i)
+  })
 
-    return results.filter(i => !!i.metadata)
+  return results.filter((i) => !!i.metadata)
 }
 
 export async function GetParticipations(address: string) {
-    const response = await fetch(baseUri, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            query: `{
+  const response = await fetch(baseUri, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: `{
                 users(where: { id: "${address}" }) {
                     id
                     participations {
@@ -135,30 +137,30 @@ export async function GetParticipations(address: string) {
                     }
                 }
             }`,
-        }),
-    })
-    if (!response.ok) {
-        throw new Error('Failed to fetch records')
-    }
+    }),
+  })
+  if (!response.ok) {
+    throw new Error('Failed to fetch records')
+  }
 
-    const { data } = await response.json()
-    const results: Record[] = data.users.flatMap((user: any) => {
-        return user.participations.flatMap((i: any) => {
-            return toRecord(i.record)
-        })
+  const { data } = await response.json()
+  const results: Record[] = data.users.flatMap((user: any) => {
+    return user.participations.flatMap((i: any) => {
+      return toRecord(i.record)
     })
+  })
 
-    return results.filter(i => !!i.metadata)
+  return results.filter((i) => !!i.metadata)
 }
 
 export async function GetConditionModules(params?: GetConditionModulesWhere) {
-    const response = await fetch(baseUri, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            query: `{
+  const response = await fetch(baseUri, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: `{
                 conditionModules(first: 10 where: {
                     ${params && params.enabled === true ? `whitelisted: ${params.enabled}` : 'whitelisted: false'}
                 }) {
@@ -169,71 +171,71 @@ export async function GetConditionModules(params?: GetConditionModulesWhere) {
                     whitelisted
                 }
             }`,
-        }),
-    })
-    if (!response.ok) {
-        throw new Error('Failed to fetch records')
-    }
+    }),
+  })
+  if (!response.ok) {
+    throw new Error('Failed to fetch records')
+  }
 
-    const { data } = await response.json()
-    const results = data.conditionModules.map((i: any) => {
-        return {
-            type: i.name,
-            address: i.id,
-            whitelisted: i.whitelisted,
-        } as ConditionModule
-    })
+  const { data } = await response.json()
+  const results = data.conditionModules.map((i: any) => {
+    return {
+      type: i.name,
+      address: i.id,
+      whitelisted: i.whitelisted,
+    } as ConditionModule
+  })
 
-    return results as ConditionModule[]
+  return results as ConditionModule[]
 }
 
 function toRecord(data: any) {
-    return {
-        id: data.id,
-        createdAt: dayjs(data.createdAt).valueOf(),
-        createdBy: data.createdBy,
-        updatedAt: data.updatedAt ? dayjs(data.updatedAt).valueOf() : undefined,
-        status: data.status,
-        message: data.message ?? '',
-        conditionModule: data.conditionModule,
-        condition: toConditions(data.condition, data.conditionModule),
-        contentUri: data.contentUri,
-        metadata: toMetadata(data.metadata),
-        participants: data.participants?.map((p: any) => toParticipant(p)) ?? [],
-    } as Record
+  return {
+    id: data.id,
+    createdAt: dayjs(data.createdAt).valueOf(),
+    createdBy: data.createdBy,
+    updatedAt: data.updatedAt ? dayjs(data.updatedAt).valueOf() : undefined,
+    status: data.status,
+    message: data.message ?? '',
+    conditionModule: data.conditionModule,
+    condition: toConditions(data.condition, data.conditionModule),
+    contentUri: data.contentUri,
+    metadata: toMetadata(data.metadata),
+    participants: data.participants?.map((p: any) => toParticipant(p)) ?? [],
+  } as Record
 }
 
 function toMetadata(data: any) {
-    if (!data) return undefined
+  if (!data) return undefined
 
-    return {
-        ...data,
-        imageUrl: data?.imageUrl?.includes('ipfs://') ?
-            `${ipfsGateway}/${data.imageUrl.replace('ipfs://', '')}` :
-            data?.imageUrl ?? '',
-    } as EventMetadata
+  return {
+    ...data,
+    imageUrl: data?.imageUrl?.includes('ipfs://')
+      ? `${ipfsGateway}/${data.imageUrl.replace('ipfs://', '')}`
+      : data?.imageUrl ?? '',
+  } as EventMetadata
 }
 
 function toParticipant(data: any) {
-    return {
-        id: data.id,
-        createdAt: dayjs(data.createdAt).valueOf(),
-        createdBy: data.createdBy,
-        address: data.address,
-        checkedIn: data.checkedIn,
-    } as Participant
+  return {
+    id: data.id,
+    createdAt: dayjs(data.createdAt).valueOf(),
+    createdBy: data.createdBy,
+    address: data.address,
+    checkedIn: data.checkedIn,
+  } as Participant
 }
 
 function toConditions(data: any, address: string) {
-    if (!data) return undefined
+  if (!data) return undefined
 
-    return {
-        type: data.name,
-        address: address,
-        name: data.name,
-        endDate: data.endDate,
-        depositFee: data.depositFee,
-        maxParticipants: data.maxParticipants,
-        tokenAddress: data.tokenAddress,
-    } as ConditionModuleData
+  return {
+    type: data.name,
+    address: address,
+    name: data.name,
+    endDate: data.endDate,
+    depositFee: data.depositFee,
+    maxParticipants: data.maxParticipants,
+    tokenAddress: data.tokenAddress,
+  } as ConditionModuleData
 }

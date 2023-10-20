@@ -14,9 +14,7 @@ export function MobileLayout(props: PropsWithChildren) {
       </div>
 
       <main className='flex-1 flex-grow overflow-auto p-4'>
-        <div className={containerClass}>
-          {props.children}
-        </div>
+        <div className={containerClass}>{props.children}</div>
       </main>
 
       <div className='p-4 h-16'>

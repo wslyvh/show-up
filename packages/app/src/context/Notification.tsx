@@ -58,12 +58,10 @@ export function NotificationProvider(props: PropsWithChildren) {
         // will re-try once, as its most likely a RPC issue
         try {
           await waitForTxNotification(notification.data.hash, notification)
-        }
-        catch (e) {
+        } catch (e) {
           //
         }
       }
-
     }
   }
 

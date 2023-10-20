@@ -22,7 +22,11 @@ if (!infuraApiKey) {
   console.warn('You need to provide a NEXT_PUBLIC_INFURA_KEY env variable')
 }
 
-const { chains, publicClient, webSocketPublicClient } = configureChains(ETH_CHAINS, [alchemyProvider({ apiKey: alchemyApiKey }), infuraProvider({ apiKey: infuraApiKey }), publicProvider()])
+const { chains, publicClient, webSocketPublicClient } = configureChains(ETH_CHAINS, [
+  alchemyProvider({ apiKey: alchemyApiKey }),
+  infuraProvider({ apiKey: infuraApiKey }),
+  publicProvider(),
+])
 
 const wagmiConfig = createConfig(
   getDefaultConfig({
@@ -38,7 +42,7 @@ const wagmiConfig = createConfig(
     chains: chains,
     publicClient,
     webSocketPublicClient,
-  }),
+  })
 )
 
 export function Web3Provider(props: PropsWithChildren) {
@@ -48,13 +52,13 @@ export function Web3Provider(props: PropsWithChildren) {
     setReady(true)
   }, [])
 
-  return <>
-    {ready && (
-      <WagmiConfig config={wagmiConfig}>
-        <ConnectKitProvider>
-          {props.children}
-        </ConnectKitProvider>
-      </WagmiConfig>
-    )}
-  </>
+  return (
+    <>
+      {ready && (
+        <WagmiConfig config={wagmiConfig}>
+          <ConnectKitProvider>{props.children}</ConnectKitProvider>
+        </WagmiConfig>
+      )}
+    </>
+  )
 }

@@ -109,7 +109,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
         BigInt(dayjs(event.end).valueOf()),
         BigInt(conditions.depositFee || 0),
         BigInt(conditions.maxParticipants || 0),
-        conditions.tokenAddress ?? AddressZero
+        conditions.tokenAddress ?? AddressZero,
       ]
     )
 
@@ -302,7 +302,6 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
     return true
   }
-
 
   if (typeof window === 'undefined') {
     return <>{props.children}</>
