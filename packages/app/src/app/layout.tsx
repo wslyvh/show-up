@@ -8,8 +8,25 @@ import { NotificationProvider } from '@/context/Notification'
 import '../assets/globals.css'
 
 export const metadata: Metadata = {
-  title: SITE_NAME,
+  applicationName: SITE_NAME,
+  title: {
+    default: SITE_NAME,
+    template: `%s · ${SITE_NAME}`,
+  },
   description: SITE_DESCRIPTION,
+  manifest: "/manifest.json",
+  appleWebApp: {
+    title: SITE_NAME,
+    capable: true,
+    statusBarStyle: "default",
+  },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+  },
+  twitter: {
+    card: "summary",
+  },
 }
 
 export default function RootLayout(props: PropsWithChildren) {

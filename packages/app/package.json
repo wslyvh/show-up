@@ -23,6 +23,7 @@
     ]
   },
   "dependencies": {
+    "@ducanh2912/next-pwa": "^9.7.2",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@web3modal/wagmi": "^3.1.0",
@@ -59,6 +60,7 @@
     "postcss": "^8",
     "prettier": "^3.0.3",
     "tailwindcss": "^3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "workbox-window": "^7.0.0"
   }
 }
