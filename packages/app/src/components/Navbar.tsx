@@ -22,7 +22,7 @@ export function Navbar() {
       <LinkComponent href='/notifications' className={pathname === '/notifications' ? 'active bg-neutral' : ''}>
         <p className='relative'>
           <BellIcon className={iconClassName} />
-          {notifications.new && (<span className="absolute -top-2 left-4 badge badge-accent badge-xs"></span>)}
+          {notifications.new && <span className='absolute -top-2 left-4 badge badge-accent badge-xs'></span>}
         </p>
       </LinkComponent>
       <LinkComponent href='/profile' className={pathname === '/profile' ? 'active bg-neutral' : ''}>

@@ -25,8 +25,8 @@ const defaultState: NotificationContext = {
   new: false,
   notifications: [],
   Add: () => Promise.resolve(),
-  MarkAsRead: () => { },
-  Clear: () => { },
+  MarkAsRead: () => {},
+  Clear: () => {},
 }
 
 export const useNotifications = () => useContext(NotificationContext)
@@ -128,7 +128,7 @@ export function NotificationProvider(props: PropsWithChildren) {
     setState((state) => ({
       ...state,
       new: true,
-      notifications: [...state.notifications, notification]
+      notifications: [...state.notifications, notification],
     }))
   }
 

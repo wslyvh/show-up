@@ -63,7 +63,10 @@ export function Ticket(props: Props) {
                 <>{formatEther(props.record.condition.depositFee)} ETH</>
               )}
               {props.record.condition.type == ConditionModuleType.BasicToken && (
-                <>{formatUnits(props.record.condition.depositFee, props.record.condition.tokenDecimals ?? 18)} {props.record.condition.tokenSymbol}</>
+                <>
+                  {formatUnits(props.record.condition.depositFee, props.record.condition.tokenDecimals ?? 18)}{' '}
+                  {props.record.condition.tokenSymbol}
+                </>
               )}
             </span>
           </div>

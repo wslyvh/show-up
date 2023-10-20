@@ -22,8 +22,8 @@ export function EventDetails(props: Props) {
   const [reason, setReason] = useState('')
   const [attendees, setAttendees] = useState<string[]>([])
   const sameDay = dayjs(props.event.start).isSame(props.event.end, 'day')
-  const hasEnded = dayjs().isAfter(dayjs((props.record.metadata?.end).valueOf()))
-  const hasAttendees = props.record.participants.filter(i => !!i.checkedIn).length > 0
+  const hasEnded = dayjs().isAfter(dayjs((props.record.metadata?.end ?? '').valueOf()))
+  const hasAttendees = props.record.participants.filter((i) => !!i.checkedIn).length > 0
   const isCancelled = Status[props.record.status.valueOf()] == Status.Cancelled.toString()
   const isActive = Status[props.record.status.valueOf()] == Status.Active.toString()
   const isSettled = Status[props.record.status.valueOf()] == Status.Settled.toString()
@@ -86,7 +86,10 @@ export function EventDetails(props: Props) {
                 <>{formatEther(props.record.condition.depositFee)} ETH</>
               )}
               {props.record.condition.type == ConditionModuleType.BasicToken && (
-                <>{formatUnits(props.record.condition.depositFee, props.record.condition.tokenDecimals ?? 18)} {props.record.condition.tokenSymbol}</>
+                <>
+                  {formatUnits(props.record.condition.depositFee, props.record.condition.tokenDecimals ?? 18)}{' '}
+                  {props.record.condition.tokenSymbol}
+                </>
               )}
             </p>
           </div>
@@ -99,7 +102,6 @@ export function EventDetails(props: Props) {
             Attend
           </button>
 
-
           <h1 className='text-xl text-white font-bold mt-8'>{props.event.title}</h1>
 
           <p className='mt-8'>{props.event.description}</p>
@@ -110,9 +112,7 @@ export function EventDetails(props: Props) {
         <div>
           <h2 className='text-xl text-white font-bold mt-8'>Admin</h2>
 
-          {eventManagement.message && (
-            <Alert type='info' message={eventManagement.message} className='my-4' />
-          )}
+          {eventManagement.message && <Alert type='info' message={eventManagement.message} className='my-4' />}
 
           <div className='form-control w-full'>
             <label className='label' htmlFor='timezone'>
@@ -122,9 +122,10 @@ export function EventDetails(props: Props) {
             </label>
 
             <textarea
-              className="textarea textarea-bordered w-full"
-              placeholder="Enter one address per line.."
-              onChange={onAttendeeChange} />
+              className='textarea textarea-bordered w-full'
+              placeholder='Enter one address per line..'
+              onChange={onAttendeeChange}
+            />
           </div>
 
           <button

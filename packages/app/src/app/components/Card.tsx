@@ -30,15 +30,17 @@ export function Card({ event }: Props) {
           </div>
         </div>
 
-        <div>
-          <div className='w-[160px] h-[80px]'>
-            <img
-              src={event.metadata?.imageUrl}
-              alt={event.metadata?.title}
-              className='rounded-lg w-full h-full object-cover'
-            />
+        {event.metadata?.imageUrl && (
+          <div>
+            <div className='w-[160px] h-[80px]'>
+              <img
+                src={event.metadata?.imageUrl}
+                alt={event.metadata?.title}
+                className='rounded-lg w-full h-full object-cover'
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </LinkComponent>
   )

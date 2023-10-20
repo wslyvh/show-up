@@ -1725,7 +1725,7 @@ export function getAbstractBasicModule(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readAbstractBasicModule<
   TAbi extends readonly unknown[] = typeof abstractBasicModuleABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: abstractBasicModuleABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -1749,7 +1749,7 @@ export function writeAbstractBasicModule<TFunctionName extends string>(
  */
 export function prepareWriteAbstractBasicModule<
   TAbi extends readonly unknown[] = typeof abstractBasicModuleABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: abstractBasicModuleABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -1783,7 +1783,7 @@ export function getBasicEther(
  */
 export function readBasicEther<
   TAbi extends readonly unknown[] = typeof basicEtherABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(
   config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof basicEtherAddress
@@ -1806,7 +1806,7 @@ export function readBasicEther<
 export function writeBasicEther<
   TFunctionName extends string,
   TMode extends WriteContractMode,
-  TChainId extends number = keyof typeof basicEtherAddress
+  TChainId extends number = keyof typeof basicEtherAddress,
 >(
   config:
     | (Omit<WriteContractPreparedArgs<typeof basicEtherABI, TFunctionName>, 'abi' | 'address'> & {
@@ -1834,7 +1834,7 @@ export function writeBasicEther<
  */
 export function prepareWriteBasicEther<
   TAbi extends readonly unknown[] = typeof basicEtherABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(
   config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof basicEtherAddress
@@ -1873,7 +1873,7 @@ export function getBasicToken(
  */
 export function readBasicToken<
   TAbi extends readonly unknown[] = typeof basicTokenABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(
   config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof basicTokenAddress
@@ -1896,7 +1896,7 @@ export function readBasicToken<
 export function writeBasicToken<
   TFunctionName extends string,
   TMode extends WriteContractMode,
-  TChainId extends number = keyof typeof basicTokenAddress
+  TChainId extends number = keyof typeof basicTokenAddress,
 >(
   config:
     | (Omit<WriteContractPreparedArgs<typeof basicTokenABI, TFunctionName>, 'abi' | 'address'> & {
@@ -1924,7 +1924,7 @@ export function writeBasicToken<
  */
 export function prepareWriteBasicToken<
   TAbi extends readonly unknown[] = typeof basicTokenABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(
   config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof basicTokenAddress
@@ -1969,7 +1969,7 @@ export function writeErc20<TFunctionName extends string>(
  */
 export function prepareWriteErc20<
   TAbi extends readonly unknown[] = typeof erc20ABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: erc20ABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -1989,7 +1989,7 @@ export function getIConditionModule(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readIConditionModule<
   TAbi extends readonly unknown[] = typeof iConditionModuleABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: iConditionModuleABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -2013,7 +2013,7 @@ export function writeIConditionModule<TFunctionName extends string>(
  */
 export function prepareWriteIConditionModule<
   TAbi extends readonly unknown[] = typeof iConditionModuleABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: iConditionModuleABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2060,7 +2060,7 @@ export function writeIerc20<TFunctionName extends string>(
  */
 export function prepareWriteIerc20<
   TAbi extends readonly unknown[] = typeof ierc20ABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: ierc20ABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2087,7 +2087,7 @@ export function getIerc20Metadata(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readIerc20Metadata<
   TAbi extends readonly unknown[] = typeof ierc20MetadataABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: ierc20MetadataABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -2111,7 +2111,7 @@ export function writeIerc20Metadata<TFunctionName extends string>(
  */
 export function prepareWriteIerc20Metadata<
   TAbi extends readonly unknown[] = typeof ierc20MetadataABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: ierc20MetadataABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2138,7 +2138,7 @@ export function getIRegistry(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readIRegistry<
   TAbi extends readonly unknown[] = typeof iRegistryABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: iRegistryABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -2162,7 +2162,7 @@ export function writeIRegistry<TFunctionName extends string>(
  */
 export function prepareWriteIRegistry<
   TAbi extends readonly unknown[] = typeof iRegistryABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: iRegistryABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2209,7 +2209,7 @@ export function writeOwnable<TFunctionName extends string>(
  */
 export function prepareWriteOwnable<
   TAbi extends readonly unknown[] = typeof ownableABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: ownableABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2243,7 +2243,7 @@ export function getRegistry(
  */
 export function readRegistry<
   TAbi extends readonly unknown[] = typeof registryABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(
   config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & { chainId?: keyof typeof registryAddress }
 ) {
@@ -2264,7 +2264,7 @@ export function readRegistry<
 export function writeRegistry<
   TFunctionName extends string,
   TMode extends WriteContractMode,
-  TChainId extends number = keyof typeof registryAddress
+  TChainId extends number = keyof typeof registryAddress,
 >(
   config:
     | (Omit<WriteContractPreparedArgs<typeof registryABI, TFunctionName>, 'abi' | 'address'> & {
@@ -2292,7 +2292,7 @@ export function writeRegistry<
  */
 export function prepareWriteRegistry<
   TAbi extends readonly unknown[] = typeof registryABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(
   config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof registryAddress
@@ -2343,7 +2343,7 @@ export function readToken<TAbi extends readonly unknown[] = typeof tokenABI, TFu
 export function writeToken<
   TFunctionName extends string,
   TMode extends WriteContractMode,
-  TChainId extends number = keyof typeof tokenAddress
+  TChainId extends number = keyof typeof tokenAddress,
 >(
   config:
     | (Omit<WriteContractPreparedArgs<typeof tokenABI, TFunctionName>, 'abi' | 'address'> & {
@@ -2371,7 +2371,7 @@ export function writeToken<
  */
 export function prepareWriteToken<
   TAbi extends readonly unknown[] = typeof tokenABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(
   config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof tokenAddress

@@ -37,7 +37,7 @@ export function Profile() {
 
       <div className='divider' />
 
-      <div className="w-full divide-y divide-gray-800 gap-4">
+      <div className='w-full divide-y divide-gray-800 gap-4'>
         <LinkComponent href='/create' className='flex items-center justify-between p-2'>
           <>
             <span>Create Event</span>

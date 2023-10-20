@@ -33,10 +33,11 @@ export async function GetRecords(params?: GetRecordsWhere) {
                     ${params?.id ? `id: "${params.id}"` : ''},
                     ${params?.status !== undefined ? `status: ${Status[params.status.valueOf()]}` : ''}, 
                     ${params?.createdBy ? `createdBy: "${params.createdBy}"` : ''}
-                    ${params?.past == true
-          ? `condition_: {endDate_lte: "${dayjs().unix()}"}`
-          : `condition_: {endDate_gte: "${dayjs().unix()}"}`
-        }
+                    ${
+                      params?.past == true
+                        ? `condition_: {endDate_lte: "${dayjs().unix()}"}`
+                        : `condition_: {endDate_gte: "${dayjs().unix()}"}`
+                    }
                 })
                 {
                     id
