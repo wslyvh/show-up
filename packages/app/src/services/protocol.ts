@@ -33,11 +33,10 @@ export async function GetRecords(params?: GetRecordsWhere) {
                     ${params?.id ? `id: "${params.id}"` : ''},
                     ${params?.status !== undefined ? `status: ${Status[params.status.valueOf()]}` : ''}, 
                     ${params?.createdBy ? `createdBy: "${params.createdBy}"` : ''}
-                    ${
-                      params?.past == true
-                        ? `condition_: {endDate_lte: "${dayjs().unix()}"}`
-                        : `condition_: {endDate_gte: "${dayjs().unix()}"}`
-                    }
+                    ${params?.past == true
+          ? `condition_: {endDate_lte: "${dayjs().unix()}"}`
+          : `condition_: {endDate_gte: "${dayjs().unix()}"}`
+        }
                 })
                 {
                     id
@@ -53,6 +52,10 @@ export async function GetRecords(params?: GetRecordsWhere) {
                         depositFee
                         maxParticipants
                         tokenAddress
+                        tokenAddress
+                        tokenName
+                        tokenSymbol
+                        tokenDecimals
                     }
                     contentUri
                     metadata {
@@ -74,6 +77,7 @@ export async function GetRecords(params?: GetRecordsWhere) {
                         createdBy
                         address
                         checkedIn
+                        transactionHash
                     }
                     blockNumber
                     transactionHash
@@ -106,6 +110,7 @@ export async function GetParticipations(address: string) {
                     id
                     participations {
                         id
+                        transactionHash
                         record {
                             id
                             createdAt
@@ -115,23 +120,34 @@ export async function GetParticipations(address: string) {
                             message
                             conditionModule
                             condition {
-                                name
-                                endDate
-                                depositFee
-                                maxParticipants
-                                tokenAddress
+                              name
+                              endDate
+                              depositFee
+                              maxParticipants
+                              tokenAddress
+                              tokenName
+                              tokenSymbol
+                              tokenDecimals
                             }
                             contentUri
                             metadata {
-                                appId
-                                title
-                                description
-                                start
-                                end
-                                timezone
-                                location
-                                website
-                                imageUrl
+                              appId
+                              title
+                              description
+                              start
+                              end
+                              timezone
+                              location
+                              website
+                              imageUrl
+                            }
+                            participants {
+                              id
+                              createdAt
+                              createdBy
+                              address
+                              checkedIn
+                              transactionHash
                             }
                         }
                     }
@@ -223,6 +239,7 @@ function toParticipant(data: any) {
     createdBy: data.createdBy,
     address: data.address,
     checkedIn: data.checkedIn,
+    transactionHash: data.transactionHash,
   } as Participant
 }
 
@@ -237,5 +254,8 @@ function toConditions(data: any, address: string) {
     depositFee: data.depositFee,
     maxParticipants: data.maxParticipants,
     tokenAddress: data.tokenAddress,
+    tokenName: data.tokenName,
+    tokenSymbol: data.tokenSymbol,
+    tokenDecimals: data.tokenDecimals,
   } as ConditionModuleData
 }

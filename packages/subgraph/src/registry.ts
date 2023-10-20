@@ -7,8 +7,9 @@ import {
   Settled as SettledEvent
 } from "../generated/Registry/Registry"
 import { IConditionModule } from "../generated/Registry/IConditionModule"
+import { Token } from "../generated/Registry/Token"
 import { Event as EventMetadataTemplate } from '../generated/templates'
-import { Bytes, BigInt, log, ethereum } from "@graphprotocol/graph-ts";
+import { Bytes, BigInt, log, ethereum, Address } from "@graphprotocol/graph-ts"
 import { Record, ConditionModule, Participant, User, Condition } from "../generated/schema"
 
 export function handleCanceled(event: CanceledEvent): void {
@@ -119,6 +120,17 @@ export function handleCreated(event: CreatedEvent): void {
         condition.depositFee = depositFee
         condition.maxParticipants = maxParticipants
         condition.tokenAddress = tokenAddress
+
+        // Add Token data
+        if (tokenAddress != Address.zero()) {
+          const tokenContract = Token.bind(tokenAddress)
+          if (tokenContract) {
+            condition.tokenName = tokenContract.name()
+            condition.tokenSymbol = tokenContract.symbol()
+            condition.tokenDecimals = BigInt.fromI32(tokenContract.decimals())
+          }
+        }
+
         condition.save()
 
         record.condition = condition.id
@@ -137,25 +149,26 @@ export function handleRegistered(event: RegisteredEvent): void {
   let record = Record.load(event.params.id.toString())
 
   if (record) {
-    let user = User.load(event.params.participant);
+    let user = User.load(event.params.participant)
     if (!user) {
-      user = new User(event.params.participant);
-      user.save();
+      user = new User(event.params.participant)
+      user.save()
     }
 
-    const participantKey = event.params.id.toString().concat(".").concat(event.params.participant.toHexString());
-    let participant = Participant.load(participantKey);
+    const participantKey = event.params.id.toString().concat(".").concat(event.params.participant.toHexString())
+    let participant = Participant.load(participantKey)
     if (!participant) {
-      participant = new Participant(participantKey);
+      participant = new Participant(participantKey)
     }
 
-    participant.createdAt = event.block.timestamp;
-    participant.createdBy = event.params.sender;
-    participant.address = event.params.participant;
-    participant.checkedIn = false;
-    participant.record = record.id;
-    participant.user = user.id;
-    participant.save();
+    participant.createdAt = event.block.timestamp
+    participant.createdBy = event.params.sender
+    participant.transactionHash = event.transaction.hash
+    participant.address = event.params.participant
+    participant.checkedIn = false
+    participant.record = record.id
+    participant.user = user.id
+    participant.save()
 
     record.updatedAt = event.block.timestamp
     record.save()

@@ -437,6 +437,19 @@ export class Participant extends Entity {
     this.set("createdBy", Value.fromBytes(value));
   }
 
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+
   get address(): Bytes {
     let value = this.get("address");
     if (!value || value.kind == ValueKind.NULL) {
@@ -783,5 +796,56 @@ export class Condition extends Entity {
 
   set tokenAddress(value: Bytes) {
     this.set("tokenAddress", Value.fromBytes(value));
+  }
+
+  get tokenSymbol(): string | null {
+    let value = this.get("tokenSymbol");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set tokenSymbol(value: string | null) {
+    if (!value) {
+      this.unset("tokenSymbol");
+    } else {
+      this.set("tokenSymbol", Value.fromString(<string>value));
+    }
+  }
+
+  get tokenName(): string | null {
+    let value = this.get("tokenName");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set tokenName(value: string | null) {
+    if (!value) {
+      this.unset("tokenName");
+    } else {
+      this.set("tokenName", Value.fromString(<string>value));
+    }
+  }
+
+  get tokenDecimals(): BigInt | null {
+    let value = this.get("tokenDecimals");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set tokenDecimals(value: BigInt | null) {
+    if (!value) {
+      this.unset("tokenDecimals");
+    } else {
+      this.set("tokenDecimals", Value.fromBigInt(<BigInt>value));
+    }
   }
 }

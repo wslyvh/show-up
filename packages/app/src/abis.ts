@@ -177,7 +177,7 @@ export const abstractBasicModuleABI = [
 /**
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xeFB0f24E6f5bE8a969488dbA2f0D6d99eAF342cd)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xC798B6C3A99a87fE4beFb24d4599b1caA6D6DAff)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836)
  */
 export const basicEtherABI = [
   { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
@@ -338,18 +338,18 @@ export const basicEtherABI = [
 /**
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xeFB0f24E6f5bE8a969488dbA2f0D6d99eAF342cd)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xC798B6C3A99a87fE4beFb24d4599b1caA6D6DAff)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836)
  */
 export const basicEtherAddress = {
   31337: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
   534351: '0xeFB0f24E6f5bE8a969488dbA2f0D6d99eAF342cd',
-  11155111: '0xC798B6C3A99a87fE4beFb24d4599b1caA6D6DAff',
+  11155111: '0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836',
 } as const
 
 /**
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xeFB0f24E6f5bE8a969488dbA2f0D6d99eAF342cd)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xC798B6C3A99a87fE4beFb24d4599b1caA6D6DAff)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836)
  */
 export const basicEtherConfig = { address: basicEtherAddress, abi: basicEtherABI } as const
 
@@ -360,7 +360,7 @@ export const basicEtherConfig = { address: basicEtherAddress, abi: basicEtherABI
 /**
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x555B9c3B79EF437776F7E0833c234c802D741771)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x317f09eCeBB6Db0d143cD7EF164F0FA1B6fC38b3)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11FB53694e42972925940836a1E3EC71cA584936)
  */
 export const basicTokenABI = [
   { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
@@ -521,18 +521,18 @@ export const basicTokenABI = [
 /**
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x555B9c3B79EF437776F7E0833c234c802D741771)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x317f09eCeBB6Db0d143cD7EF164F0FA1B6fC38b3)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11FB53694e42972925940836a1E3EC71cA584936)
  */
 export const basicTokenAddress = {
   31337: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
   534351: '0x555B9c3B79EF437776F7E0833c234c802D741771',
-  11155111: '0x317f09eCeBB6Db0d143cD7EF164F0FA1B6fC38b3',
+  11155111: '0x11FB53694e42972925940836a1E3EC71cA584936',
 } as const
 
 /**
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x555B9c3B79EF437776F7E0833c234c802D741771)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x317f09eCeBB6Db0d143cD7EF164F0FA1B6fC38b3)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11FB53694e42972925940836a1E3EC71cA584936)
  */
 export const basicTokenConfig = { address: basicTokenAddress, abi: basicTokenABI } as const
 
@@ -1239,110 +1239,6 @@ export const iRegistryABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IShowHub
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const iShowHubABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
-      { name: 'reason', internalType: 'string', type: 'string', indexed: true },
-      { name: 'sender', internalType: 'address', type: 'address', indexed: false },
-      { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
-    ],
-    name: 'Cancelled',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
-      { name: 'sender', internalType: 'address', type: 'address', indexed: false },
-      { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
-    ],
-    name: 'Created',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
-      { name: 'participant', internalType: 'address', type: 'address', indexed: true },
-      { name: 'sender', internalType: 'address', type: 'address', indexed: false },
-      { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
-    ],
-    name: 'Registered',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
-      { name: 'sender', internalType: 'address', type: 'address', indexed: false },
-      { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
-    ],
-    name: 'Settled',
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'id', internalType: 'uint256', type: 'uint256' },
-      { name: 'reason', internalType: 'string', type: 'string' },
-    ],
-    name: 'cancel',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'contentUri', internalType: 'string', type: 'string' },
-      { name: 'endDate', internalType: 'uint256', type: 'uint256' },
-      { name: 'depositFee', internalType: 'uint256', type: 'uint256' },
-      { name: 'maxParticipants', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'createWithEther',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'contentUri', internalType: 'string', type: 'string' },
-      { name: 'endDate', internalType: 'uint256', type: 'uint256' },
-      { name: 'depositFee', internalType: 'uint256', type: 'uint256' },
-      { name: 'maxParticipants', internalType: 'uint256', type: 'uint256' },
-      { name: 'tokenAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'createWithToken',
-    outputs: [],
-  },
-  {
-    stateMutability: 'payable',
-    type: 'function',
-    inputs: [
-      { name: 'id', internalType: 'uint256', type: 'uint256' },
-      { name: 'participant', internalType: 'address', type: 'address' },
-    ],
-    name: 'register',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'id', internalType: 'uint256', type: 'uint256' },
-      { name: 'participants', internalType: 'address[]', type: 'address[]' },
-    ],
-    name: 'settle',
-    outputs: [],
-  },
-] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Math
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1392,7 +1288,7 @@ export const ownableABI = [
 /**
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x088c088217611a54991AFbEf3D77020D3Ad7CbA3)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfD4712Ed09b1d98354dC0153fd3eF7e374F71443)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0959f7dD732631B7600fcCe67312920d4F5ECB9c)
  */
 export const registryABI = [
   { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
@@ -1597,161 +1493,20 @@ export const registryABI = [
 /**
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x088c088217611a54991AFbEf3D77020D3Ad7CbA3)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfD4712Ed09b1d98354dC0153fd3eF7e374F71443)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0959f7dD732631B7600fcCe67312920d4F5ECB9c)
  */
 export const registryAddress = {
   31337: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
   534351: '0x088c088217611a54991AFbEf3D77020D3Ad7CbA3',
-  11155111: '0xfD4712Ed09b1d98354dC0153fd3eF7e374F71443',
+  11155111: '0x0959f7dD732631B7600fcCe67312920d4F5ECB9c',
 } as const
 
 /**
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x088c088217611a54991AFbEf3D77020D3Ad7CbA3)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfD4712Ed09b1d98354dC0153fd3eF7e374F71443)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0959f7dD732631B7600fcCe67312920d4F5ECB9c)
  */
 export const registryConfig = { address: registryAddress, abi: registryABI } as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// ShowHub
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const showHubABI = [
-  { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
-  { type: 'error', inputs: [], name: 'AccessDenied' },
-  { type: 'error', inputs: [], name: 'InactiveRecord' },
-  { type: 'error', inputs: [], name: 'IncorrectValue' },
-  { type: 'error', inputs: [], name: 'InvalidDate' },
-  { type: 'error', inputs: [], name: 'LimitReached' },
-  { type: 'error', inputs: [], name: 'NotFound' },
-  { type: 'error', inputs: [{ name: 'owner', internalType: 'address', type: 'address' }], name: 'OwnableInvalidOwner' },
-  {
-    type: 'error',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'OwnableUnauthorizedAccount',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
-      { name: 'reason', internalType: 'string', type: 'string', indexed: true },
-      { name: 'sender', internalType: 'address', type: 'address', indexed: false },
-      { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
-    ],
-    name: 'Cancelled',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
-      { name: 'sender', internalType: 'address', type: 'address', indexed: false },
-      { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
-    ],
-    name: 'Created',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'previousOwner', internalType: 'address', type: 'address', indexed: true },
-      { name: 'newOwner', internalType: 'address', type: 'address', indexed: true },
-    ],
-    name: 'OwnershipTransferred',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
-      { name: 'participant', internalType: 'address', type: 'address', indexed: true },
-      { name: 'sender', internalType: 'address', type: 'address', indexed: false },
-      { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
-    ],
-    name: 'Registered',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
-      { name: 'sender', internalType: 'address', type: 'address', indexed: false },
-      { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
-    ],
-    name: 'Settled',
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'id', internalType: 'uint256', type: 'uint256' },
-      { name: 'reason', internalType: 'string', type: 'string' },
-    ],
-    name: 'cancel',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'contentUri', internalType: 'string', type: 'string' },
-      { name: 'endDate', internalType: 'uint256', type: 'uint256' },
-      { name: 'depositFee', internalType: 'uint256', type: 'uint256' },
-      { name: 'maxParticipants', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'createWithEther',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'contentUri', internalType: 'string', type: 'string' },
-      { name: 'endDate', internalType: 'uint256', type: 'uint256' },
-      { name: 'depositFee', internalType: 'uint256', type: 'uint256' },
-      { name: 'maxParticipants', internalType: 'uint256', type: 'uint256' },
-      { name: 'tokenAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'createWithToken',
-    outputs: [],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'owner',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-  },
-  {
-    stateMutability: 'payable',
-    type: 'function',
-    inputs: [
-      { name: 'id', internalType: 'uint256', type: 'uint256' },
-      { name: 'participant', internalType: 'address', type: 'address' },
-    ],
-    name: 'register',
-    outputs: [],
-  },
-  { stateMutability: 'nonpayable', type: 'function', inputs: [], name: 'renounceOwnership', outputs: [] },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'id', internalType: 'uint256', type: 'uint256' },
-      { name: 'participants', internalType: 'address[]', type: 'address[]' },
-    ],
-    name: 'settle',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
-    name: 'transferOwnership',
-    outputs: [],
-  },
-] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Token
@@ -1760,7 +1515,7 @@ export const showHubABI = [
 /**
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA0831CF780DBc6B80f8cBf0da388f38f268A414e)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x3C67cE8eA670B4f180d581eC4cef79750D2d482f)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0)
  */
 export const tokenABI = [
   { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
@@ -1939,18 +1694,18 @@ export const tokenABI = [
 /**
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA0831CF780DBc6B80f8cBf0da388f38f268A414e)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x3C67cE8eA670B4f180d581eC4cef79750D2d482f)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0)
  */
 export const tokenAddress = {
   31337: '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
   534351: '0xA0831CF780DBc6B80f8cBf0da388f38f268A414e',
-  11155111: '0x3C67cE8eA670B4f180d581eC4cef79750D2d482f',
+  11155111: '0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0',
 } as const
 
 /**
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA0831CF780DBc6B80f8cBf0da388f38f268A414e)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x3C67cE8eA670B4f180d581eC4cef79750D2d482f)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0)
  */
 export const tokenConfig = { address: tokenAddress, abi: tokenABI } as const
 
@@ -1970,7 +1725,7 @@ export function getAbstractBasicModule(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readAbstractBasicModule<
   TAbi extends readonly unknown[] = typeof abstractBasicModuleABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: abstractBasicModuleABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -1994,7 +1749,7 @@ export function writeAbstractBasicModule<TFunctionName extends string>(
  */
 export function prepareWriteAbstractBasicModule<
   TAbi extends readonly unknown[] = typeof abstractBasicModuleABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: abstractBasicModuleABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2007,7 +1762,7 @@ export function prepareWriteAbstractBasicModule<
  *
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xeFB0f24E6f5bE8a969488dbA2f0D6d99eAF342cd)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xC798B6C3A99a87fE4beFb24d4599b1caA6D6DAff)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836)
  */
 export function getBasicEther(
   config: Omit<GetContractArgs, 'abi' | 'address'> & { chainId?: keyof typeof basicEtherAddress }
@@ -2024,11 +1779,11 @@ export function getBasicEther(
  *
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xeFB0f24E6f5bE8a969488dbA2f0D6d99eAF342cd)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xC798B6C3A99a87fE4beFb24d4599b1caA6D6DAff)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836)
  */
 export function readBasicEther<
   TAbi extends readonly unknown[] = typeof basicEtherABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(
   config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof basicEtherAddress
@@ -2046,12 +1801,12 @@ export function readBasicEther<
  *
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xeFB0f24E6f5bE8a969488dbA2f0D6d99eAF342cd)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xC798B6C3A99a87fE4beFb24d4599b1caA6D6DAff)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836)
  */
 export function writeBasicEther<
   TFunctionName extends string,
   TMode extends WriteContractMode,
-  TChainId extends number = keyof typeof basicEtherAddress,
+  TChainId extends number = keyof typeof basicEtherAddress
 >(
   config:
     | (Omit<WriteContractPreparedArgs<typeof basicEtherABI, TFunctionName>, 'abi' | 'address'> & {
@@ -2075,11 +1830,11 @@ export function writeBasicEther<
  *
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xeFB0f24E6f5bE8a969488dbA2f0D6d99eAF342cd)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xC798B6C3A99a87fE4beFb24d4599b1caA6D6DAff)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836)
  */
 export function prepareWriteBasicEther<
   TAbi extends readonly unknown[] = typeof basicEtherABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(
   config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof basicEtherAddress
@@ -2097,7 +1852,7 @@ export function prepareWriteBasicEther<
  *
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x555B9c3B79EF437776F7E0833c234c802D741771)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x317f09eCeBB6Db0d143cD7EF164F0FA1B6fC38b3)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11FB53694e42972925940836a1E3EC71cA584936)
  */
 export function getBasicToken(
   config: Omit<GetContractArgs, 'abi' | 'address'> & { chainId?: keyof typeof basicTokenAddress }
@@ -2114,11 +1869,11 @@ export function getBasicToken(
  *
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x555B9c3B79EF437776F7E0833c234c802D741771)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x317f09eCeBB6Db0d143cD7EF164F0FA1B6fC38b3)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11FB53694e42972925940836a1E3EC71cA584936)
  */
 export function readBasicToken<
   TAbi extends readonly unknown[] = typeof basicTokenABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(
   config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof basicTokenAddress
@@ -2136,12 +1891,12 @@ export function readBasicToken<
  *
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x555B9c3B79EF437776F7E0833c234c802D741771)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x317f09eCeBB6Db0d143cD7EF164F0FA1B6fC38b3)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11FB53694e42972925940836a1E3EC71cA584936)
  */
 export function writeBasicToken<
   TFunctionName extends string,
   TMode extends WriteContractMode,
-  TChainId extends number = keyof typeof basicTokenAddress,
+  TChainId extends number = keyof typeof basicTokenAddress
 >(
   config:
     | (Omit<WriteContractPreparedArgs<typeof basicTokenABI, TFunctionName>, 'abi' | 'address'> & {
@@ -2165,11 +1920,11 @@ export function writeBasicToken<
  *
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x555B9c3B79EF437776F7E0833c234c802D741771)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x317f09eCeBB6Db0d143cD7EF164F0FA1B6fC38b3)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11FB53694e42972925940836a1E3EC71cA584936)
  */
 export function prepareWriteBasicToken<
   TAbi extends readonly unknown[] = typeof basicTokenABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(
   config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof basicTokenAddress
@@ -2214,7 +1969,7 @@ export function writeErc20<TFunctionName extends string>(
  */
 export function prepareWriteErc20<
   TAbi extends readonly unknown[] = typeof erc20ABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: erc20ABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2234,7 +1989,7 @@ export function getIConditionModule(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readIConditionModule<
   TAbi extends readonly unknown[] = typeof iConditionModuleABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: iConditionModuleABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -2258,7 +2013,7 @@ export function writeIConditionModule<TFunctionName extends string>(
  */
 export function prepareWriteIConditionModule<
   TAbi extends readonly unknown[] = typeof iConditionModuleABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: iConditionModuleABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2305,7 +2060,7 @@ export function writeIerc20<TFunctionName extends string>(
  */
 export function prepareWriteIerc20<
   TAbi extends readonly unknown[] = typeof ierc20ABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: ierc20ABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2332,7 +2087,7 @@ export function getIerc20Metadata(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readIerc20Metadata<
   TAbi extends readonly unknown[] = typeof ierc20MetadataABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: ierc20MetadataABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -2356,7 +2111,7 @@ export function writeIerc20Metadata<TFunctionName extends string>(
  */
 export function prepareWriteIerc20Metadata<
   TAbi extends readonly unknown[] = typeof ierc20MetadataABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: ierc20MetadataABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2383,7 +2138,7 @@ export function getIRegistry(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readIRegistry<
   TAbi extends readonly unknown[] = typeof iRegistryABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: iRegistryABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -2407,43 +2162,9 @@ export function writeIRegistry<TFunctionName extends string>(
  */
 export function prepareWriteIRegistry<
   TAbi extends readonly unknown[] = typeof iRegistryABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: iRegistryABI, ...config } as unknown as PrepareWriteContractConfig<
-    TAbi,
-    TFunctionName
-  >)
-}
-
-/**
- * Wraps __{@link getContract}__ with `abi` set to __{@link iShowHubABI}__.
- */
-export function getIShowHub(config: Omit<GetContractArgs, 'abi'>) {
-  return getContract({ abi: iShowHubABI, ...config })
-}
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link iShowHubABI}__.
- */
-export function writeIShowHub<TFunctionName extends string>(
-  config:
-    | Omit<WriteContractPreparedArgs<typeof iShowHubABI, TFunctionName>, 'abi'>
-    | Omit<WriteContractUnpreparedArgs<typeof iShowHubABI, TFunctionName>, 'abi'>
-) {
-  return writeContract({ abi: iShowHubABI, ...config } as unknown as WriteContractArgs<
-    typeof iShowHubABI,
-    TFunctionName
-  >)
-}
-
-/**
- * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link iShowHubABI}__.
- */
-export function prepareWriteIShowHub<
-  TAbi extends readonly unknown[] = typeof iShowHubABI,
-  TFunctionName extends string = string,
->(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
-  return prepareWriteContract({ abi: iShowHubABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
     TFunctionName
   >)
@@ -2488,7 +2209,7 @@ export function writeOwnable<TFunctionName extends string>(
  */
 export function prepareWriteOwnable<
   TAbi extends readonly unknown[] = typeof ownableABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: ownableABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2501,7 +2222,7 @@ export function prepareWriteOwnable<
  *
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x088c088217611a54991AFbEf3D77020D3Ad7CbA3)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfD4712Ed09b1d98354dC0153fd3eF7e374F71443)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0959f7dD732631B7600fcCe67312920d4F5ECB9c)
  */
 export function getRegistry(
   config: Omit<GetContractArgs, 'abi' | 'address'> & { chainId?: keyof typeof registryAddress }
@@ -2518,11 +2239,11 @@ export function getRegistry(
  *
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x088c088217611a54991AFbEf3D77020D3Ad7CbA3)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfD4712Ed09b1d98354dC0153fd3eF7e374F71443)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0959f7dD732631B7600fcCe67312920d4F5ECB9c)
  */
 export function readRegistry<
   TAbi extends readonly unknown[] = typeof registryABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(
   config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & { chainId?: keyof typeof registryAddress }
 ) {
@@ -2538,12 +2259,12 @@ export function readRegistry<
  *
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x088c088217611a54991AFbEf3D77020D3Ad7CbA3)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfD4712Ed09b1d98354dC0153fd3eF7e374F71443)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0959f7dD732631B7600fcCe67312920d4F5ECB9c)
  */
 export function writeRegistry<
   TFunctionName extends string,
   TMode extends WriteContractMode,
-  TChainId extends number = keyof typeof registryAddress,
+  TChainId extends number = keyof typeof registryAddress
 >(
   config:
     | (Omit<WriteContractPreparedArgs<typeof registryABI, TFunctionName>, 'abi' | 'address'> & {
@@ -2567,11 +2288,11 @@ export function writeRegistry<
  *
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x088c088217611a54991AFbEf3D77020D3Ad7CbA3)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfD4712Ed09b1d98354dC0153fd3eF7e374F71443)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0959f7dD732631B7600fcCe67312920d4F5ECB9c)
  */
 export function prepareWriteRegistry<
   TAbi extends readonly unknown[] = typeof registryABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(
   config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof registryAddress
@@ -2585,51 +2306,11 @@ export function prepareWriteRegistry<
 }
 
 /**
- * Wraps __{@link getContract}__ with `abi` set to __{@link showHubABI}__.
- */
-export function getShowHub(config: Omit<GetContractArgs, 'abi'>) {
-  return getContract({ abi: showHubABI, ...config })
-}
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link showHubABI}__.
- */
-export function readShowHub<TAbi extends readonly unknown[] = typeof showHubABI, TFunctionName extends string = string>(
-  config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>
-) {
-  return readContract({ abi: showHubABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
-}
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link showHubABI}__.
- */
-export function writeShowHub<TFunctionName extends string>(
-  config:
-    | Omit<WriteContractPreparedArgs<typeof showHubABI, TFunctionName>, 'abi'>
-    | Omit<WriteContractUnpreparedArgs<typeof showHubABI, TFunctionName>, 'abi'>
-) {
-  return writeContract({ abi: showHubABI, ...config } as unknown as WriteContractArgs<typeof showHubABI, TFunctionName>)
-}
-
-/**
- * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link showHubABI}__.
- */
-export function prepareWriteShowHub<
-  TAbi extends readonly unknown[] = typeof showHubABI,
-  TFunctionName extends string = string,
->(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
-  return prepareWriteContract({ abi: showHubABI, ...config } as unknown as PrepareWriteContractConfig<
-    TAbi,
-    TFunctionName
-  >)
-}
-
-/**
  * Wraps __{@link getContract}__ with `abi` set to __{@link tokenABI}__.
  *
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA0831CF780DBc6B80f8cBf0da388f38f268A414e)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x3C67cE8eA670B4f180d581eC4cef79750D2d482f)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0)
  */
 export function getToken(config: Omit<GetContractArgs, 'abi' | 'address'> & { chainId?: keyof typeof tokenAddress }) {
   return getContract({ abi: tokenABI, address: tokenAddress[config.chainId as keyof typeof tokenAddress], ...config })
@@ -2640,7 +2321,7 @@ export function getToken(config: Omit<GetContractArgs, 'abi' | 'address'> & { ch
  *
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA0831CF780DBc6B80f8cBf0da388f38f268A414e)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x3C67cE8eA670B4f180d581eC4cef79750D2d482f)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0)
  */
 export function readToken<TAbi extends readonly unknown[] = typeof tokenABI, TFunctionName extends string = string>(
   config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & { chainId?: keyof typeof tokenAddress }
@@ -2657,12 +2338,12 @@ export function readToken<TAbi extends readonly unknown[] = typeof tokenABI, TFu
  *
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA0831CF780DBc6B80f8cBf0da388f38f268A414e)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x3C67cE8eA670B4f180d581eC4cef79750D2d482f)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0)
  */
 export function writeToken<
   TFunctionName extends string,
   TMode extends WriteContractMode,
-  TChainId extends number = keyof typeof tokenAddress,
+  TChainId extends number = keyof typeof tokenAddress
 >(
   config:
     | (Omit<WriteContractPreparedArgs<typeof tokenABI, TFunctionName>, 'abi' | 'address'> & {
@@ -2686,11 +2367,11 @@ export function writeToken<
  *
  * -
  * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA0831CF780DBc6B80f8cBf0da388f38f268A414e)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x3C67cE8eA670B4f180d581eC4cef79750D2d482f)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0)
  */
 export function prepareWriteToken<
   TAbi extends readonly unknown[] = typeof tokenABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(
   config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof tokenAddress

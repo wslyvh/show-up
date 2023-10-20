@@ -8,7 +8,7 @@ import dayjs from 'dayjs'
 import { useEventManagement } from '@/context/EventManagement'
 import { Alert } from '@/components/Alert'
 import { useAccount } from 'wagmi'
-import { formatEther } from 'viem'
+import { formatEther, formatUnits } from 'viem'
 import { useState } from 'react'
 
 interface Props {
@@ -22,7 +22,7 @@ export function EventDetails(props: Props) {
   const [reason, setReason] = useState('')
   const [attendees, setAttendees] = useState<string[]>([])
   const sameDay = dayjs(props.event.start).isSame(props.event.end, 'day')
-  const hasEnded = dayjs().isAfter(dayjs(props.record.condition.endDate.toString()))
+  const hasEnded = dayjs().isAfter(dayjs((props.record.metadata?.end).valueOf()))
   const hasAttendees = props.record.participants.filter(i => !!i.checkedIn).length > 0
   const isCancelled = Status[props.record.status.valueOf()] == Status.Cancelled.toString()
   const isActive = Status[props.record.status.valueOf()] == Status.Active.toString()
@@ -86,9 +86,8 @@ export function EventDetails(props: Props) {
                 <>{formatEther(props.record.condition.depositFee)} ETH</>
               )}
               {props.record.condition.type == ConditionModuleType.BasicToken && (
-                <>{props.record.condition.depositFee} DAI</>
+                <>{formatUnits(props.record.condition.depositFee, props.record.condition.tokenDecimals ?? 18)} {props.record.condition.tokenSymbol}</>
               )}
-              {' '} Deposit
             </p>
           </div>
 

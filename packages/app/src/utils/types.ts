@@ -33,6 +33,7 @@ export interface Participant {
   createdBy: string
   address: string
   checkedIn: boolean
+  transactionHash: string
 }
 
 export interface EventMetadata {
@@ -69,4 +70,7 @@ export interface ConditionModuleData extends ConditionModule {
   depositFee: bigint
   maxParticipants: number
   tokenAddress?: string // Only used for BasicToken module
+  tokenSymbol?: string
+  tokenName?: string
+  tokenDecimals?: number
 }

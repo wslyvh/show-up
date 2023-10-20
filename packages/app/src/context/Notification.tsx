@@ -14,15 +14,19 @@ interface Notification {
 }
 
 interface NotificationContext {
+  new: boolean
   notifications: Notification[]
   Add: (notification: Notification) => Promise<void>
-  Clear: () => Promise<void>
+  MarkAsRead: () => void
+  Clear: () => void
 }
 
 const defaultState: NotificationContext = {
+  new: false,
   notifications: [],
   Add: () => Promise.resolve(),
-  Clear: () => Promise.resolve(),
+  MarkAsRead: () => { },
+  Clear: () => { },
 }
 
 export const useNotifications = () => useContext(NotificationContext)
@@ -34,6 +38,7 @@ export function NotificationProvider(props: PropsWithChildren) {
   const [state, setState] = useState<NotificationContext>({
     ...defaultState,
     Add,
+    MarkAsRead,
     Clear,
   })
 
@@ -47,7 +52,6 @@ export function NotificationProvider(props: PropsWithChildren) {
   }, [])
 
   async function Add(notification: Notification) {
-    console.log('Create Notification', notification)
     await saveNotification(notification)
 
     if (notification.data?.hash) {
@@ -91,7 +95,14 @@ export function NotificationProvider(props: PropsWithChildren) {
     }
   }
 
-  async function Clear() {
+  function MarkAsRead() {
+    setState((state) => ({
+      ...state,
+      new: false,
+    }))
+  }
+
+  function Clear() {
     console.log('Clear Notifications')
 
     state.notifications = []
@@ -114,7 +125,11 @@ export function NotificationProvider(props: PropsWithChildren) {
       localStorage.setItem(localStorageKey, JSON.stringify([...state.notifications, notification]))
     }
 
-    setState((state) => ({ ...state, notifications: [...state.notifications, notification] }))
+    setState((state) => ({
+      ...state,
+      new: true,
+      notifications: [...state.notifications, notification]
+    }))
   }
 
   if (typeof window === 'undefined') {

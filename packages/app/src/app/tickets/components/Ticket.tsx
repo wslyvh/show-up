@@ -1,8 +1,8 @@
 import { ConditionModuleType, Record, Status } from '@/utils/types'
 import { QRCodeSVG } from 'qrcode.react'
-import { useAccount } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
+import { formatEther, formatUnits } from 'viem'
 import dayjs from 'dayjs'
-import { formatEther, formatUnits, parseEther } from 'viem'
 
 interface Props {
   record: Record
@@ -23,11 +23,16 @@ export function TicketBadge(props: StatusProps) {
 
 export function Ticket(props: Props) {
   const { address } = useAccount()
+  const { chain } = useNetwork()
+  const ticket = props.record.participants.find((p) => p.address.toLowerCase() == address.toLowerCase())
+  // console.log('PARTICIPANTS', props.record, ticket)
+  const qrLink = `${chain?.blockExplorers?.default.url}/tx/${ticket?.transactionHash}`
+  console.log('QR', ticket, qrLink)
 
   return (
     <article className='flex w-full flex-col md:flex-row'>
       <div className='flex rounded-xl bg-white items-center justify-center p-4 md:p-12'>
-        <QRCodeSVG value='https://showup.events/' level='Q' />
+        <QRCodeSVG value={qrLink} level='Q' />
       </div>
 
       <div className='flex items-center px-2 md:px-0 md:py-2'>
@@ -58,7 +63,7 @@ export function Ticket(props: Props) {
                 <>{formatEther(props.record.condition.depositFee)} ETH</>
               )}
               {props.record.condition.type == ConditionModuleType.BasicToken && (
-                <>{props.record.condition.depositFee} DAI</>
+                <>{formatUnits(props.record.condition.depositFee, props.record.condition.tokenDecimals ?? 18)} {props.record.condition.tokenSymbol}</>
               )}
             </span>
           </div>

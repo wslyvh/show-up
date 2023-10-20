@@ -8,9 +8,9 @@ dataSources:
     name: Registry
     network: sepolia
     source:
-      address: '0xfD4712Ed09b1d98354dC0153fd3eF7e374F71443'
+      address: '0x0959f7dD732631B7600fcCe67312920d4F5ECB9c'
       abi: Registry
-      startBlock: 4512495
+      startBlock: 4528530
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -26,6 +26,8 @@ dataSources:
           file: ./abis/Registry.json
         - name: IConditionModule
           file: ./abis/IConditionModule.json
+        - name: Token
+          file: ./abis/Token.json
       eventHandlers:
         - event: Canceled(indexed uint256,string,bytes,address,uint256)
           handler: handleCanceled

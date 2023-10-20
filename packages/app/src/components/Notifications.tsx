@@ -16,7 +16,11 @@ import { TruncateMiddle } from '@/utils/format'
 dayjs.extend(relativeTime)
 
 export function Notifications() {
-  const { notifications } = useNotifications()
+  const { notifications, MarkAsRead } = useNotifications()
+
+  useEffect(() => {
+    MarkAsRead()
+  }, [])
 
   return (
     <div className='flex flex-col gap-2'>
