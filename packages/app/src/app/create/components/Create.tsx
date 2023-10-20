@@ -240,7 +240,6 @@ export function CreateForm() {
               <input
                 id='depositFee'
                 type='number'
-                min='0.00'
                 step='0.01'
                 max='1000.00'
                 required

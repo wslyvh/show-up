@@ -20,7 +20,7 @@ interface EventManagementContext {
   message: string
   modules: ConditionModule[]
   Create: (event: EventMetadata, conditions: ConditionModuleData, image?: File) => Promise<void>
-  Cancel: (id: string) => Promise<void>
+  Cancel: (id: string, reason?: string) => Promise<void>
   Register: (id: string, module: ConditionModuleData, participant?: string) => Promise<void>
   Checkin: (id: string, attendees: string[]) => Promise<void>
   Settle: (id: string) => Promise<void>
@@ -106,7 +106,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
       [{ type: 'address' }, { type: 'uint256' }, { type: 'uint256' }, { type: 'uint256' }, { type: 'address' }],
       [
         account,
-        BigInt(dayjs(event.end).valueOf()),
+        BigInt(dayjs(event.end).unix()),
         BigInt(conditions.depositFee || 0),
         BigInt(conditions.maxParticipants || 0),
         conditions.tokenAddress ?? AddressZero,
@@ -222,6 +222,11 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
     if (!account || !chain) {
       setState({ ...state, loading: false, message: 'Not connected.' })
+      return
+    }
+
+    if (attendees.length === 0) {
+      setState({ ...state, loading: false, message: 'No attendees to check in' })
       return
     }
 

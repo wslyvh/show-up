@@ -16,12 +16,12 @@ import { TruncateMiddle } from '@/utils/format'
 dayjs.extend(relativeTime)
 
 export function Notifications() {
-  const { Add, notifications } = useNotifications()
+  const { notifications } = useNotifications()
 
   return (
     <div className='flex flex-col gap-2'>
       {notifications
-        .sort((i) => i.created)
+        .sort((a, b) => b.created - a.created)
         .map((i, index) => {
           const id = `${index}_${i.type}_notification`
           const iconClassName = `stroke-${i.type} shrink-0 h-6 w-6 text-${i.type}-400`
