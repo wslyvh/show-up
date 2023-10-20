@@ -51,3 +51,7 @@ contracts/artifacts
 # subgraph
 subgraph/node_modules
 subgraph/build
+
+**public/sw.js
+**public/sw*
+**public/workbox-**

@@ -20,8 +20,8 @@ export function EventDetails(props: Props) {
   const sameDay = dayjs(props.event.start).isSame(props.event.end, 'day')
   const isCancelled = Status[props.record.status.valueOf()] == Status.Cancelled.toString()
   const isActive = props.record.status === Status.Active && dayjs().isBefore(props.event.end)
-  const isAdmin = props.record.createdBy.toLowerCase() === address.toLowerCase()
-  const isParticipant = props.record.participants.map(i => i.address.toLowerCase()).includes(address.toLowerCase())
+  const isAdmin = props.record.createdBy.toLowerCase() === address?.toLowerCase()
+  const isParticipant = props.record.participants.map(i => i.address.toLowerCase()).includes(address?.toLowerCase())
   console.log('Conditions', sameDay, isActive, isCancelled, isAdmin, isParticipant)
 
   return (
