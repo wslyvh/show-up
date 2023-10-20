@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { PropsWithChildren } from 'react'
 import { SITE_DESCRIPTION, SITE_NAME } from '@/utils/site'
-import { Layout } from '@/components/Layout'
+import { MobileLayout } from '@/components/MobileLayout'
 import { Web3Provider } from '@/context/Web3'
 import { EventManagementProvider } from '@/context/EventManagement'
 import { NotificationProvider } from '@/context/Notification'
@@ -36,7 +36,7 @@ export default function RootLayout(props: PropsWithChildren) {
         <Web3Provider>
           <NotificationProvider>
             <EventManagementProvider>
-              <Layout>{props.children}</Layout>
+              <MobileLayout>{props.children}</MobileLayout>
             </EventManagementProvider>
           </NotificationProvider>
         </Web3Provider>

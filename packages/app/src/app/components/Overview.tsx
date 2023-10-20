@@ -9,7 +9,7 @@ interface Props {
 export function Overview(props: Props) {
   return (
     <>
-      <Tabs options={['Upcoming', 'Past']} />
+      {/* <Tabs options={['Upcoming', 'Past']} /> */}
 
       <div className='flex flex-col gap-2'>
         {props.events.filter(i => !!i.metadata).map((event) => (

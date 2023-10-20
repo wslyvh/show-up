@@ -2,6 +2,7 @@
 
 import { waitForTransaction } from '@wagmi/core'
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react'
+import { fetchEnsName } from 'wagmi/actions'
 
 interface Notification {
   created: number
@@ -47,7 +48,7 @@ export function NotificationProvider(props: PropsWithChildren) {
 
   async function Add(notification: Notification) {
     console.log('Create Notification', notification)
-    saveNotification(notification)
+    await saveNotification(notification)
 
     if (notification.data?.hash) {
       console.log('Wait for transaction', notification.data.hash)
@@ -101,7 +102,16 @@ export function NotificationProvider(props: PropsWithChildren) {
     }
   }
 
-  function saveNotification(notification: Notification) {
+  async function saveNotification(notification: Notification) {
+    if (notification.from) {
+      const name = await fetchEnsName({
+        address: notification.from,
+        chainId: 1,
+      })
+
+      if (name) notification.from = name
+    }
+
     setState((state) => ({ ...state, notifications: [...state.notifications, notification] }))
 
     if (typeof window !== 'undefined' && window.localStorage) {

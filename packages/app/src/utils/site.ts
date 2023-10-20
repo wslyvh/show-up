@@ -1,4 +1,4 @@
-export const SITE_EMOJI = '🎪'
+export const SITE_EMOJI = '😎👋'
 export const SITE_NAME = 'Show Up'
 export const SITE_DESCRIPTION = 'Earn $$ by showing up!'
 export const SITE_URL = 'https://showup.events'

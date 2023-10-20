@@ -1,9 +1,12 @@
 import { CreateForm } from '@/app/create/components/Create'
+import { Protected } from '@/components/Protected'
 
 export default function Home() {
   return (
     <>
-      <CreateForm />
+      <Protected>
+        <CreateForm />
+      </Protected>
     </>
   )
 }

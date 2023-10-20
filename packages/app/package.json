@@ -26,9 +26,10 @@
     "@ducanh2912/next-pwa": "^9.7.2",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
-    "@web3modal/wagmi": "^3.1.0",
     "abitype": "^0.10.1",
+    "connectkit": "^1.5.3",
     "dayjs": "^1.11.10",
+    "ethereum-blockies-base64": "^1.0.2",
     "iron-session": "^6.3.1",
     "next": "13.5.4",
     "qrcode.react": "^3.1.0",
@@ -38,8 +39,8 @@
     "react-icons": "^4.11.0",
     "siwe": "^2.1.4",
     "slugify": "^1.6.6",
-    "viem": "^1.15.3",
-    "wagmi": "^1.4.3",
+    "viem": "^1.16.6",
+    "wagmi": "^1.4.4",
     "web3.storage": "^4.5.5"
   },
   "devDependencies": {

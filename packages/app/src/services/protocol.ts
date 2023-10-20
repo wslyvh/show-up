@@ -1,4 +1,4 @@
-import { ConditionModule, ConditionModuleData, ConditionModuleType, EventMetadata, Participant, Record, Status } from "@/utils/types"
+import { ConditionModule, ConditionModuleData, EventMetadata, Participant, Record, Status } from "@/utils/types"
 import dayjs from "dayjs"
 
 const baseUri = 'https://api.studio.thegraph.com/query/43964/show-up-sepolia/version/latest'
@@ -89,7 +89,7 @@ export async function GetRecords(params?: GetRecordsWhere) {
         return toRecord(i)
     })
 
-    return results
+    return results.filter(i => !!i.metadata)
 }
 
 export async function GetParticipations(address: string) {
@@ -148,7 +148,7 @@ export async function GetParticipations(address: string) {
         })
     })
 
-    return results
+    return results.filter(i => !!i.metadata)
 }
 
 export async function GetConditionModules(params?: GetConditionModulesWhere) {

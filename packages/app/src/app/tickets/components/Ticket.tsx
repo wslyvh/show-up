@@ -1,59 +1,73 @@
-import { Record } from "@/utils/types"
-import { QRCodeSVG } from 'qrcode.react';
+import { ConditionModuleType, Record, Status } from "@/utils/types"
+import { QRCodeSVG } from 'qrcode.react'
+import { useAccount } from "wagmi"
+import dayjs from "dayjs"
+import { formatEther, formatUnits, parseEther } from "viem"
 
 interface Props {
     record: Record
 }
 
+interface StatusProps {
+    status: Status
+}
+
+export function TicketBadge(props: StatusProps) {
+    let className = "badge badge-outline self-start mt-2 ml-2 shrink-0"
+    if (Status[props.status.valueOf()] == Status.Active.toString()) className += " badge-info"
+    if (Status[props.status.valueOf()] == Status.Cancelled.toString()) className += " badge-error"
+    if (Status[props.status.valueOf()] == Status.Settled.toString()) className += " badge-success"
+
+    return <span className={className}>{props.status}</span>
+}
+
 export function Ticket(props: Props) {
+    const { address } = useAccount()
+
     return (
-        <div>
-            <article className="w-full flex-grow flex items-center">
-                <div className="flex w-full text-zinc-900 h-64">
-                    <div className="h-full bg-white flex items-center justify-center px-12 rounded-xl">
-                        <QRCodeSVG value="https://showup.events/" level="Q" />
+        <article className="flex w-full flex-col md:flex-row">
+            <div className="flex rounded-xl bg-white items-center justify-center p-4 md:p-12">
+                <QRCodeSVG value="https://showup.events/" level="Q" />
+            </div>
+
+            <div className='flex items-center px-2 md:px-0 md:py-2'>
+                <div className="border border-1 border-dashed bg-white border-base-100 w-full md:w-0 md:h-full"></div>
+            </div>
+
+            <div className="flex flex-col flex-grow rounded-xl bg-white p-8">
+                <div className="flex items-center gap-2">
+                    <span className="flex-grow text-4xl font-bold text-blue-900">{props.record.metadata?.title}</span>
+                    <TicketBadge status={props.record.status} />
+                </div>
+                <span className="text-neutral-800 text-sm mt-2">{props.record.metadata?.location}</span>
+
+                <div className="flex flex-col mt-8">
+                    <span className="text-xs text-neutral-600">Date</span>
+                    <span className="font-mono">{dayjs(props.record.metadata?.start).format('DD/MMM/YYYY')}</span>
+                </div>
+
+                <div className="flex flex-row justify-between mt-4">
+                    <div className="flex flex-col flex-auto min-w-0 mr-4">
+                        <span className="text-xs text-neutral-600">Address</span>
+                        <span className="font-mono truncate">{address}</span>
                     </div>
-
-                    {/* <div className='relative h-full flex flex-col items-center py-2'>
-                        <div className="h-full border border-2 border-dashed bg-white border-base-100"></div>
-                    </div> */}
-
-                    <div className='relative h-full flex flex-col items-center border-dashed justify-between border-2 bg-white border-base-100'>
-                        <div className="absolute rounded-full w-8 h-8 bg-base-100 -top-6"></div>
-                        <div className="absolute rounded-full w-8 h-8 bg-base-100 -bottom-6"></div>
-                    </div>
-
-                    <div className="h-full py-8 px-10 bg-white flex-grow rounded-xl flex flex-col">
-                        <div className="w-full">
-                            <div className="flex flex-col">
-                                <div className="flex items-center gap-2">
-                                    <span className="flex-grow text-4xl font-bold text-primary">Show Up Event</span>
-                                    <span className="badge badge-info badge-outline">Paid</span>
-                                    <span className="badge badge-success badge-outline">Settled</span>
-                                    <span className="badge badge-error badge-outline">Cancelled</span>
-                                </div>
-                                <span className="text-zinc-500 text-sm">Devconnect, Istanbul</span>
-                            </div>
-                        </div>
-                        <div className="flex w-full h-full flex-col flex-grow justify-end gap-2">
-                            <div className="flex flex-col">
-                                <span className="text-xs text-neutral-400">Date</span>
-                                <span className="font-mono">09/06/2023</span>
-                            </div>
-                            <div className="flex flex-row gap-4 justify-between">
-                                <div className="flex flex-col">
-                                    <span className="text-xs text-zinc-400">Address</span>
-                                    <span className="font-mono">wslyvh.eth</span>
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-xs text-neutral-400">Deposit</span>
-                                    <span className="font-mono">0.02 Eth</span>
-                                </div>
-                            </div>
-                        </div>
+                    <div className="flex flex-col shrink-0 w-24">
+                        <span className="text-xs text-neutral-600">Deposit</span>
+                        <span className="font-mono">
+                            {props.record.condition.type == ConditionModuleType.BasicEther && (
+                                <>
+                                    {formatEther(props.record.condition.depositFee)} ETH
+                                </>
+                            )}
+                            {props.record.condition.type == ConditionModuleType.BasicToken && (
+                                <>
+                                    {props.record.condition.depositFee} DAI
+                                </>
+                            )}
+                        </span>
                     </div>
                 </div>
-            </article>
-        </div>
+            </div>
+        </article >
     )
 }
