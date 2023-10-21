@@ -8,6 +8,7 @@ export async function main() {
     const [owner] = await ethers.getSigners()
 
     console.log('NETWORK ID', network.config.chainId)
+    // Sepolia 
     const registry = await ethers.getContractAt('Registry', '0x0959f7dD732631B7600fcCe67312920d4F5ECB9c')
     const basicEtherModule = await ethers.getContractAt('BasicEther', '0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836')
     const basicTokenModule = await ethers.getContractAt('BasicToken', '0x11FB53694e42972925940836a1E3EC71cA584936')
@@ -45,6 +46,15 @@ export async function main() {
 
     // Create Test events
     console.log('Create Events with BasicEther modules..')
+
+    // // Additional Event to settle
+    // const settleEvent = 'ipfs://bafkreibljo45l7qzlv2kf26mcwykruq46pxijoi4nbecaklgaxrcl3tdk4'
+    // const settleEnd = 1697899500
+    // const settleParams = ethers.utils.defaultAbiCoder.encode(
+    //     ["address", 'uint256', 'uint256', 'uint256', 'address'],
+    //     [owner.address, settleEnd, ethers.utils.parseUnits('0.001', 18), defaultMaxParticipants, ethers.constants.AddressZero])
+    // const settleTx = await registry.create(settleEvent, basicEtherModule.address, settleParams, { gasLimit: 350000 })
+    // await settleTx.wait()
 
     const devconnectUri = 'ipfs://bafkreid43edjyimgerffps46bupswb5gbmkrejl3smzfrihkeidax476fy'
     const devconnectEnd = dayjs('2023-11-19T13:00').unix()

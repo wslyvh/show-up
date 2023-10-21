@@ -157,7 +157,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
   }
 
   async function Register(id: string, module: ConditionModuleData, participant = account) {
-    console.log(`Register ${participant} for Event ${id}`)
+    console.log(`Register ${participant} for Event ${id} at ${chain?.id}`)
     if (!participant || !chain) {
       setState({ ...state, loading: false, message: 'Not connected.' })
       return

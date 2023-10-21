@@ -10,13 +10,13 @@ interface Props {
 export function Card({ event }: Props) {
   return (
     <LinkComponent href={`/events/${event.id}`}>
-      <div className='flex rounded-lg bg-neutral text-neutral-content p-4 hover:ring hover:ring-1'>
+      <div className='flex rounded-lg bg-neutral text-neutral-content p-4 hover:ring hover:ring-1 flex-col-reverse sm:flex-row'>
         <div className='w-full'>
           <p className='uppercase text-secondary text-sm'>
             {dayjs(event.metadata?.start).format('ddd MMM DD · HH:mm')}
           </p>
           <h2 className='text-xl font-bold mt-2'>{event.metadata?.title}</h2>
-          <div className='flex flex-row items-center gap-1 text-sm mt-4'>
+          <div className='flex flex-row items-center gap-1 text-sm mt-4 truncate'>
             <MapPinIcon className='h-5 w-5' /> {event.metadata?.location}
           </div>
           <div className='flex flex-row items-center gap-1 text-sm mt-2'>
@@ -32,7 +32,7 @@ export function Card({ event }: Props) {
 
         {event.metadata?.imageUrl && (
           <div>
-            <div className='w-[160px] h-[80px]'>
+            <div className='w-full h-[120px] mb-4 sm:w-[160px] sm:h-[80px] sm:mb-0'>
               <img
                 src={event.metadata?.imageUrl}
                 alt={event.metadata?.title}

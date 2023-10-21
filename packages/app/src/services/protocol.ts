@@ -1,7 +1,7 @@
 import { ConditionModule, ConditionModuleData, EventMetadata, Participant, Record, Status } from '@/utils/types'
 import dayjs from 'dayjs'
 
-const baseUri = 'https://api.studio.thegraph.com/query/43964/show-up-sepolia/version/latest'
+const baseUri = 'https://api.studio.thegraph.com/query/43964/show-up-protocol/version/latest'
 const ipfsGateway = 'https://cloudflare-ipfs.com/ipfs'
 
 interface GetRecordsWhere {
@@ -33,11 +33,10 @@ export async function GetRecords(params?: GetRecordsWhere) {
                     ${params?.id ? `id: "${params.id}"` : ''},
                     ${params?.status !== undefined ? `status: ${Status[params.status.valueOf()]}` : ''}, 
                     ${params?.createdBy ? `createdBy: "${params.createdBy}"` : ''}
-                    ${
-                      params?.past == true
-                        ? `condition_: {endDate_lte: "${dayjs().unix()}"}`
-                        : `condition_: {endDate_gte: "${dayjs().unix()}"}`
-                    }
+                    ${params?.past == true
+          ? `condition_: {endDate_lte: "${dayjs().unix()}"}`
+          : `condition_: {endDate_gte: "${dayjs().unix()}"}`
+        }
                 })
                 {
                     id

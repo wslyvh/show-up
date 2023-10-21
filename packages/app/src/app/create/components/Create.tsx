@@ -132,7 +132,7 @@ export function CreateForm() {
             />
           </div>
 
-          <div className='flex flex-row justify-between form-control w-full gap-4'>
+          <div className='flex flex-row justify-between form-control w-full gap-4 flex-col sm:flex-row'>
             <div className='flex-grow'>
               <label className='label' htmlFor='start'>
                 <span className='label-text'>
@@ -236,6 +236,8 @@ export function CreateForm() {
                     {token.symbol}
                   </option>
                 ))}
+                <option disabled value=''>NFTs</option>
+                <option disabled value=''>Reputation</option>
               </select>
               <input
                 id='depositFee'

@@ -10,6 +10,7 @@ import { Alert } from '@/components/Alert'
 import { useAccount } from 'wagmi'
 import { formatEther, formatUnits } from 'viem'
 import { useState } from 'react'
+import makeBlockie from 'ethereum-blockies-base64'
 
 interface Props {
   record: Record
@@ -60,7 +61,7 @@ export function EventDetails(props: Props) {
           </div>
         </div>
 
-        <div className=' p-8'>
+        <div className='p-8 mt-4'>
           <div className='flex flex-col mt-4 gap-2'>
             <p className='flex flex-row items-center gap-2'>
               <CalendarDaysIcon className='h-5 w-5 text-info' /> {dayjs(props.event.start).format('ddd MMM DD · HH:mm')}{' '}
@@ -96,10 +97,10 @@ export function EventDetails(props: Props) {
 
           <button
             type='button'
-            disabled={!isActive || hasEnded}
-            onClick={() => eventManagement.Register(props.record.id, props.record.condition)}
+            disabled={!isActive || hasEnded || isParticipant}
+            onClick={() => eventManagement.Register(props.record.id, props.record.condition, address)}
             className='btn btn-accent btn-outline btn-sm w-full mt-8'>
-            Attend
+            Register
           </button>
 
           <h1 className='text-xl text-white font-bold mt-8'>{props.event.title}</h1>
@@ -107,6 +108,26 @@ export function EventDetails(props: Props) {
           <p className='mt-8'>{props.event.description}</p>
         </div>
       </div>
+
+      {props.record.participants.length > 0 && (
+        <div>
+          <h2 className='text-xl text-white font-bold mt-8'>Attendees</h2>
+
+          <div className='flex flex-wrap justify-center gap-8 mt-8'>
+            {props.record.participants.map((participant) => {
+              return (
+                <>
+                  <div className="avatar">
+                    <div className={`w-20 rounded-full ${participant.checkedIn ? 'ring ring-success ring-offset-base-100 ring-offset-2' : ''}`}>
+                      <img src={makeBlockie(participant.address)} />
+                    </div>
+                  </div>
+                </>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       {isAdmin && (
         <div>
@@ -130,7 +151,7 @@ export function EventDetails(props: Props) {
 
           <button
             type='button'
-            disabled={!isActive || !hasEnded || isCancelled || isSettled}
+            disabled={!isActive || hasEnded || isCancelled || isSettled}
             onClick={() => eventManagement.Checkin(props.record.id, attendees)}
             className='btn btn-accent btn-outline btn-sm w-full mt-4'>
             Check-in
@@ -138,7 +159,7 @@ export function EventDetails(props: Props) {
 
           <button
             type='button'
-            disabled={!isActive || !hasEnded || !hasAttendees || isCancelled || isSettled}
+            disabled={!isActive || !hasAttendees || isCancelled || isSettled} // check is ended
             onClick={() => eventManagement.Settle(props.record.id)}
             className='btn btn-accent btn-outline btn-sm w-full mt-4'>
             Settle

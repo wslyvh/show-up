@@ -8,8 +8,8 @@ dataSources:
     name: Registry
     network: sepolia
     source:
-      address: '0x0959f7dD732631B7600fcCe67312920d4F5ECB9c'
       abi: Registry
+      address: '0x0959f7dD732631B7600fcCe67312920d4F5ECB9c'
       startBlock: 4528530
     mapping:
       kind: ethereum/events
@@ -55,3 +55,4 @@ templates:
       abis:
         - name: Registry
           file: ./abis/Registry.json
+    network: sepolia

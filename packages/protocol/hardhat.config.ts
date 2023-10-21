@@ -34,7 +34,18 @@ const config: HardhatUserConfig = {
     apiKey: {
       mainnet: etherscanApiKey,
       sepolia: etherscanApiKey,
+      scrollSepolia: 'D62920783A4311EE9D6600155D570C742E',
     },
+    customChains: [{
+      network: 'scrollSepolia',
+      chainId: 534351,
+      urls: {
+        // apiURL: 'https://api-sepolia.scrollscan.com/api',
+        // browserURL: 'https://sepolia.scrollscan.dev/'
+        apiURL: 'https://sepolia-blockscout.scroll.io/api',
+        browserURL: 'https://sepolia-blockscout.scroll.io/'
+      }
+    }],
   },
   networks: {
     hardhat: {
