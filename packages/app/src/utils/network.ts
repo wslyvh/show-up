@@ -1,8 +1,8 @@
-import { hardhat, mainnet, sepolia, scroll, scrollSepolia } from 'viem/chains'
+import { hardhat, mainnet, sepolia, scroll, scrollSepolia, mantleTestnet } from 'viem/chains'
 
-export const DEFAULT_CHAIN_ID = 11155111 // 11155111 Sepolia // Hardhat 31337 // scrollSepolia 534351
+export const DEFAULT_CHAIN_ID = 11155111 // 11155111 Sepolia // Hardhat 31337 // scrollSepolia 534351 // mantleTestnet 5001
 
-export const ETH_CHAINS = [sepolia, scrollSepolia]
+export const ETH_CHAINS = [sepolia, scrollSepolia, mantleTestnet]
 
 export const AddressZero = '0x0000000000000000000000000000000000000000'
 

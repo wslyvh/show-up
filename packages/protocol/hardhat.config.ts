@@ -35,6 +35,7 @@ const config: HardhatUserConfig = {
       mainnet: etherscanApiKey,
       sepolia: etherscanApiKey,
       scrollSepolia: 'D62920783A4311EE9D6600155D570C742E',
+      mantleTestnet: etherscanApiKey,
     },
     customChains: [{
       network: 'scrollSepolia',
@@ -44,7 +45,14 @@ const config: HardhatUserConfig = {
         // browserURL: 'https://sepolia.scrollscan.dev/'
         apiURL: 'https://sepolia-blockscout.scroll.io/api',
         browserURL: 'https://sepolia-blockscout.scroll.io/'
-      }
+      },
+    }, {
+      network: "mantleTestnet",
+      chainId: 5001,
+      urls: {
+        apiURL: 'https://explorer.testnet.mantle.xyz/api',
+        browserURL: 'https://explorer.testnet.mantle.xyz/',
+      },
     }],
   },
   networks: {
@@ -64,7 +72,11 @@ const config: HardhatUserConfig = {
       chainId: 534351,
       url: 'https://scroll-sepolia.blockpi.network/v1/rpc/public', // 'https://sepolia-rpc.scroll.io/',
       accounts: [deployerKey as string],
-      gasPrice: 15000000,
+    },
+    mantleTestnet: {
+      chainId: 5001,
+      url: 'https://rpc.testnet.mantle.xyz/',
+      accounts: [deployerKey as string],
     },
   },
 }
