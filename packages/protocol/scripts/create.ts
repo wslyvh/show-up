@@ -9,16 +9,16 @@ export async function main() {
 
     console.log('NETWORK ID', network.config.chainId)
     // Sepolia 
-    const registry = await ethers.getContractAt('Registry', '0x0959f7dD732631B7600fcCe67312920d4F5ECB9c')
-    const basicEtherModule = await ethers.getContractAt('BasicEther', '0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836')
-    const basicTokenModule = await ethers.getContractAt('BasicToken', '0x11FB53694e42972925940836a1E3EC71cA584936')
-    const token = await ethers.getContractAt('Token', '0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0')
+    // const registry = await ethers.getContractAt('Registry', '0x0959f7dD732631B7600fcCe67312920d4F5ECB9c')
+    // const basicEtherModule = await ethers.getContractAt('BasicEther', '0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836')
+    // const basicTokenModule = await ethers.getContractAt('BasicToken', '0x11FB53694e42972925940836a1E3EC71cA584936')
+    // const token = await ethers.getContractAt('Token', '0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0')
 
-    // Sepolia 
-    // const registry = await ethers.getContractAt('Registry', '0xfD4712Ed09b1d98354dC0153fd3eF7e374F71443')
-    // const basicEtherModule = await ethers.getContractAt('BasicEther', '0xC798B6C3A99a87fE4beFb24d4599b1caA6D6DAff')
-    // const basicTokenModule = await ethers.getContractAt('BasicToken', '0x317f09eCeBB6Db0d143cD7EF164F0FA1B6fC38b3')
-    // const token = await ethers.getContractAt('Token', '0x3C67cE8eA670B4f180d581eC4cef79750D2d482f')
+    // Scroll Sepolia 
+    const registry = await ethers.getContractAt('Registry', '0xa21BD128d7c507bf2F6b78181A9A99e86a23E593')
+    const basicEtherModule = await ethers.getContractAt('BasicEther', '0xf32E8f56626F87A0bf5e93154CA3a51D45123dc0')
+    const basicTokenModule = await ethers.getContractAt('BasicToken', '0xB944AFeF3821062B4B813D5aCaE833Eca223db09')
+    const token = await ethers.getContractAt('Token', '0xA95579514dB88a1F7a561E46bEdBDA1C676E76A4')
 
     // Check contracts exist
     const RegistryExists = await ethers.provider.getCode(registry.address)

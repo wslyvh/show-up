@@ -1,8 +1,8 @@
 import { hardhat, mainnet, sepolia, scroll, scrollSepolia } from 'viem/chains'
 
-export const DEFAULT_CHAIN_ID = 11155111 // 11155111 Sepolia // Hardhat 31337
+export const DEFAULT_CHAIN_ID = 11155111 // 11155111 Sepolia // Hardhat 31337 // scrollSepolia 534351
 
-export const ETH_CHAINS = [sepolia, scrollSepolia, scroll]
+export const ETH_CHAINS = [sepolia, scrollSepolia]
 
 export const AddressZero = '0x0000000000000000000000000000000000000000'
 
@@ -21,4 +21,5 @@ export const TOKENS = [
   { chainId: 10, symbol: 'USDC', address: '0x0b2c639c533813f4aa9d7837caf62653d097ff85' },
   { chainId: 10, symbol: 'DAI', address: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1' },
   { chainId: 11155111, symbol: 'DAI', address: '0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0' },
+  { chainId: 534351, symbol: 'TEST DAI', address: '0xA95579514dB88a1F7a561E46bEdBDA1C676E76A4' },
 ]

@@ -5,8 +5,9 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "build:scroll": "graph build --network scrollSepolia",
+    "build:scroll": "graph build --network scroll-sepolia",
     "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ show-up-protocol",
+    "deploy:scroll": "graph deploy --node https://api.studio.thegraph.com/deploy/ show-up  --network scroll-sepolia",
     "create-local": "graph create --node http://localhost:8020/ show-up-protocol",
     "remove-local": "graph remove --node http://localhost:8020/ show-up-protocol",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 show-up-protocol",

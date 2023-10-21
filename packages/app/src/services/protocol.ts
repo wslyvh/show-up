@@ -1,7 +1,10 @@
 import { ConditionModule, ConditionModuleData, EventMetadata, Participant, Record, Status } from '@/utils/types'
 import dayjs from 'dayjs'
 
-const baseUri = 'https://api.studio.thegraph.com/query/43964/show-up-protocol/version/latest'
+const baseUriScrollSepolia = 'https://api.studio.thegraph.com/query/43964/show-up-scroll/version/latest'
+const baseUriSepolia = 'https://api.studio.thegraph.com/query/43964/show-up-sepolia/version/latest'
+
+const baseUri = baseUriSepolia
 const ipfsGateway = 'https://cloudflare-ipfs.com/ipfs'
 
 interface GetRecordsWhere {

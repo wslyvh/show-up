@@ -6,11 +6,11 @@ features:
 dataSources:
   - kind: ethereum
     name: Registry
-    network: sepolia
+    network: scroll-sepolia
     source:
       abi: Registry
-      address: '0x0959f7dD732631B7600fcCe67312920d4F5ECB9c'
-      startBlock: 4528530
+      address: "0xa21BD128d7c507bf2F6b78181A9A99e86a23E593"
+      startBlock: 1762899
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -55,4 +55,4 @@ templates:
       abis:
         - name: Registry
           file: ./abis/Registry.json
-    network: sepolia
+    network: scroll-sepolia
