@@ -32,6 +32,7 @@
     "ethereum-blockies-base64": "^1.0.2",
     "iron-session": "^6.3.1",
     "next": "13.5.4",
+    "next-plausible": "^3.11.2",
     "qrcode.react": "^3.1.0",
     "react": "^18",
     "react-dom": "^18",

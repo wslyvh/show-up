@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import { PropsWithChildren } from 'react'
-import { SITE_DESCRIPTION, SITE_NAME } from '@/utils/site'
+import { SITE_DESCRIPTION, SITE_DOMAIN, SITE_NAME } from '@/utils/site'
 import { MobileLayout } from '@/components/MobileLayout'
 import { Web3Provider } from '@/context/Web3'
 import { EventManagementProvider } from '@/context/EventManagement'
 import { NotificationProvider } from '@/context/Notification'
+import PlausibleProvider from 'next-plausible'
 import '../assets/globals.css'
 
 export const metadata: Metadata = {
@@ -32,6 +33,9 @@ export const metadata: Metadata = {
 export default function RootLayout(props: PropsWithChildren) {
   return (
     <html lang='en'>
+      <head>
+        <PlausibleProvider domain={SITE_DOMAIN} />
+      </head>
       <body>
         <Web3Provider>
           <NotificationProvider>
