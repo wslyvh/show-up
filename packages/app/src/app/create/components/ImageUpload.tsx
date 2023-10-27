@@ -45,11 +45,11 @@ export function ImageUpload(props: Props) {
             htmlFor='dropzone-file'
             className='flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-xl cursor-pointer bg-neutral hover:bg-gray-800 border-gray-700 hover:border-gray-600'>
             <div className='flex flex-col items-center justify-center pb-4'>
-              <CloudArrowUpIcon className='w-12 h-12 dark:text-gray-400 my-4' />
-              <p className='mb-2 text-sm text-gray-500 dark:text-gray-400'>
+              <CloudArrowUpIcon className='w-12 h-12 text-gray-400 my-4' />
+              <p className='mb-2 text-sm text-gray-400'>
                 <span className='font-semibold'>Click to upload</span> or drag and drop
               </p>
-              <p className='text-xs text-gray-500 dark:text-gray-400'>
+              <p className='text-xs text-gray-400'>
                 .png format, with a recommended size of 1200:600 (2:1 ratio)
               </p>
             </div>

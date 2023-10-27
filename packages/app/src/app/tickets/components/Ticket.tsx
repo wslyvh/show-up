@@ -25,14 +25,13 @@ export function Ticket(props: Props) {
   const { address } = useAccount()
   const { chain } = useNetwork()
   const ticket = props.record.participants.find((p) => p.address.toLowerCase() == address.toLowerCase())
-  // console.log('PARTICIPANTS', props.record, ticket)
-  const qrLink = `${chain?.blockExplorers?.default.url}/tx/${ticket?.transactionHash}`
-  console.log('QR', ticket, qrLink)
+
+  if (!ticket) return null
 
   return (
     <article className='flex w-full flex-col md:flex-row'>
       <div className='flex rounded-xl bg-white items-center justify-center p-4 md:p-12'>
-        <QRCodeSVG value={qrLink} level='Q' />
+        <QRCodeSVG value={ticket.url} level='Q' />
       </div>
 
       <div className='flex items-center px-2 md:px-0 md:py-2'>

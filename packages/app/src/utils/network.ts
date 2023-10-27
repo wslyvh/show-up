@@ -1,21 +1,41 @@
 import { hardhat, mainnet, sepolia, scroll, scrollSepolia, mantleTestnet } from 'viem/chains'
 
+export const DEFAULT_IPFS_GATEWAY = 'https://cloudflare-ipfs.com/ipfs'
 export const DEFAULT_CHAIN_ID = 11155111 // 11155111 Sepolia // Hardhat 31337 // scrollSepolia 534351 // mantleTestnet 5001
-
-export const ETH_CHAINS = [sepolia, scrollSepolia, mantleTestnet]
-
+export const ETH_CHAINS = [sepolia, scrollSepolia]
 export const AddressZero = '0x0000000000000000000000000000000000000000'
 
-export function GetNetworkColor(chain?: string) {
-  if (chain === 'homestead') return 'green'
-  if (chain === 'arbitrum') return 'blue'
-  if (chain === 'optimism') return 'red'
-  if (chain === 'matic') return 'purple'
+export function GetNetworkColor(chainId: number = DEFAULT_CHAIN_ID) {
+  if (chainId === 1) return 'green'
+  if (chainId === 10) return 'red'
+  if (chainId === 137) return 'purple'
+  if (chainId === 42161) return 'blue'
+  if (chainId === 534352) return 'yellow'
 
   return 'grey'
 }
 
-export const TOKENS = [
+export function GetNetworkName(chainId: number = DEFAULT_CHAIN_ID) {
+  if (chainId === 1) return 'mainnet'
+  if (chainId === 5) return 'goerli'
+  if (chainId === 534352) return 'scroll'
+  if (chainId === 534351) return 'scroll-sepolia'
+  if (chainId === 11155111) return 'sepolia'
+  if (chainId === 42161) return 'arbitrum'
+  if (chainId === 10) return 'optimism'
+
+  return 'mainnet'
+}
+
+export function GetGraphBaseUri(chainId: number = DEFAULT_CHAIN_ID) {
+  if (ETH_CHAINS.find((c) => c.id === chainId)) {
+    return `https://api.studio.thegraph.com/query/43964/show-up-${GetNetworkName(chainId)}/version/latest`
+  }
+
+  throw new Error(`chainId ${chainId} not supported`)
+}
+
+export const WHITELISTED_TOKENS = [
   { chainId: 1, symbol: 'USDC', address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' },
   { chainId: 1, symbol: 'DAI', address: '0x6b175474e89094c44da98b954eedeac495271d0f' },
   { chainId: 10, symbol: 'USDC', address: '0x0b2c639c533813f4aa9d7837caf62653d097ff85' },

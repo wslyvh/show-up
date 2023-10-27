@@ -1,19 +1,23 @@
-import { Record } from '@/utils/types'
+'use client'
+
+import { Loading } from '@/components/Loading'
 import { Card } from './Card'
-import { Tabs } from './Tabs'
+import { useEvents } from '@/hooks/useEvents'
+import { Empty } from '@/components/Empty'
 
-interface Props {
-  events: Record[]
-}
+export function Overview() {
+  const events = useEvents()
 
-export function Overview(props: Props) {
+  if (events.isLoading) return <Loading text='' />
+
+  if (!events.isLoading && (!events.data || events.data.length === 0)) return <Empty text={`No events found`} />
+
   return (
     <>
       {/* <Tabs options={['Upcoming', 'Past']} /> */}
 
       <div className='flex flex-col gap-2'>
-        {props.events
-          .filter((i) => !!i.metadata)
+        {events.data?.filter((i) => !!i.metadata)
           .map((event) => (
             <Card key={event.id} event={event} />
           ))}

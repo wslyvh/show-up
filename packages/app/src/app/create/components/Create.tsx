@@ -5,7 +5,7 @@ import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import { useEventManagement } from '@/context/EventManagement'
 import { ConditionModuleData, ConditionModuleType, EventMetadata } from '@/utils/types'
 import { DEFAULT_APP_ID } from '@/utils/site'
-import { AddressZero, DEFAULT_CHAIN_ID, TOKENS } from '@/utils/network'
+import { AddressZero, DEFAULT_CHAIN_ID, WHITELISTED_TOKENS } from '@/utils/network'
 import { formatUnits, parseUnits } from 'viem'
 import { basicEtherAddress, basicTokenAddress } from '@/abis'
 import { SelectBox } from '@/components/SelectBox'
@@ -231,7 +231,7 @@ export function CreateForm() {
                 value={conditions.tokenAddress ? conditions.tokenAddress : ''}
                 required>
                 <option value=''>Ether</option>
-                {TOKENS.filter((i) => i.chainId === chain?.id).map((token) => (
+                {WHITELISTED_TOKENS.filter((i) => i.chainId === chain?.id).map((token) => (
                   <option key={token.address} value={token.address}>
                     {token.symbol}
                   </option>

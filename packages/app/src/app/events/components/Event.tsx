@@ -23,7 +23,7 @@ export function EventDetails(props: Props) {
   const [reason, setReason] = useState('')
   const [attendees, setAttendees] = useState<string[]>([])
   const sameDay = dayjs(props.event.start).isSame(props.event.end, 'day')
-  const hasEnded = dayjs().isAfter(dayjs((props.record.metadata?.end ?? '').valueOf()))
+  const hasEnded = dayjs().isAfter(dayjs((props.record.metadata?.end ?? '')))
   const hasAttendees = props.record.participants.filter((i) => !!i.checkedIn).length > 0
   const isCancelled = Status[props.record.status.valueOf()] == Status.Cancelled.toString()
   const isActive = Status[props.record.status.valueOf()] == Status.Active.toString()

@@ -1,11 +1,6 @@
+import { DEFAULT_CHAIN_ID, DEFAULT_IPFS_GATEWAY, ETH_CHAINS, GetGraphBaseUri } from '@/utils/network'
 import { ConditionModule, ConditionModuleData, EventMetadata, Participant, Record, Status } from '@/utils/types'
 import dayjs from 'dayjs'
-
-const baseUriScrollSepolia = 'https://api.studio.thegraph.com/query/43964/show-up-scroll/version/latest'
-const baseUriSepolia = 'https://api.studio.thegraph.com/query/43964/show-up-sepolia/version/latest'
-
-const baseUri = baseUriSepolia
-const ipfsGateway = 'https://cloudflare-ipfs.com/ipfs'
 
 interface GetRecordsWhere {
   id?: string
@@ -19,13 +14,15 @@ interface GetConditionModulesWhere {
   enabled?: boolean
 }
 
-export async function GetRecord(id: string) {
-  const result = await GetRecords({ id: id })
+export async function GetRecord(id: string, chainId: number = DEFAULT_CHAIN_ID) {
+  const result = await GetRecords({ id: id }, chainId)
   return result.length > 0 ? result[0] : undefined
 }
 
-export async function GetRecords(params?: GetRecordsWhere) {
-  const response = await fetch(baseUri, {
+export async function GetRecords(params?: GetRecordsWhere, chainId: number = DEFAULT_CHAIN_ID) {
+  console.log('GetRecords', params, chainId)
+
+  const response = await fetch(GetGraphBaseUri(chainId), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -94,15 +91,13 @@ export async function GetRecords(params?: GetRecordsWhere) {
   }
 
   const { data } = await response.json()
-  const results: Record[] = data.records.map((i: any) => {
-    return toRecord(i)
-  })
-
+  const results: Record[] = data.records.map((i: any) => toRecord(i, chainId))
   return results.filter((i) => !!i.metadata)
 }
 
-export async function GetParticipations(address: string) {
-  const response = await fetch(baseUri, {
+export async function GetParticipations(address: string, chainId: number = DEFAULT_CHAIN_ID) {
+  console.log('GetParticipations', address, chainId)
+  const response = await fetch(GetGraphBaseUri(chainId), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -165,15 +160,15 @@ export async function GetParticipations(address: string) {
   const { data } = await response.json()
   const results: Record[] = data.users.flatMap((user: any) => {
     return user.participations.flatMap((i: any) => {
-      return toRecord(i.record)
+      return toRecord(i.record, chainId)
     })
   })
 
   return results.filter((i) => !!i.metadata)
 }
 
-export async function GetConditionModules(params?: GetConditionModulesWhere) {
-  const response = await fetch(baseUri, {
+export async function GetConditionModules(params?: GetConditionModulesWhere, chainId: number = DEFAULT_CHAIN_ID) {
+  const response = await fetch(GetGraphBaseUri(chainId), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -197,18 +192,14 @@ export async function GetConditionModules(params?: GetConditionModulesWhere) {
   }
 
   const { data } = await response.json()
-  const results = data.conditionModules.map((i: any) => {
-    return {
-      type: i.name,
-      address: i.id,
-      whitelisted: i.whitelisted,
-    } as ConditionModule
-  })
-
+  const results: ConditionModule[] = data.conditionModules.map((i: any) => toConditionModule(i, chainId))
   return results as ConditionModule[]
 }
 
-function toRecord(data: any) {
+
+// Mapping Functions
+
+function toRecord(data: any, chainId: number = DEFAULT_CHAIN_ID) {
   return {
     id: data.id,
     createdAt: dayjs(data.createdAt).valueOf(),
@@ -217,25 +208,26 @@ function toRecord(data: any) {
     status: data.status,
     message: data.message ?? '',
     conditionModule: data.conditionModule,
-    condition: toConditions(data.condition, data.conditionModule),
+    condition: toConditions(data.condition, data.conditionModule, chainId),
     contentUri: data.contentUri,
     metadata: toMetadata(data.metadata),
-    participants: data.participants?.map((p: any) => toParticipant(p)) ?? [],
+    participants: data.participants?.map((p: any) => toParticipant(p, chainId)) ?? [],
   } as Record
 }
 
-function toMetadata(data: any) {
+function toMetadata(data: any, chainId: number = DEFAULT_CHAIN_ID) {
   if (!data) return undefined
 
   return {
     ...data,
     imageUrl: data?.imageUrl?.includes('ipfs://')
-      ? `${ipfsGateway}/${data.imageUrl.replace('ipfs://', '')}`
+      ? `${DEFAULT_IPFS_GATEWAY}/${data.imageUrl.replace('ipfs://', '')}`
       : data?.imageUrl ?? '',
   } as EventMetadata
 }
 
-function toParticipant(data: any) {
+function toParticipant(data: any, chainId: number = DEFAULT_CHAIN_ID) {
+  const chain = ETH_CHAINS.find((c) => c.id === chainId)
   return {
     id: data.id,
     createdAt: dayjs(data.createdAt).valueOf(),
@@ -243,10 +235,19 @@ function toParticipant(data: any) {
     address: data.address,
     checkedIn: data.checkedIn,
     transactionHash: data.transactionHash,
+    url: chain ? `${chain.blockExplorers.default.url}/tx/${data.transactionHash}` : '',
   } as Participant
 }
 
-function toConditions(data: any, address: string) {
+function toConditionModule(data: any, chainId: number = DEFAULT_CHAIN_ID) {
+  return {
+    type: data.name,
+    address: data.id,
+    whitelisted: data.whitelisted,
+  } as ConditionModule
+}
+
+function toConditions(data: any, address: string, chainId: number = DEFAULT_CHAIN_ID) {
   if (!data) return undefined
 
   return {

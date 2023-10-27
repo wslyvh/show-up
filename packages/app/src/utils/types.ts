@@ -34,6 +34,7 @@ export interface Participant {
   address: string
   checkedIn: boolean
   transactionHash: string
+  url: string
 }
 
 export interface EventMetadata {
