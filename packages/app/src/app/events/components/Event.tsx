@@ -7,7 +7,7 @@ import { ConditionModuleType, EventMetadata, Record, Status } from '@/utils/type
 import dayjs from 'dayjs'
 import { useEventManagement } from '@/context/EventManagement'
 import { Alert } from '@/components/Alert'
-import { useAccount } from 'wagmi'
+import { useAccount, useBalance } from 'wagmi'
 import { formatEther, formatUnits } from 'viem'
 import { useState } from 'react'
 import makeBlockie from 'ethereum-blockies-base64'
@@ -19,13 +19,21 @@ interface Props {
 }
 
 export function EventDetails(props: Props) {
-  const { address } = useAccount()
   const eventManagement = useEventManagement()
+  const { address } = useAccount()
   const [reason, setReason] = useState('')
   const [attendees, setAttendees] = useState<string[]>([])
+
+  const balanceReq: any = { address: address, watch: true }
+  if (props.record.condition.type == ConditionModuleType.BasicToken && props.record.condition.tokenAddress) {
+    balanceReq.token = props.record.condition.tokenAddress
+  }
+  const { data: balance } = useBalance(balanceReq)
+
   const sameDay = dayjs(props.event.start).isSame(props.event.end, 'day')
-  const hasEnded = dayjs().isAfter(dayjs((props.record.metadata?.end ?? '')))
+  const hasEnded = dayjs().isAfter(dayjs(props.record.condition.endDate))
   const hasAttendees = props.record.participants.filter((i) => !!i.checkedIn).length > 0
+  const hasBalance = balance && balance.value > props.record.condition.depositFee
   const isCancelled = Status[props.record.status.valueOf()] == Status.Cancelled.toString()
   const isActive = Status[props.record.status.valueOf()] == Status.Active.toString()
   const isSettled = Status[props.record.status.valueOf()] == Status.Settled.toString()
@@ -36,6 +44,14 @@ export function EventDetails(props: Props) {
     if (!e.target.value) return
 
     setAttendees(e.target.value.split('\n'))
+  }
+
+  function registerButtonText() {
+    if (!isActive || hasEnded) return 'Event has ended'
+    if (isParticipant) return 'Already registered'
+    if (!hasBalance) return 'Not enough funds'
+
+    return 'Register'
   }
 
   return (
@@ -102,10 +118,10 @@ export function EventDetails(props: Props) {
 
           <button
             type='button'
-            disabled={!isActive || hasEnded || isParticipant}
+            disabled={!isActive || hasEnded || isParticipant || !hasBalance}
             onClick={() => eventManagement.Register(props.record.id, props.record.condition, address)}
             className='btn btn-accent btn-outline btn-sm w-full mt-8'>
-            Register
+            {registerButtonText()}
           </button>
 
           <h1 className='text-xl text-white font-bold mt-8'>{props.event.title}</h1>

@@ -67,7 +67,7 @@ export interface ConditionModule {
 }
 
 export interface ConditionModuleData extends ConditionModule {
-  endDate: string | bigint
+  endDate: string | number
   depositFee: bigint
   maxParticipants: number
   tokenAddress?: string // Only used for BasicToken module

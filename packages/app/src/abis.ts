@@ -176,7 +176,7 @@ export const abstractBasicModuleABI = [
 
 /**
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xeFB0f24E6f5bE8a969488dbA2f0D6d99eAF342cd)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xf32E8f56626F87A0bf5e93154CA3a51D45123dc0)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836)
  */
 export const basicEtherABI = [
@@ -337,18 +337,18 @@ export const basicEtherABI = [
 
 /**
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xeFB0f24E6f5bE8a969488dbA2f0D6d99eAF342cd)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xf32E8f56626F87A0bf5e93154CA3a51D45123dc0)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836)
  */
 export const basicEtherAddress = {
   31337: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
-  534351: '0xeFB0f24E6f5bE8a969488dbA2f0D6d99eAF342cd',
+  534351: '0xf32E8f56626F87A0bf5e93154CA3a51D45123dc0',
   11155111: '0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836',
 } as const
 
 /**
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xeFB0f24E6f5bE8a969488dbA2f0D6d99eAF342cd)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xf32E8f56626F87A0bf5e93154CA3a51D45123dc0)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836)
  */
 export const basicEtherConfig = { address: basicEtherAddress, abi: basicEtherABI } as const
@@ -359,7 +359,7 @@ export const basicEtherConfig = { address: basicEtherAddress, abi: basicEtherABI
 
 /**
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x555B9c3B79EF437776F7E0833c234c802D741771)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xB944AFeF3821062B4B813D5aCaE833Eca223db09)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11FB53694e42972925940836a1E3EC71cA584936)
  */
 export const basicTokenABI = [
@@ -520,18 +520,18 @@ export const basicTokenABI = [
 
 /**
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x555B9c3B79EF437776F7E0833c234c802D741771)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xB944AFeF3821062B4B813D5aCaE833Eca223db09)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11FB53694e42972925940836a1E3EC71cA584936)
  */
 export const basicTokenAddress = {
   31337: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
-  534351: '0x555B9c3B79EF437776F7E0833c234c802D741771',
+  534351: '0xB944AFeF3821062B4B813D5aCaE833Eca223db09',
   11155111: '0x11FB53694e42972925940836a1E3EC71cA584936',
 } as const
 
 /**
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x555B9c3B79EF437776F7E0833c234c802D741771)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xB944AFeF3821062B4B813D5aCaE833Eca223db09)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11FB53694e42972925940836a1E3EC71cA584936)
  */
 export const basicTokenConfig = { address: basicTokenAddress, abi: basicTokenABI } as const
@@ -1287,7 +1287,7 @@ export const ownableABI = [
 
 /**
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x088c088217611a54991AFbEf3D77020D3Ad7CbA3)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xa21BD128d7c507bf2F6b78181A9A99e86a23E593)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0959f7dD732631B7600fcCe67312920d4F5ECB9c)
  */
 export const registryABI = [
@@ -1492,18 +1492,18 @@ export const registryABI = [
 
 /**
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x088c088217611a54991AFbEf3D77020D3Ad7CbA3)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xa21BD128d7c507bf2F6b78181A9A99e86a23E593)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0959f7dD732631B7600fcCe67312920d4F5ECB9c)
  */
 export const registryAddress = {
   31337: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
-  534351: '0x088c088217611a54991AFbEf3D77020D3Ad7CbA3',
+  534351: '0xa21BD128d7c507bf2F6b78181A9A99e86a23E593',
   11155111: '0x0959f7dD732631B7600fcCe67312920d4F5ECB9c',
 } as const
 
 /**
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x088c088217611a54991AFbEf3D77020D3Ad7CbA3)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xa21BD128d7c507bf2F6b78181A9A99e86a23E593)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0959f7dD732631B7600fcCe67312920d4F5ECB9c)
  */
 export const registryConfig = { address: registryAddress, abi: registryABI } as const
@@ -1514,7 +1514,7 @@ export const registryConfig = { address: registryAddress, abi: registryABI } as 
 
 /**
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA0831CF780DBc6B80f8cBf0da388f38f268A414e)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA95579514dB88a1F7a561E46bEdBDA1C676E76A4)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0)
  */
 export const tokenABI = [
@@ -1693,18 +1693,18 @@ export const tokenABI = [
 
 /**
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA0831CF780DBc6B80f8cBf0da388f38f268A414e)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA95579514dB88a1F7a561E46bEdBDA1C676E76A4)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0)
  */
 export const tokenAddress = {
   31337: '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
-  534351: '0xA0831CF780DBc6B80f8cBf0da388f38f268A414e',
+  534351: '0xA95579514dB88a1F7a561E46bEdBDA1C676E76A4',
   11155111: '0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0',
 } as const
 
 /**
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA0831CF780DBc6B80f8cBf0da388f38f268A414e)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA95579514dB88a1F7a561E46bEdBDA1C676E76A4)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0)
  */
 export const tokenConfig = { address: tokenAddress, abi: tokenABI } as const
@@ -1725,7 +1725,7 @@ export function getAbstractBasicModule(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readAbstractBasicModule<
   TAbi extends readonly unknown[] = typeof abstractBasicModuleABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: abstractBasicModuleABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -1749,7 +1749,7 @@ export function writeAbstractBasicModule<TFunctionName extends string>(
  */
 export function prepareWriteAbstractBasicModule<
   TAbi extends readonly unknown[] = typeof abstractBasicModuleABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: abstractBasicModuleABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -1761,7 +1761,7 @@ export function prepareWriteAbstractBasicModule<
  * Wraps __{@link getContract}__ with `abi` set to __{@link basicEtherABI}__.
  *
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xeFB0f24E6f5bE8a969488dbA2f0D6d99eAF342cd)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xf32E8f56626F87A0bf5e93154CA3a51D45123dc0)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836)
  */
 export function getBasicEther(
@@ -1778,12 +1778,12 @@ export function getBasicEther(
  * Wraps __{@link readContract}__ with `abi` set to __{@link basicEtherABI}__.
  *
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xeFB0f24E6f5bE8a969488dbA2f0D6d99eAF342cd)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xf32E8f56626F87A0bf5e93154CA3a51D45123dc0)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836)
  */
 export function readBasicEther<
   TAbi extends readonly unknown[] = typeof basicEtherABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(
   config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof basicEtherAddress
@@ -1800,13 +1800,13 @@ export function readBasicEther<
  * Wraps __{@link writeContract}__ with `abi` set to __{@link basicEtherABI}__.
  *
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xeFB0f24E6f5bE8a969488dbA2f0D6d99eAF342cd)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xf32E8f56626F87A0bf5e93154CA3a51D45123dc0)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836)
  */
 export function writeBasicEther<
   TFunctionName extends string,
   TMode extends WriteContractMode,
-  TChainId extends number = keyof typeof basicEtherAddress,
+  TChainId extends number = keyof typeof basicEtherAddress
 >(
   config:
     | (Omit<WriteContractPreparedArgs<typeof basicEtherABI, TFunctionName>, 'abi' | 'address'> & {
@@ -1829,12 +1829,12 @@ export function writeBasicEther<
  * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link basicEtherABI}__.
  *
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xeFB0f24E6f5bE8a969488dbA2f0D6d99eAF342cd)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xf32E8f56626F87A0bf5e93154CA3a51D45123dc0)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836)
  */
 export function prepareWriteBasicEther<
   TAbi extends readonly unknown[] = typeof basicEtherABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(
   config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof basicEtherAddress
@@ -1851,7 +1851,7 @@ export function prepareWriteBasicEther<
  * Wraps __{@link getContract}__ with `abi` set to __{@link basicTokenABI}__.
  *
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x555B9c3B79EF437776F7E0833c234c802D741771)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xB944AFeF3821062B4B813D5aCaE833Eca223db09)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11FB53694e42972925940836a1E3EC71cA584936)
  */
 export function getBasicToken(
@@ -1868,12 +1868,12 @@ export function getBasicToken(
  * Wraps __{@link readContract}__ with `abi` set to __{@link basicTokenABI}__.
  *
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x555B9c3B79EF437776F7E0833c234c802D741771)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xB944AFeF3821062B4B813D5aCaE833Eca223db09)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11FB53694e42972925940836a1E3EC71cA584936)
  */
 export function readBasicToken<
   TAbi extends readonly unknown[] = typeof basicTokenABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(
   config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof basicTokenAddress
@@ -1890,13 +1890,13 @@ export function readBasicToken<
  * Wraps __{@link writeContract}__ with `abi` set to __{@link basicTokenABI}__.
  *
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x555B9c3B79EF437776F7E0833c234c802D741771)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xB944AFeF3821062B4B813D5aCaE833Eca223db09)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11FB53694e42972925940836a1E3EC71cA584936)
  */
 export function writeBasicToken<
   TFunctionName extends string,
   TMode extends WriteContractMode,
-  TChainId extends number = keyof typeof basicTokenAddress,
+  TChainId extends number = keyof typeof basicTokenAddress
 >(
   config:
     | (Omit<WriteContractPreparedArgs<typeof basicTokenABI, TFunctionName>, 'abi' | 'address'> & {
@@ -1919,12 +1919,12 @@ export function writeBasicToken<
  * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link basicTokenABI}__.
  *
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x555B9c3B79EF437776F7E0833c234c802D741771)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xB944AFeF3821062B4B813D5aCaE833Eca223db09)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x11FB53694e42972925940836a1E3EC71cA584936)
  */
 export function prepareWriteBasicToken<
   TAbi extends readonly unknown[] = typeof basicTokenABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(
   config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof basicTokenAddress
@@ -1969,7 +1969,7 @@ export function writeErc20<TFunctionName extends string>(
  */
 export function prepareWriteErc20<
   TAbi extends readonly unknown[] = typeof erc20ABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: erc20ABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -1989,7 +1989,7 @@ export function getIConditionModule(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readIConditionModule<
   TAbi extends readonly unknown[] = typeof iConditionModuleABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: iConditionModuleABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -2013,7 +2013,7 @@ export function writeIConditionModule<TFunctionName extends string>(
  */
 export function prepareWriteIConditionModule<
   TAbi extends readonly unknown[] = typeof iConditionModuleABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: iConditionModuleABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2060,7 +2060,7 @@ export function writeIerc20<TFunctionName extends string>(
  */
 export function prepareWriteIerc20<
   TAbi extends readonly unknown[] = typeof ierc20ABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: ierc20ABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2087,7 +2087,7 @@ export function getIerc20Metadata(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readIerc20Metadata<
   TAbi extends readonly unknown[] = typeof ierc20MetadataABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: ierc20MetadataABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -2111,7 +2111,7 @@ export function writeIerc20Metadata<TFunctionName extends string>(
  */
 export function prepareWriteIerc20Metadata<
   TAbi extends readonly unknown[] = typeof ierc20MetadataABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: ierc20MetadataABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2138,7 +2138,7 @@ export function getIRegistry(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readIRegistry<
   TAbi extends readonly unknown[] = typeof iRegistryABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: iRegistryABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -2162,7 +2162,7 @@ export function writeIRegistry<TFunctionName extends string>(
  */
 export function prepareWriteIRegistry<
   TAbi extends readonly unknown[] = typeof iRegistryABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: iRegistryABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2209,7 +2209,7 @@ export function writeOwnable<TFunctionName extends string>(
  */
 export function prepareWriteOwnable<
   TAbi extends readonly unknown[] = typeof ownableABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: ownableABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2221,7 +2221,7 @@ export function prepareWriteOwnable<
  * Wraps __{@link getContract}__ with `abi` set to __{@link registryABI}__.
  *
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x088c088217611a54991AFbEf3D77020D3Ad7CbA3)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xa21BD128d7c507bf2F6b78181A9A99e86a23E593)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0959f7dD732631B7600fcCe67312920d4F5ECB9c)
  */
 export function getRegistry(
@@ -2238,12 +2238,12 @@ export function getRegistry(
  * Wraps __{@link readContract}__ with `abi` set to __{@link registryABI}__.
  *
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x088c088217611a54991AFbEf3D77020D3Ad7CbA3)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xa21BD128d7c507bf2F6b78181A9A99e86a23E593)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0959f7dD732631B7600fcCe67312920d4F5ECB9c)
  */
 export function readRegistry<
   TAbi extends readonly unknown[] = typeof registryABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(
   config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & { chainId?: keyof typeof registryAddress }
 ) {
@@ -2258,13 +2258,13 @@ export function readRegistry<
  * Wraps __{@link writeContract}__ with `abi` set to __{@link registryABI}__.
  *
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x088c088217611a54991AFbEf3D77020D3Ad7CbA3)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xa21BD128d7c507bf2F6b78181A9A99e86a23E593)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0959f7dD732631B7600fcCe67312920d4F5ECB9c)
  */
 export function writeRegistry<
   TFunctionName extends string,
   TMode extends WriteContractMode,
-  TChainId extends number = keyof typeof registryAddress,
+  TChainId extends number = keyof typeof registryAddress
 >(
   config:
     | (Omit<WriteContractPreparedArgs<typeof registryABI, TFunctionName>, 'abi' | 'address'> & {
@@ -2287,12 +2287,12 @@ export function writeRegistry<
  * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link registryABI}__.
  *
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0x088c088217611a54991AFbEf3D77020D3Ad7CbA3)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xa21BD128d7c507bf2F6b78181A9A99e86a23E593)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x0959f7dD732631B7600fcCe67312920d4F5ECB9c)
  */
 export function prepareWriteRegistry<
   TAbi extends readonly unknown[] = typeof registryABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(
   config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof registryAddress
@@ -2309,7 +2309,7 @@ export function prepareWriteRegistry<
  * Wraps __{@link getContract}__ with `abi` set to __{@link tokenABI}__.
  *
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA0831CF780DBc6B80f8cBf0da388f38f268A414e)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA95579514dB88a1F7a561E46bEdBDA1C676E76A4)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0)
  */
 export function getToken(config: Omit<GetContractArgs, 'abi' | 'address'> & { chainId?: keyof typeof tokenAddress }) {
@@ -2320,7 +2320,7 @@ export function getToken(config: Omit<GetContractArgs, 'abi' | 'address'> & { ch
  * Wraps __{@link readContract}__ with `abi` set to __{@link tokenABI}__.
  *
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA0831CF780DBc6B80f8cBf0da388f38f268A414e)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA95579514dB88a1F7a561E46bEdBDA1C676E76A4)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0)
  */
 export function readToken<TAbi extends readonly unknown[] = typeof tokenABI, TFunctionName extends string = string>(
@@ -2337,13 +2337,13 @@ export function readToken<TAbi extends readonly unknown[] = typeof tokenABI, TFu
  * Wraps __{@link writeContract}__ with `abi` set to __{@link tokenABI}__.
  *
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA0831CF780DBc6B80f8cBf0da388f38f268A414e)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA95579514dB88a1F7a561E46bEdBDA1C676E76A4)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0)
  */
 export function writeToken<
   TFunctionName extends string,
   TMode extends WriteContractMode,
-  TChainId extends number = keyof typeof tokenAddress,
+  TChainId extends number = keyof typeof tokenAddress
 >(
   config:
     | (Omit<WriteContractPreparedArgs<typeof tokenABI, TFunctionName>, 'abi' | 'address'> & {
@@ -2366,12 +2366,12 @@ export function writeToken<
  * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link tokenABI}__.
  *
  * -
- * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA0831CF780DBc6B80f8cBf0da388f38f268A414e)
+ * - [__View Contract on Scroll Sepolia Blockscout__](https://sepolia-blockscout.scroll.io/address/0xA95579514dB88a1F7a561E46bEdBDA1C676E76A4)
  * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0)
  */
 export function prepareWriteToken<
   TAbi extends readonly unknown[] = typeof tokenABI,
-  TFunctionName extends string = string,
+  TFunctionName extends string = string
 >(
   config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof tokenAddress

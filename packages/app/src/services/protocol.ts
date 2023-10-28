@@ -202,9 +202,9 @@ export async function GetConditionModules(params?: GetConditionModulesWhere, cha
 function toRecord(data: any, chainId: number = DEFAULT_CHAIN_ID) {
   return {
     id: data.id,
-    createdAt: dayjs(data.createdAt).valueOf(),
+    createdAt: dayjs.unix(data.createdAt).toISOString(),
     createdBy: data.createdBy,
-    updatedAt: data.updatedAt ? dayjs(data.updatedAt).valueOf() : undefined,
+    updatedAt: data.updatedAt ? dayjs.unix(data.updatedAt).toISOString() : undefined,
     status: data.status,
     message: data.message ?? '',
     conditionModule: data.conditionModule,
@@ -230,7 +230,7 @@ function toParticipant(data: any, chainId: number = DEFAULT_CHAIN_ID) {
   const chain = ETH_CHAINS.find((c) => c.id === chainId)
   return {
     id: data.id,
-    createdAt: dayjs(data.createdAt).valueOf(),
+    createdAt: dayjs.unix(data.createdAt).toISOString(),
     createdBy: data.createdBy,
     address: data.address,
     checkedIn: data.checkedIn,
@@ -254,7 +254,7 @@ function toConditions(data: any, address: string, chainId: number = DEFAULT_CHAI
     type: data.name,
     address: address,
     name: data.name,
-    endDate: data.endDate,
+    endDate: dayjs.unix(data.endDate).toISOString(),
     depositFee: data.depositFee,
     maxParticipants: data.maxParticipants,
     tokenAddress: data.tokenAddress,

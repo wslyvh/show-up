@@ -8,17 +8,24 @@ export async function main() {
     const [owner] = await ethers.getSigners()
 
     console.log('NETWORK ID', network.config.chainId)
+
+    // Hardhat // localhost 
+    // const registry = await ethers.getContractAt('Registry', '0x5FbDB2315678afecb367f032d93F642f64180aa3')
+    // const basicEtherModule = await ethers.getContractAt('BasicEther', '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512')
+    // const basicTokenModule = await ethers.getContractAt('BasicToken', '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0')
+    // const token = await ethers.getContractAt('Token', '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707')
+
     // Sepolia 
-    // const registry = await ethers.getContractAt('Registry', '0x0959f7dD732631B7600fcCe67312920d4F5ECB9c')
-    // const basicEtherModule = await ethers.getContractAt('BasicEther', '0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836')
-    // const basicTokenModule = await ethers.getContractAt('BasicToken', '0x11FB53694e42972925940836a1E3EC71cA584936')
-    // const token = await ethers.getContractAt('Token', '0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0')
+    const registry = await ethers.getContractAt('Registry', '0x0959f7dD732631B7600fcCe67312920d4F5ECB9c')
+    const basicEtherModule = await ethers.getContractAt('BasicEther', '0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836')
+    const basicTokenModule = await ethers.getContractAt('BasicToken', '0x11FB53694e42972925940836a1E3EC71cA584936')
+    const token = await ethers.getContractAt('Token', '0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0')
 
     // Scroll Sepolia 
-    const registry = await ethers.getContractAt('Registry', '0xa21BD128d7c507bf2F6b78181A9A99e86a23E593')
-    const basicEtherModule = await ethers.getContractAt('BasicEther', '0xf32E8f56626F87A0bf5e93154CA3a51D45123dc0')
-    const basicTokenModule = await ethers.getContractAt('BasicToken', '0xB944AFeF3821062B4B813D5aCaE833Eca223db09')
-    const token = await ethers.getContractAt('Token', '0xA95579514dB88a1F7a561E46bEdBDA1C676E76A4')
+    // const registry = await ethers.getContractAt('Registry', '0xa21BD128d7c507bf2F6b78181A9A99e86a23E593')
+    // const basicEtherModule = await ethers.getContractAt('BasicEther', '0xf32E8f56626F87A0bf5e93154CA3a51D45123dc0')
+    // const basicTokenModule = await ethers.getContractAt('BasicToken', '0xB944AFeF3821062B4B813D5aCaE833Eca223db09')
+    // const token = await ethers.getContractAt('Token', '0xA95579514dB88a1F7a561E46bEdBDA1C676E76A4')
 
     // Check contracts exist
     const RegistryExists = await ethers.provider.getCode(registry.address)
@@ -81,7 +88,7 @@ export async function main() {
     await tx3.wait()
 
     const supUri = 'ipfs://bafkreibljo45l7qzlv2kf26mcwykruq46pxijoi4nbecaklgaxrcl3tdk4'
-    const supEnd = dayjs('2023-10-28T13:00').unix()
+    const supEnd = dayjs().add(3, 'days').unix()
     const paramsEther4 = ethers.utils.defaultAbiCoder.encode(
         ["address", 'uint256', 'uint256', 'uint256', 'address'],
         [owner.address, supEnd, ethers.utils.parseUnits('0.001', 18), defaultMaxParticipants, ethers.constants.AddressZero])

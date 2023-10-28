@@ -121,7 +121,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
       })
 
       const createTx = await writeRegistry(createConfig)
-      await sendTransactionNotification(createTx.hash)
+      await sendTransactionNotification(createTx.hash, 'Creating event. It can take up to 10 mins for an event to be indexed.')
 
       setState({ ...state, loading: false, message: '' })
     } catch (e) {
@@ -147,7 +147,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
       })
 
       const cancelTx = await writeRegistry(cancelConfig)
-      await sendTransactionNotification(cancelTx.hash)
+      await sendTransactionNotification(cancelTx.hash, 'Cancelling event')
 
       setState({ ...state, loading: false, message: '' })
     } catch (e) {
@@ -167,24 +167,22 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
     try {
       if (module.type === ConditionModuleType.BasicEther) {
-        const params = encodeAbiParameters([{ type: 'address' }], [participant])
         const registerConfig = await prepareWriteRegistry({
           chainId: chain?.id as any,
           functionName: 'register',
-          args: [id, participant, params],
+          args: [id, participant, '0x'],
           value: module.depositFee,
         })
 
         const registerTx = await writeRegistry(registerConfig)
-        await sendTransactionNotification(registerTx.hash)
+        await sendTransactionNotification(registerTx.hash, 'Registering for event')
 
         setState({ ...state, loading: false, message: '' })
         return
       }
 
       if (module.type === ConditionModuleType.BasicToken) {
-        const params = encodeAbiParameters([{ type: 'address' }], [participant])
-
+        // TODO: Check if user has set (enough) allowance already
         // Approve token
         const approveConfig = await prepareWriteContract({
           chainId: chain?.id as any,
@@ -195,18 +193,19 @@ export function EventManagementProvider(props: PropsWithChildren) {
         })
 
         const approveTx = await writeRegistry(approveConfig)
-        await sendTransactionNotification(approveTx.hash)
+        await sendTransactionNotification(approveTx.hash, 'Approving ERC20 token')
 
         await waitForTransaction({ hash: approveTx.hash })
 
         const registerConfig = await prepareWriteRegistry({
           chainId: chain?.id as any,
           functionName: 'register',
-          args: [id, params],
+          args: [id, participant, '0x'],
+          value: BigInt(0),
         })
 
         const registerTx = await writeRegistry(registerConfig)
-        await sendTransactionNotification(registerTx.hash)
+        await sendTransactionNotification(registerTx.hash, 'Registering for event')
 
         setState({ ...state, loading: false, message: '' })
         return
@@ -240,7 +239,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
       })
 
       const checkinTx = await writeRegistry(checkinConfig)
-      await sendTransactionNotification(checkinTx.hash)
+      await sendTransactionNotification(checkinTx.hash, 'Checking in to event')
 
       setState({ ...state, loading: false, message: '' })
     } catch (e) {
@@ -267,7 +266,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
       })
 
       const settleTx = await writeRegistry(settleConfig)
-      await sendTransactionNotification(settleTx.hash)
+      await sendTransactionNotification(settleTx.hash, 'Settling event')
 
       setState({ ...state, loading: false, message: '' })
     } catch (e) {
@@ -276,11 +275,11 @@ export function EventManagementProvider(props: PropsWithChildren) {
     }
   }
 
-  async function sendTransactionNotification(hash: string) {
+  async function sendTransactionNotification(hash: string, message: string = 'Transaction sent') {
     await notifications.Add({
       created: Date.now(),
       type: 'info',
-      message: 'Transaction sent',
+      message: message,
       from: account,
       cta: {
         label: 'View transaction',
