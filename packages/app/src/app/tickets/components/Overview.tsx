@@ -10,17 +10,16 @@ export function Overview() {
   const { address } = useAccount()
   const tickets = useTickets()
 
-  if (tickets.isLoading) return <Loading text='' />
+  if (tickets.isPending) return <Loading text='' />
 
-  if (!tickets.isLoading && (!tickets.data || tickets.data.length === 0)) return <Empty text={`No tickets found for ${address}`} />
+  if (tickets.isError || !tickets.data) return <Empty text={`No tickets found for ${address}`} />
 
   return (
     <>
       <div className='flex flex-col gap-4'>
-        {tickets.data?.filter((i) => !!i.metadata)
-          .map((ticket) => (
-            <Ticket key={ticket.id} record={ticket} />
-          ))}
+        {tickets.data.map((ticket) => (
+          <Ticket key={ticket.id} record={ticket} />
+        ))}
       </div>
     </>
   )

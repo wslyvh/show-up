@@ -2,16 +2,19 @@
 
 import { GetParticipations } from "@/services/protocol"
 import { useAccount, useNetwork } from "wagmi"
-import useSWR from "swr"
+import { useQuery } from "@tanstack/react-query"
 
 export function useTickets() {
     const { address } = useAccount()
     const { chain } = useNetwork()
-    const { data, error, isLoading } = useSWR(['participations', address, chain?.id], async () => await GetParticipations(address, chain?.id))
+    const { data, isError, isPending } = useQuery({
+        queryKey: ['tickets', address, chain?.id],
+        queryFn: async () => await GetParticipations(address, chain?.id)
+    })
 
     return {
         data,
-        isLoading,
-        error
+        isPending,
+        isError
     }
 }

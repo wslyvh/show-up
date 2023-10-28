@@ -6,6 +6,7 @@ import { Web3Provider } from '@/context/Web3'
 import { EventManagementProvider } from '@/context/EventManagement'
 import { NotificationProvider } from '@/context/Notification'
 import PlausibleProvider from 'next-plausible'
+import DataProvider from '@/context/Data'
 import '../assets/globals.css'
 
 export const metadata: Metadata = {
@@ -39,9 +40,11 @@ export default function RootLayout(props: PropsWithChildren) {
       <body>
         <Web3Provider>
           <NotificationProvider>
-            <EventManagementProvider>
-              <MobileLayout>{props.children}</MobileLayout>
-            </EventManagementProvider>
+            <DataProvider>
+              <EventManagementProvider>
+                <MobileLayout>{props.children}</MobileLayout>
+              </EventManagementProvider>
+            </DataProvider>
           </NotificationProvider>
         </Web3Provider>
       </body>

@@ -11,6 +11,7 @@ import { useAccount } from 'wagmi'
 import { formatEther, formatUnits } from 'viem'
 import { useState } from 'react'
 import makeBlockie from 'ethereum-blockies-base64'
+import { LinkComponent } from '@/components/LinkComponent'
 
 interface Props {
   record: Record
@@ -68,7 +69,11 @@ export function EventDetails(props: Props) {
               - {dayjs(props.event.end).format(sameDay ? 'HH:mm' : 'ddd MMM DD · HH:mm')}
             </p>
             <p className='flex flex-row items-center gap-2'>
-              <MapPinIcon className='h-5 w-5 text-info' /> {props.event.location}
+              <MapPinIcon className='h-5 w-5 text-info' />
+              {props.event.location.startsWith('https://') && (
+                <LinkComponent href={props.event.location} className='underline hover:text-white'>{props.event.location}</LinkComponent>
+              )}
+              {!props.event.location.startsWith('https://') && props.event.location}
             </p>
             <p className='flex flex-row items-center gap-2'>
               <UserIcon className='h-5 w-5  text-info' /> {props.record.participants.length} going

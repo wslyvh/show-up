@@ -1,18 +1,20 @@
 'use client'
 
 import { GetRecords } from "@/services/protocol"
-import { useNetwork } from "wagmi"
-import useSWR from "swr"
+import { useQuery } from "@tanstack/react-query"
 import { Status } from "@/utils/types"
+import { useNetwork } from "wagmi"
 
 export function useEvents() {
     const { chain } = useNetwork()
-    const { data, error, isLoading } = useSWR(['events', chain?.id],
-        async () => await GetRecords({ status: Status.Active }, chain?.id))
+    const { data, isError, isPending } = useQuery({
+        queryKey: ['events', chain?.id],
+        queryFn: async () => await GetRecords({ status: Status.Active }, chain?.id)
+    })
 
     return {
         data,
-        isLoading,
-        error
+        isPending,
+        isError
     }
 }

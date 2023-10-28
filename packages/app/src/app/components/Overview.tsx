@@ -8,19 +8,18 @@ import { Empty } from '@/components/Empty'
 export function Overview() {
   const events = useEvents()
 
-  if (events.isLoading) return <Loading text='' />
+  if (events.isPending) return <Loading text='' />
 
-  if (!events.isLoading && (!events.data || events.data.length === 0)) return <Empty text={`No events found`} />
+  if (events.isError || !events.data) return <Empty text={`No events found`} />
 
   return (
     <>
       {/* <Tabs options={['Upcoming', 'Past']} /> */}
 
       <div className='flex flex-col gap-2'>
-        {events.data?.filter((i) => !!i.metadata)
-          .map((event) => (
-            <Card key={event.id} event={event} />
-          ))}
+        {events.data.map((event) => (
+          <Card key={event.id} event={event} />
+        ))}
       </div>
     </>
   )
