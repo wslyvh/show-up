@@ -1,6 +1,8 @@
 export const SITE_EMOJI = '😎👋'
 export const SITE_NAME = 'Show Up'
+export const SITE_SHORT_NAME = 'Sup'
 export const SITE_DESCRIPTION = 'Earn $$ by showing up!'
+export const SITE_INFO = 'Onchain RSVP and Event management'
 export const SITE_DOMAIN = 'showup.events'
 export const SITE_URL = `https://www.${SITE_DOMAIN}`
 

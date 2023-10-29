@@ -13,19 +13,19 @@ export function Navbar() {
 
   return (
     <footer className='btm-nav'>
-      <LinkComponent href='/' className={pathname === '/' ? 'active bg-neutral' : ''}>
+      <LinkComponent href='/' ariaLabel='Home' className={pathname === '/' ? 'active bg-neutral' : ''}>
         <HomeIcon className={iconClassName} />
       </LinkComponent>
-      <LinkComponent href='/tickets' className={pathname === '/tickets' ? 'active bg-neutral' : ''}>
+      <LinkComponent href='/tickets' ariaLabel='Tickets' className={pathname === '/tickets' ? 'active bg-neutral' : ''}>
         <TicketIcon className={iconClassName} />
       </LinkComponent>
-      <LinkComponent href='/notifications' className={pathname === '/notifications' ? 'active bg-neutral' : ''}>
+      <LinkComponent href='/notifications' ariaLabel='Notifications' className={pathname === '/notifications' ? 'active bg-neutral' : ''}>
         <p className='relative'>
           <BellIcon className={iconClassName} />
           {notifications.new && <span className='absolute -top-2 left-4 badge badge-accent badge-xs'></span>}
         </p>
       </LinkComponent>
-      <LinkComponent href='/profile' className={pathname === '/profile' ? 'active bg-neutral' : ''}>
+      <LinkComponent href='/profile' ariaLabel='Profile' className={pathname === '/profile' ? 'active bg-neutral' : ''}>
         <UserIcon className={iconClassName} />
       </LinkComponent>
     </footer>

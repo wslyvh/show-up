@@ -17,10 +17,12 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   manifest: '/manifest.json',
+  themeColor: '#000000',
+  viewport: 'width=device-width, initial-scale=1.0, viewport-fit=cover',
   appleWebApp: {
     title: SITE_NAME,
     capable: true,
-    statusBarStyle: 'default',
+    statusBarStyle: 'black-translucent',
   },
   openGraph: {
     type: 'website',
@@ -36,6 +38,9 @@ export default function RootLayout(props: PropsWithChildren) {
     <html lang='en'>
       <head>
         <PlausibleProvider domain={SITE_DOMAIN} />
+        <link rel="icon" href="/icons/favicon.ico" sizes="any" />
+        <link rel="shortcut icon" href="/icons/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180x180.png" type="image/png" sizes="any" />
       </head>
       <body>
         <Web3Provider>

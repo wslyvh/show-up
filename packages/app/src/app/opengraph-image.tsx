@@ -1,4 +1,4 @@
-import { SITE_NAME } from '@/utils/site'
+import { SITE_EMOJI, SITE_INFO, SITE_NAME, SITE_SHORT_NAME } from '@/utils/site'
 import { ImageResponse } from 'next/server'
 
 // Route segment config
@@ -15,16 +15,17 @@ export default async function Image() {
     (
       <div
         style={{
-          fontSize: 128,
-          background: 'linear-gradient(to top, rgb(29, 78, 216), rgb(30, 64, 175), rgb(17, 24, 39))',
+          background: 'linear-gradient(to bottom, rgb(0, 0, 0), rgb(15, 23, 41), rgb(15, 23, 41))',
           width: '100%',
           height: '100%',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          color: 'white',
         }}>
-        😎👋 Sup
+
+        <h1 style={{ fontSize: 128, color: 'white' }}>{SITE_EMOJI} {SITE_SHORT_NAME}</h1>
+        <p style={{ fontSize: 28, color: 'rgb(206, 208, 212)' }}>{SITE_INFO}</p>
       </div>
     )
   )
