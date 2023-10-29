@@ -26,10 +26,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
+    title: SITE_NAME,
     siteName: SITE_NAME,
+    images: '/opengraph-image.png',
   },
   twitter: {
     card: 'summary',
+    title: SITE_NAME,
+    images: '/opengraph-image.png',
   },
 }
 
