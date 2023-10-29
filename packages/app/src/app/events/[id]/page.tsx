@@ -1,5 +1,6 @@
 import { GetRecord } from '@/services/protocol'
-import { EventDetails } from '../components/Event'
+import { EventDetails } from '../components/Details'
+import EventDataProvider from '@/context/EventData'
 
 export const revalidate = 1
 
@@ -9,8 +10,8 @@ export default async function Page({ params }: { params: { id: string } }) {
   if (!record || !record.metadata) return null
 
   return (
-    <>
-      <EventDetails record={record} event={record.metadata} />
-    </>
+    <EventDataProvider record={record}>
+      <EventDetails />
+    </EventDataProvider>
   )
 }
