@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function Alert(props: Props) {
-  let className = `alert alert-${props.type}`
+  let className = `alert alert-${props.type} flex flex-row text-left items-start`
   if (props.className) className += ` ${props.className}`
   const iconClassName = `stroke-${props.type} shrink-0 h-6 w-6 text-${props.type}-400`
 

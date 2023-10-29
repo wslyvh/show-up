@@ -239,7 +239,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
       })
 
       const checkinTx = await writeRegistry(checkinConfig)
-      await sendTransactionNotification(checkinTx.hash, 'Checking in to event')
+      await sendTransactionNotification(checkinTx.hash, `Checking in ${attendees.length} attendees`)
 
       setState({ ...state, loading: false, message: '' })
     } catch (e) {
