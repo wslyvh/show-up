@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { PropsWithChildren } from 'react'
-import { SITE_DESCRIPTION, SITE_DOMAIN, SITE_NAME } from '@/utils/site'
+import { SITE_DESCRIPTION, SITE_DOMAIN, SITE_NAME, SITE_URL, SOCIAL_TWITTER } from '@/utils/site'
 import { MobileLayout } from '@/components/MobileLayout'
 import { Web3Provider } from '@/context/Web3'
 import { EventManagementProvider } from '@/context/EventManagement'
@@ -15,6 +15,7 @@ export const metadata: Metadata = {
     default: SITE_NAME,
     template: `%s · ${SITE_NAME}`,
   },
+  metadataBase: new URL(SITE_URL),
   description: SITE_DESCRIPTION,
   manifest: '/manifest.json',
   themeColor: '#000000',
@@ -28,12 +29,16 @@ export const metadata: Metadata = {
     type: 'website',
     title: SITE_NAME,
     siteName: SITE_NAME,
-    images: '/opengraph-image.png',
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    images: '/opengraph-image',
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
+    site: SOCIAL_TWITTER,
     title: SITE_NAME,
-    images: '/opengraph-image.png',
+    description: SITE_DESCRIPTION,
+    images: '/opengraph-image',
   },
 }
 
