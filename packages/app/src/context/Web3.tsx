@@ -46,19 +46,12 @@ const wagmiConfig = createConfig(
 )
 
 export function Web3Provider(props: PropsWithChildren) {
-  const [ready, setReady] = useState(false)
-
-  useEffect(() => {
-    setReady(true)
-  }, [])
 
   return (
     <>
-      {ready && (
-        <WagmiConfig config={wagmiConfig}>
-          <ConnectKitProvider>{props.children}</ConnectKitProvider>
-        </WagmiConfig>
-      )}
+      <WagmiConfig config={wagmiConfig}>
+        <ConnectKitProvider>{props.children}</ConnectKitProvider>
+      </WagmiConfig>
     </>
   )
 }

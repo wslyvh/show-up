@@ -3,7 +3,7 @@
 import { ActionDrawer } from '@/components/ActionDrawer'
 import { useEventManagement } from '@/context/EventManagement'
 import { ConditionModuleType, Record } from '@/utils/types'
-import { formatUnits } from 'viem'
+import { formatUnits } from 'viem/utils'
 import { useAccount } from 'wagmi'
 
 interface Props {

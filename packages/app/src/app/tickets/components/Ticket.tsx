@@ -1,7 +1,7 @@
 import { ConditionModuleType, Record, Status } from '@/utils/types'
 import { QRCodeSVG } from 'qrcode.react'
 import { useAccount, useNetwork } from 'wagmi'
-import { formatEther, formatUnits } from 'viem'
+import { formatEther, formatUnits } from 'viem/utils'
 import dayjs from 'dayjs'
 
 interface Props {

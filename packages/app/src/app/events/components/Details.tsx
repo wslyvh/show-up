@@ -5,7 +5,7 @@ import { BanknotesIcon, CalendarDaysIcon, MapPinIcon, UserIcon } from '@heroicon
 import Image from 'next/image'
 import { ConditionModuleType } from '@/utils/types'
 import dayjs from 'dayjs'
-import { formatEther, formatUnits } from 'viem'
+import { formatEther, formatUnits } from 'viem/utils'
 import makeBlockie from 'ethereum-blockies-base64'
 import { LinkComponent } from '@/components/LinkComponent'
 import { AdminActions } from './Admin/Actions'
@@ -34,7 +34,9 @@ export function EventDetails() {
             width={0}
             height='240'
             src={event.imageUrl}
-            alt='Event Image'
+            alt={event.title}
+            placeholder='blur'
+            blurDataURL='data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
             sizes='100vw'
             className='rounded-t-lg w-full h-full object-cover'
           />
@@ -106,13 +108,11 @@ export function EventDetails() {
           <div className='flex flex-wrap justify-center gap-8 mt-8'>
             {record.participants.map((participant) => {
               return (
-                <>
-                  <div className="avatar">
-                    <div className={`w-20 rounded-full ${participant.checkedIn ? 'ring ring-success ring-offset-base-100 ring-offset-2' : ''}`}>
-                      <img src={makeBlockie(participant.address)} />
-                    </div>
+                <div key={participant.address} className="avatar">
+                  <div className={`w-20 rounded-full ${participant.checkedIn ? 'ring ring-success ring-offset-base-100 ring-offset-2' : ''}`}>
+                    <img src={makeBlockie(participant.address)} alt={participant.address} />
                   </div>
-                </>
+                </div>
               )
             })}
           </div>
