@@ -37,7 +37,7 @@ const wagmiConfig = createConfig(
     appName: SITE_NAME,
     appDescription: SITE_DESCRIPTION,
     appUrl: SITE_URL,
-    // appIcon: `${SITE_URL}/logo.png`, // your app's icon, no bigger than 1024x1024px (max. 1MB)
+    appIcon: `${SITE_URL}/icons/sup-512x512.png`,
 
     chains: chains,
     publicClient,
@@ -46,12 +46,19 @@ const wagmiConfig = createConfig(
 )
 
 export function Web3Provider(props: PropsWithChildren) {
+  const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    setReady(true)
+  }, [])
 
   return (
     <>
-      <WagmiConfig config={wagmiConfig}>
-        <ConnectKitProvider>{props.children}</ConnectKitProvider>
-      </WagmiConfig>
+      {ready && (
+        <WagmiConfig config={wagmiConfig}>
+          <ConnectKitProvider>{props.children}</ConnectKitProvider>
+        </WagmiConfig>
+      )}
     </>
   )
 }
