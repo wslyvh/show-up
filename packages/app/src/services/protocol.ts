@@ -2,7 +2,7 @@ import { DEFAULT_CHAIN_ID, DEFAULT_IPFS_GATEWAY, ETH_CHAINS, GetGraphBaseUri } f
 import { ConditionModule, ConditionModuleData, EventMetadata, Participant, Record, Status } from '@/utils/types'
 import dayjs from 'dayjs'
 
-interface GetRecordsWhere {
+export interface GetRecordsWhere {
   id?: string
   status?: Status
   createdBy?: string
@@ -10,13 +10,13 @@ interface GetRecordsWhere {
   past?: boolean
 }
 
-interface GetConditionModulesWhere {
+export interface GetConditionModulesWhere {
   enabled?: boolean
 }
 
 export async function GetRecord(id: string, chainId: number = DEFAULT_CHAIN_ID) {
   const result = await GetRecords({ id: id }, chainId)
-  return result.length > 0 ? result[0] : undefined
+  return result.length > 0 ? result[0] : null
 }
 
 export async function GetRecords(params?: GetRecordsWhere, chainId: number = DEFAULT_CHAIN_ID) {

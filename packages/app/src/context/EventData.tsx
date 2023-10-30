@@ -5,6 +5,7 @@ import { useAccount, useBalance } from 'wagmi'
 import { ConditionModuleType, EventMetadata, Record, Status } from '@/utils/types'
 import dayjs from 'dayjs'
 import { Alert } from '@/components/Alert'
+import { useEvent } from '@/hooks/useEvent'
 
 interface EventDataContext {
     record: Record
@@ -39,7 +40,7 @@ const defaultState: EventDataContext = {
 }
 
 interface Props extends PropsWithChildren {
-    record: Record
+    id: string
 }
 
 export const useEventData = () => useContext(EventDataContext)
@@ -47,32 +48,34 @@ export const useEventData = () => useContext(EventDataContext)
 const EventDataContext = createContext(defaultState)
 
 export default function EventDataProvider(props: Props) {
-    const event = props.record.metadata!
+    const { data: record } = useEvent(props)
     const { address } = useAccount()
-
     const balanceRequest: any = { address: address, watch: true }
-    if (props.record.condition.type == ConditionModuleType.BasicToken && props.record.condition.tokenAddress) {
-        balanceRequest.token = props.record.condition.tokenAddress
+    if (record?.condition.type == ConditionModuleType.BasicToken && record?.condition.tokenAddress) {
+        balanceRequest.token = record.condition.tokenAddress
     }
     const { data: balance } = useBalance(balanceRequest)
 
+    if (!record) return null
+
+    const event = record.metadata!
     const sameDay = dayjs(event.start).isSame(event.end, 'day')
-    const hasEnded = dayjs().isAfter(dayjs(props.record.condition.endDate))
-    const hasAttendees = props.record.participants.filter((i) => !!i.checkedIn).length > 0
-    const hasBalance = balance && balance.value > props.record.condition.depositFee || false
-    const isCancelled = Status[props.record.status.valueOf()] == Status.Cancelled.toString()
-    const isActive = Status[props.record.status.valueOf()] == Status.Active.toString()
-    const isSettled = Status[props.record.status.valueOf()] == Status.Settled.toString()
-    const isAdmin = props.record.createdBy.toLowerCase() === address?.toLowerCase()
-    const isParticipant = props.record.participants.map((i) => i.address.toLowerCase()).includes(address?.toLowerCase())
+    const hasEnded = dayjs().isAfter(dayjs(record.condition.endDate))
+    const hasAttendees = record.participants.filter((i) => !!i.checkedIn).length > 0
+    const hasBalance = balance && balance.value > record.condition.depositFee || false
+    const isCancelled = Status[record.status.valueOf()] == Status.Cancelled.toString()
+    const isActive = Status[record.status.valueOf()] == Status.Active.toString()
+    const isSettled = Status[record.status.valueOf()] == Status.Settled.toString()
+    const isAdmin = record.createdBy.toLowerCase() === address?.toLowerCase()
+    const isParticipant = record.participants.map((i) => i.address.toLowerCase()).includes(address?.toLowerCase())
     const canRegister = !isActive || hasEnded || isParticipant || !hasBalance
 
     return <EventDataContext.Provider value={{
-        record: props.record,
-        event: props.record.metadata!, // metadata should be filtered on the graph client
+        record: record,
+        event: record.metadata!, // metadata should be filtered on the graph client
         sameDay,
         hasEnded,
-        hasParticipants: props.record.participants.length > 0,
+        hasParticipants: record.participants.length > 0,
         hasAttendees,
         hasBalance,
         isActive,
@@ -84,7 +87,13 @@ export default function EventDataProvider(props: Props) {
     }}>
         <>
             {isCancelled && (
-                <Alert type='error' message={props.record.message || 'This event has been cancelled'} className='my-4' />
+                <Alert type='error' message={record.message || 'This event has been cancelled'} className='my-4' />
+            )}
+            {hasEnded && isActive && (
+                <Alert type='info' message={record.message || 'This event has ended and can be settled'} className='my-4' />
+            )}
+            {isSettled && (
+                <Alert type='success' message={record.message || 'This event has been settled'} className='my-4' />
             )}
             {props.children}
         </>

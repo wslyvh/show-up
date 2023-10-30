@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { PropsWithChildren } from 'react'
-import { SITE_DESCRIPTION, SITE_DOMAIN, SITE_NAME, SITE_URL, SOCIAL_TWITTER } from '@/utils/site'
+import { DEFAULT_REVALIDATE_PERIOD, SITE_DESCRIPTION, SITE_DOMAIN, SITE_NAME, SITE_URL, SOCIAL_TWITTER } from '@/utils/site'
 import { MobileLayout } from '@/components/MobileLayout'
 import { Web3Provider } from '@/context/Web3'
 import { EventManagementProvider } from '@/context/EventManagement'
@@ -41,6 +41,8 @@ export const metadata: Metadata = {
     images: '/opengraph-image',
   },
 }
+
+export const revalidate = DEFAULT_REVALIDATE_PERIOD
 
 export default function RootLayout(props: PropsWithChildren) {
   return (

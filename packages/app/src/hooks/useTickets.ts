@@ -9,7 +9,7 @@ export function useTickets() {
     const { chain } = useNetwork()
     const { data, isError, isPending } = useQuery({
         queryKey: ['tickets', address, chain?.id],
-        queryFn: async () => await GetParticipations(address, chain?.id)
+        queryFn: () => GetParticipations(address, chain?.id)
     })
 
     return {

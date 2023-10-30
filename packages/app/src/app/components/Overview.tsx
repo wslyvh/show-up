@@ -1,14 +1,11 @@
 'use client'
 
-import { Loading } from '@/components/Loading'
 import { Card } from './Card'
 import { useEvents } from '@/hooks/useEvents'
 import { Empty } from '@/components/Empty'
 
 export function Overview() {
   const events = useEvents()
-
-  if (events.isPending) return <Loading text='' />
 
   if (events.isError || !events.data) return <Empty text={`No events found`} />
 

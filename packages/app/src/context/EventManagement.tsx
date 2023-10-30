@@ -13,6 +13,7 @@ import { DEFAULT_APP_ID } from '@/utils/site'
 import { GetConditionModules } from '@/services/protocol'
 import { useNotifications } from './Notification'
 import dayjs from 'dayjs'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface EventManagementContext {
   appId: string
@@ -50,6 +51,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
   const { address: account } = useAccount()
   const { chain } = useNetwork()
   const notifications = useNotifications()
+  const queryClient = useQueryClient()
   const [state, setState] = useState<EventManagementContext>({
     ...defaultState,
     modules: [],
@@ -149,11 +151,14 @@ export function EventManagementProvider(props: PropsWithChildren) {
       const cancelTx = await writeRegistry(cancelConfig)
       await sendTransactionNotification(cancelTx.hash, 'Cancelling event')
 
-      setState({ ...state, loading: false, message: '' })
     } catch (e) {
       console.error(e)
       setState({ ...state, loading: false, message: 'Unable to cancel event' })
+      return
     }
+
+    setState({ ...state, loading: false, message: '' })
+    queryClient.invalidateQueries({ queryKey: ['events'] })
   }
 
   async function Register(id: string, module: ConditionModuleData, participant = account) {
@@ -176,9 +181,6 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
         const registerTx = await writeRegistry(registerConfig)
         await sendTransactionNotification(registerTx.hash, 'Registering for event')
-
-        setState({ ...state, loading: false, message: '' })
-        return
       }
 
       if (module.type === ConditionModuleType.BasicToken) {
@@ -206,14 +208,14 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
         const registerTx = await writeRegistry(registerConfig)
         await sendTransactionNotification(registerTx.hash, 'Registering for event')
-
-        setState({ ...state, loading: false, message: '' })
-        return
       }
     } catch (e) {
       console.error(e)
       setState({ ...state, loading: false, message: 'Unable to register for event' })
     }
+
+    setState({ ...state, loading: false, message: '' })
+    queryClient.invalidateQueries({ queryKey: ['events'] })
   }
 
   async function Checkin(id: string, attendees: string[]) {
@@ -240,12 +242,14 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
       const checkinTx = await writeRegistry(checkinConfig)
       await sendTransactionNotification(checkinTx.hash, `Checking in ${attendees.length} attendees`)
-
-      setState({ ...state, loading: false, message: '' })
     } catch (e) {
       console.error(e)
       setState({ ...state, loading: false, message: 'Error checking in to event' })
+      return
     }
+
+    setState({ ...state, loading: false, message: '' })
+    queryClient.invalidateQueries({ queryKey: ['events'] })
   }
 
   async function Settle(id: string) {
@@ -268,11 +272,14 @@ export function EventManagementProvider(props: PropsWithChildren) {
       const settleTx = await writeRegistry(settleConfig)
       await sendTransactionNotification(settleTx.hash, 'Settling event')
 
-      setState({ ...state, loading: false, message: '' })
     } catch (e) {
       console.error(e)
       setState({ ...state, loading: false, message: 'Error checking in to event' })
+      return
     }
+
+    setState({ ...state, loading: false, message: '' })
+    queryClient.invalidateQueries({ queryKey: ['events'] })
   }
 
   async function sendTransactionNotification(hash: string, message: string = 'Transaction sent') {
@@ -290,7 +297,6 @@ export function EventManagementProvider(props: PropsWithChildren) {
   }
 
   function validateMetadata(event: EventMetadata) {
-    console.log('validateMetadata', event)
     if (!event.title || !event.start || !event.end || !event.timezone || !event.location) {
       return false
     }
@@ -299,7 +305,6 @@ export function EventManagementProvider(props: PropsWithChildren) {
   }
 
   function validateConditions(conditions: ConditionModuleData) {
-    console.log('validateConditions', conditions)
     if (!conditions.type || !conditions.depositFee || conditions.maxParticipants < 0) {
       return false
     }
