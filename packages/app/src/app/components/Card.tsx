@@ -1,7 +1,8 @@
-import dayjs from 'dayjs'
 import { MapPinIcon, UserIcon } from '@heroicons/react/24/outline'
-import { Record } from '@/utils/types'
 import { LinkComponent } from '@/components/LinkComponent'
+import { Record } from '@/utils/types'
+import Image from 'next/image'
+import dayjs from 'dayjs'
 
 interface Props {
   event: Record
@@ -33,9 +34,14 @@ export function Card({ event }: Props) {
         {event.metadata?.imageUrl && (
           <div>
             <div className='w-full h-[120px] mb-4 sm:w-[160px] sm:h-[80px] sm:mb-0'>
-              <img
+              <Image
+                width={0}
+                height='120'
                 src={event.metadata?.imageUrl}
                 alt={event.metadata?.title}
+                placeholder='blur'
+                blurDataURL='data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
+                sizes='100vw'
                 className='rounded-lg w-full h-full object-cover'
               />
             </div>
