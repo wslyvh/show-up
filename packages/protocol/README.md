@@ -55,6 +55,15 @@ Condition modules could be used independently (although it's not specifically de
 
 All the functions of the registry contract use calldata to pass arguments to the condition module. This allows for more flexibility and extensibility to design and build new condition module without any restrictions of what should be included. The registry contract does not validate the calldata. The condition module is responsible to handle and validate the calldata.
 
+## Deployed Contracts
+
+### Sepolia
+
+- Registry [0x0959f7dD732631B7600fcCe67312920d4F5ECB9c](https://sepolia.etherscan.io/address/0x0959f7dD732631B7600fcCe67312920d4F5ECB9c)
+- BasicEther [0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836](https://sepolia.etherscan.io/address/0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836)
+- BasicToken [0x11FB53694e42972925940836a1E3EC71cA584936](https://sepolia.etherscan.io/address/0x11FB53694e42972925940836a1E3EC71cA584936)
+- Token (test token) [0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0](https://sepolia.etherscan.io/address/0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0)
+
 ## Development
 
 Try running some of the following tasks:
