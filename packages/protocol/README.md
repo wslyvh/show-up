@@ -27,6 +27,10 @@ The following condition modules are available:
 
 Condition modules could be used independently (although it's not specifically designed that way and untested).
 
+**Mocks**
+
+The [Token](./contracts/mocks/Token.sol) contract is only used for mock and testing purposes of the `BasicToken` module. It is not a necessary contract or component of the protocol.
+
 ### Business logic and structure
 
 #### Actors
