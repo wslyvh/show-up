@@ -1,6 +1,61 @@
-# Smart Contracts
+# Show Up Protocol
 
-This project demonstrates how to add smart contracts to your project using [Hardhat](https://hardhat.org/docs). It provides a sample `Message` contract, a test and deployment scripts.
+This package contains a set of smart contracts built on [Ethereum](https://ethereum.org/) using [Hardhat](https://hardhat.org/docs).
+
+These contracts make up the Show Up Protocol that help manage commitments and the conditions for keeping them. It is designed and built in combination with the [Show Up App](../app), which focuses specifically on RSVP and Events management. The protocol however is designed to be generic and can used by other clients or front-ends that facilitate other use cases. E.g. habit tracking, health or fitness challenges, tracking progress on bootcamps or courses, etc.
+
+## Contracts
+
+![Show Up Protocol overview](./overview.png)
+
+**Core**
+
+The protocol is made up of the following core contracts:
+
+- [Registry](./contracts/Registry.sol) - this is the main contract and entry point that manages the records of commitments and forwards the calls to a required condition module.
+- [Common](./contracts/Common.sol) - a library for common structs, types and errors.
+
+**Condition Modules**
+
+Condition modules manage the logic for keeping commitments and distributing rewards. Any record in the Registry must use a required condition module. Condition modules should implement the [IConditionModule](./contracts/interfaces/IConditionModule.sol) interface. The Registry can whitelist or disable condition modules. This allows for other use-cases to be built. E.g. reputation based modules, or modules that use other tokens, assets or fund public goods.
+
+The following condition modules are available:
+
+- [BasicEther](./contracts/conditions/BasicEther.sol) - a condition module that allows deposits and distribution of funds using Ether as native currency
+- [BasicToken](./contracts/conditions/BasicToken.sol) - a condition module that allows deposits and distribution of funds using any ERC20 tokens
+- [AbstractBasicModule](./contracts/conditions/AbstractBasicModule.sol) - a base contract for the BasicEther and BasicToken modules. It defines the interface and implements the shared functionality that between both modules.
+
+Condition modules could be used independently (although it's not specifically designed that way and untested).
+
+### Business logic and structure
+
+#### Actors
+
+- **Owner** - the owner of the registry contract. The owner can whitelist or disable condition modules. It has no other privileges or admin controls.
+- **Record Owner** - the creator of a record (e.g. event organizer). This is the person that defines the conditions for registration, deposits and distribution.
+- **Participant** - a person who commits to a record (e.g. RSVP to an event).
+- **Attendee** - a participant who've been marked as attended by the event organizer.
+
+#### Functions
+
+- **Create** - anyone can create a new record that includes a hash as contentUri for metadata and the condition module to use for that record. The person who creates the record will be the **Record Owner**.
+  - Metadata is defined using standardized formats to allow for App-specific indexing. Metadata can be stored anywhere offchain (e.g. IPFS) and uses a similar approach to tokenUris in NFTs. It currently supports Event Metadata. See [Event Metadata](../app/src/utils/types.ts) for more details.
+  - A condition module should be whitelisted and implement the [IConditionModule](./contracts/interfaces/IConditionModule.sol) interface.
+- **Cancel** - the **Record Owner** can cancel a record at any time. When an event is cancelled it returns all previous deposits to the participants.
+  - `BasicEther` and `BasicToken` add additional checks that an event must not have taken place yet and no participants have been checked in yet.
+- **Register** - anyone can register themselves or another account by depositing the required amount as defined by the record's condition module. Registering someone else means sponsoring the deposit fee. Only the person for who is paid for becomes a **Participant**. The deposit is held in the respective condition module contract until the record is cancelled or settled.
+  - `BasicEther` uses Ether as native currency and the `msg.value` of the payable register function
+  - `BasicToken` requires an ERC20 token approval from the participant to the condition module contract before calling the register function
+- **Checkin** - the **Record Owner** can checkin any number of participants. Participants must've registered themselves before. Keeping track of check-ins is a manual process that can be done offchain.
+- **Settle** - the **Record Owner** can settle a record after it has ended. The registry contract divides the pot of all **Participants** distributes it equally between all **Attendees**. Distribution is defined by the condition module.
+  - `BasicEther` uses Ether as native currency and uses payable transfer to distribute funds
+  - `BasicToken` uses ERC20 token transfers to distribute funds
+
+#### Calldata
+
+All the functions of the registry contract use calldata to pass arguments to the condition module. This allows for more flexibility and extensibility to design and build new condition module without any restrictions of what should be included. The registry contract does not validate the calldata. The condition module is responsible to handle and validate the calldata.
+
+## Development
 
 Try running some of the following tasks:
 
