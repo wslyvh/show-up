@@ -1,6 +1,7 @@
 import React, { PropsWithChildren } from 'react'
 import { Header } from './Header'
 import { Navbar } from './Navbar'
+import { TestnetAlert } from './Testnet'
 
 const containerClass = 'container mx-auto max-w-4xl'
 
@@ -10,6 +11,7 @@ export function MobileLayout(props: PropsWithChildren) {
       <div className='bg-gradient-to-b from-base-300 to-base-100 p-4 sticky top-0'>
         <div className={containerClass}>
           <Header />
+          <TestnetAlert />
         </div>
       </div>
 
