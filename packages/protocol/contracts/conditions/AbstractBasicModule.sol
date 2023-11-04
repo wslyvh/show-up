@@ -2,11 +2,12 @@
 pragma solidity ^0.8.20;
 
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
+import {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';
 
 import {IConditionModule} from '../interfaces/IConditionModule.sol';
 import '../Common.sol';
 
-contract AbstractBasicModule is IConditionModule {
+contract AbstractBasicModule is Ownable, IConditionModule {
     struct Conditions {
         address owner;
         uint256 endDate;
@@ -30,9 +31,9 @@ contract AbstractBasicModule is IConditionModule {
 
     string internal _name;
 
-    constructor() { }
+    constructor(address owner) Ownable(owner) { }
 
-    function initialize(uint256 recordId, bytes calldata data) external virtual {
+    function initialize(uint256 recordId, bytes calldata data) onlyOwner external virtual {
         Conditions memory conditions = abi.decode(data, (Conditions));
 
         if (conditions.endDate < block.timestamp) revert InvalidDate();
@@ -40,27 +41,27 @@ contract AbstractBasicModule is IConditionModule {
         _conditions[recordId] = conditions;
     }
 
-    function cancel(uint256 recordId, bytes calldata data) external virtual {
+    function cancel(uint256 recordId, bytes calldata data) onlyOwner external virtual {
         // Derived contract should handle cancellation and settlement of deposits as transfers depend on the module implementation
         // e.g. for each registration, transfer deposit back to participant
 
-        this._cancel(recordId, data);    
+        _cancel(recordId, data);    
     }
 
-    function _cancel(uint256 recordId, bytes calldata data) public virtual {
+    function _cancel(uint256 recordId, bytes calldata data) internal virtual {
         if(_conditions[recordId].endDate < block.timestamp) revert InvalidDate();
         if(_registrations[recordId].totalAttendees > 0) revert AlreadyStarted();
     }
 
-    function register(uint256 recordId, address participant, address sender, bytes calldata data) external payable virtual {
+    function register(uint256 recordId, address participant, address sender, bytes calldata data) onlyOwner external payable virtual {
         // Derived contract should check depositFee and handle totalDepositAmount as the deposits depend on the module implementation
         // e.g. if(_conditions[recordId].depositFee != msg.value) revert IncorrectValue();
         // e.g. _registrations[recordId].totalDepositAmount += msg.value;
 
-        this._register(recordId, participant);
+        _register(recordId, participant);
     }
 
-    function _register(uint256 recordId, address participant) public payable virtual {
+    function _register(uint256 recordId, address participant) internal virtual {
         if(_conditions[recordId].maxParticipants > 0 && _conditions[recordId].maxParticipants == _registrations[recordId].totalRegistrations) revert LimitReached();
         if(_registrations[recordId].registrations[participant]) revert AlreadyRegistered();
         if(_conditions[recordId].endDate < block.timestamp) revert InvalidDate();
@@ -70,7 +71,7 @@ contract AbstractBasicModule is IConditionModule {
         _registrations[recordId].totalRegistrations++;
     }
 
-    function checkin(uint256 recordId, address[] calldata attendees, bytes calldata data) external virtual returns(address[] memory) {
+    function checkin(uint256 recordId, address[] calldata attendees, bytes calldata data) onlyOwner external virtual returns(address[] memory) {
         address[] memory registrations = new address[](attendees.length);
 
         for (uint256 i = 0; i < attendees.length; i++) {
@@ -86,14 +87,14 @@ contract AbstractBasicModule is IConditionModule {
         return registrations;
     }
 
-    function settle(uint256 recordId, bytes calldata data) external virtual {
+    function settle(uint256 recordId, bytes calldata data) onlyOwner external virtual {
         // Derived contract should handle settlement and transfering attendance fees as transfer depend on the module implementation
         // e.g. for each attendee, transfer attendance fee to participant
 
-        this._settle(recordId, data);
+        _settle(recordId, data);
     }
 
-    function _settle(uint256 recordId, bytes calldata data) public virtual {
+    function _settle(uint256 recordId, bytes calldata data) internal virtual {
         if (_conditions[recordId].endDate > block.timestamp) revert InvalidDate();
         if (_registrations[recordId].totalAttendees == 0) revert NoAttendees();
     }

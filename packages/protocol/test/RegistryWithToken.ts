@@ -14,7 +14,7 @@ describe('RegistryWithToken', function () {
     console.log('Registry deployed to:', registry.address)
 
     const BasicToken = await ethers.getContractFactory('BasicToken')
-    const basicTokenModule = await BasicToken.deploy()
+    const basicTokenModule = await BasicToken.deploy(registry.address)
     console.log('BasicToken Module deployed to:', basicTokenModule.address)
 
     await registry.whitelistConditionModule(basicTokenModule.address, true)

@@ -10,10 +10,10 @@ export async function main() {
     const registry = await Registry.deploy()
 
     const BasicEther = await ethers.getContractFactory('BasicEther')
-    const basicEtherModule = await BasicEther.deploy()
+    const basicEtherModule = await BasicEther.deploy(registry.address)
 
     const BasicToken = await ethers.getContractFactory('BasicToken')
-    const basicTokenModule = await BasicToken.deploy()
+    const basicTokenModule = await BasicToken.deploy(registry.address)
 
     await registry.whitelistConditionModule(basicEtherModule.address, true)
     await registry.whitelistConditionModule(basicTokenModule.address, true)

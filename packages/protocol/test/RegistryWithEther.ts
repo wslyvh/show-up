@@ -14,7 +14,7 @@ describe('RegistryWithEther', function () {
     console.log('Registry deployed to:', registry.address)
 
     const BasicEther = await ethers.getContractFactory('BasicEther')
-    const basicEtherModule = await BasicEther.deploy()
+    const basicEtherModule = await BasicEther.deploy(registry.address)
     console.log('BasicEther Module deployed to:', basicEtherModule.address)
 
     await registry.whitelistConditionModule(basicEtherModule.address, true)

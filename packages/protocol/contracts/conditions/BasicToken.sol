@@ -3,16 +3,17 @@ pragma solidity ^0.8.20;
 
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';
 
 import {AbstractBasicModule} from './AbstractBasicModule.sol';
 import '../Common.sol';
 
-contract BasicToken is AbstractBasicModule {
-    constructor() AbstractBasicModule() { 
+contract BasicToken is Ownable, AbstractBasicModule {
+    constructor(address owner) AbstractBasicModule(owner) { 
         _name = "BasicToken";
     }
 
-    function initialize(uint256 recordId, bytes calldata data) external virtual override {
+    function initialize(uint256 recordId, bytes calldata data) onlyOwner external virtual override {
         Conditions memory conditions = abi.decode(data, (Conditions));
 
         if (conditions.tokenAddress == address(0)) revert InvalidAddress();
@@ -21,8 +22,8 @@ contract BasicToken is AbstractBasicModule {
         _conditions[recordId] = conditions;
     }
 
-    function cancel(uint256 recordId, bytes calldata data) external virtual override {
-        super._cancel(recordId, data);
+    function cancel(uint256 recordId, bytes calldata data) onlyOwner external virtual override {
+        _cancel(recordId, data);
 
         IERC20 token = IERC20(_conditions[recordId].tokenAddress);
         for (uint256 i = 0; i < _registrations[recordId].totalRegistrations; i++) {
@@ -30,8 +31,8 @@ contract BasicToken is AbstractBasicModule {
         }
     }
 
-    function register(uint256 recordId, address participant, address sender, bytes calldata data) external payable virtual override {
-        super._register(recordId, participant);
+    function register(uint256 recordId, address participant, address sender, bytes calldata data) onlyOwner external payable virtual override {
+        _register(recordId, participant);
 
         if(msg.value > 0) revert IncorrectValue();
 
@@ -41,8 +42,8 @@ contract BasicToken is AbstractBasicModule {
         require(token.transferFrom(sender, address(this), _conditions[recordId].depositFee));
     }
 
-    function settle(uint256 recordId, bytes calldata data) external virtual override {
-        super._settle(recordId, data);
+    function settle(uint256 recordId, bytes calldata data) onlyOwner external virtual override {
+        _settle(recordId, data);
         
         (bool success, uint256 attendanceFee) = Math.tryDiv(_registrations[recordId].totalDepositAmount, _registrations[recordId].totalAttendees);
         if (!success) revert IncorrectValue();

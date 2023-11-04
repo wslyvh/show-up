@@ -14,11 +14,11 @@ describe('Registry', function () {
     console.log('Registry deployed to:', registry.address)
 
     const BasicEther = await ethers.getContractFactory('BasicEther')
-    const basicEtherModule = await BasicEther.deploy()
+    const basicEtherModule = await BasicEther.deploy(registry.address)
     console.log('BasicEther Module deployed to:', basicEtherModule.address)
 
     const BasicToken = await ethers.getContractFactory('BasicToken')
-    const basicTokenModule = await BasicToken.deploy()
+    const basicTokenModule = await BasicToken.deploy(registry.address)
     console.log('BasicToken Module deployed to:', basicTokenModule.address)
 
     await registry.whitelistConditionModule(basicEtherModule.address, true)
