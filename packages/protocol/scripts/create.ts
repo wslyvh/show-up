@@ -16,16 +16,11 @@ export async function main() {
     // const token = await ethers.getContractAt('Token', '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707')
 
     // Sepolia 
-    const registry = await ethers.getContractAt('Registry', '0x0959f7dD732631B7600fcCe67312920d4F5ECB9c')
-    const basicEtherModule = await ethers.getContractAt('BasicEther', '0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836')
-    const basicTokenModule = await ethers.getContractAt('BasicToken', '0x11FB53694e42972925940836a1E3EC71cA584936')
-    const token = await ethers.getContractAt('Token', '0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0')
+    const registry = await ethers.getContractAt('Registry', '0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2')
+    const basicEtherModule = await ethers.getContractAt('BasicEther', '0x33FF944E8504B674835A5BEd88f10f11bEC92c2c')
+    const basicTokenModule = await ethers.getContractAt('BasicToken', '0x33132fE88fe8316881474b551CA2DDD277A320a0')
 
-    // Scroll Sepolia 
-    // const registry = await ethers.getContractAt('Registry', '0xa21BD128d7c507bf2F6b78181A9A99e86a23E593')
-    // const basicEtherModule = await ethers.getContractAt('BasicEther', '0xf32E8f56626F87A0bf5e93154CA3a51D45123dc0')
-    // const basicTokenModule = await ethers.getContractAt('BasicToken', '0xB944AFeF3821062B4B813D5aCaE833Eca223db09')
-    // const token = await ethers.getContractAt('Token', '0xA95579514dB88a1F7a561E46bEdBDA1C676E76A4')
+    const token = await ethers.getContractAt('Token', '0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0') // No new token deployed
 
     // Check contracts exist
     const RegistryExists = await ethers.provider.getCode(registry.address)

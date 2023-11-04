@@ -1,11 +1,8 @@
-import { hardhat, mainnet, sepolia, scroll, scrollSepolia, mantleTestnet } from 'viem/chains'
+import { CONFIG } from "./config"
 
-export const DEFAULT_IPFS_GATEWAY = 'https://cloudflare-ipfs.com/ipfs'
-export const DEFAULT_CHAIN_ID = 11155111 // 11155111 Sepolia // Hardhat 31337 // scrollSepolia 534351 // mantleTestnet 5001
-export const ETH_CHAINS = [sepolia, scrollSepolia]
 export const AddressZero = '0x0000000000000000000000000000000000000000'
 
-export function GetNetworkColor(chainId: number = DEFAULT_CHAIN_ID) {
+export function GetNetworkColor(chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
   if (chainId === 1) return 'green'
   if (chainId === 10) return 'red'
   if (chainId === 137) return 'purple'
@@ -15,11 +12,8 @@ export function GetNetworkColor(chainId: number = DEFAULT_CHAIN_ID) {
   return 'grey'
 }
 
-export function GetNetworkName(chainId: number = DEFAULT_CHAIN_ID) {
+export function GetNetworkName(chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
   if (chainId === 1) return 'mainnet'
-  if (chainId === 5) return 'goerli'
-  if (chainId === 534352) return 'scroll'
-  if (chainId === 534351) return 'scroll-sepolia'
   if (chainId === 11155111) return 'sepolia'
   if (chainId === 42161) return 'arbitrum'
   if (chainId === 10) return 'optimism'
@@ -27,8 +21,8 @@ export function GetNetworkName(chainId: number = DEFAULT_CHAIN_ID) {
   return 'mainnet'
 }
 
-export function GetGraphBaseUri(chainId: number = DEFAULT_CHAIN_ID) {
-  if (ETH_CHAINS.find((c) => c.id === chainId)) {
+export function GetGraphBaseUri(chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
+  if (CONFIG.DEFAULT_CHAINS.find((c) => c.id === chainId)) {
     return `https://api.studio.thegraph.com/query/43964/show-up-${GetNetworkName(chainId)}/version/latest`
   }
 
@@ -36,10 +30,14 @@ export function GetGraphBaseUri(chainId: number = DEFAULT_CHAIN_ID) {
 }
 
 export const WHITELISTED_TOKENS = [
-  { chainId: 1, symbol: 'USDC', address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' },
-  { chainId: 1, symbol: 'DAI', address: '0x6b175474e89094c44da98b954eedeac495271d0f' },
-  { chainId: 10, symbol: 'USDC', address: '0x0b2c639c533813f4aa9d7837caf62653d097ff85' },
-  { chainId: 10, symbol: 'DAI', address: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1' },
-  { chainId: 11155111, symbol: 'DAI', address: '0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0' },
-  { chainId: 534351, symbol: 'TEST DAI', address: '0xA95579514dB88a1F7a561E46bEdBDA1C676E76A4' },
+  { chainId: 1, symbol: 'DAI', address: '0x6b175474e89094c44da98b954eedeac495271d0f', decimals: 18 },
+  { chainId: 1, symbol: 'USDC', address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', decimals: 6 },
+  { chainId: 1, symbol: 'USDT', address: '0xdac17f958d2ee523a2206206994597c13d831ec7', decimals: 6 },
+
+  { chainId: 10, symbol: 'OP', address: '0x4200000000000000000000000000000000000042', decimals: 18 },
+  { chainId: 10, symbol: 'DAI', address: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1', decimals: 18 },
+  { chainId: 10, symbol: 'USDT', address: '0x94b008aa00579c1307b0ef2c499ad98a8ce58e58', decimals: 6 },
+  { chainId: 10, symbol: 'USDC', address: '0x0b2c639c533813f4aa9d7837caf62653d097ff85', decimals: 6 },
+
+  { chainId: 11155111, symbol: 'SUP-DAI', address: '0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0', decimals: 18 },
 ]

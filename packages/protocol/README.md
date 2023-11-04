@@ -1,3 +1,5 @@
+> **NOTE** Show Up Protocol has been thoughtfully designed, built and reviewed by external developers. However, it has not been audited yet. Use at your own risk.
+
 # Show Up Protocol
 
 This package contains a set of smart contracts built on [Ethereum](https://ethereum.org/) using [Hardhat](https://hardhat.org/docs).
@@ -59,12 +61,17 @@ All the functions of the registry contract use calldata to pass arguments to the
 
 ## Deployed Contracts
 
+### Optimism
+
+- Registry [0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2](https://sepolia.etherscan.io/address/0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2)
+- BasicEther [0x33FF944E8504B674835A5BEd88f10f11bEC92c2c](https://sepolia.etherscan.io/address/0x33FF944E8504B674835A5BEd88f10f11bEC92c2c)
+- BasicToken [0x33132fE88fe8316881474b551CA2DDD277A320a0](https://sepolia.etherscan.io/address/0x33132fE88fe8316881474b551CA2DDD277A320a0)
+
 ### Sepolia
 
-- Registry [0x0959f7dD732631B7600fcCe67312920d4F5ECB9c](https://sepolia.etherscan.io/address/0x0959f7dD732631B7600fcCe67312920d4F5ECB9c)
-- BasicEther [0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836](https://sepolia.etherscan.io/address/0x0b6b25a06A2EE6c560BB33EbDbECA831f2D67836)
-- BasicToken [0x11FB53694e42972925940836a1E3EC71cA584936](https://sepolia.etherscan.io/address/0x11FB53694e42972925940836a1E3EC71cA584936)
-- Token (test token) [0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0](https://sepolia.etherscan.io/address/0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0)
+- Registry [0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2](https://optimistic.etherscan.io/address/0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2)
+- BasicEther [0x33FF944E8504B674835A5BEd88f10f11bEC92c2c](https://optimistic.etherscan.io/address/0x33FF944E8504B674835A5BEd88f10f11bEC92c2c)
+- BasicToken [0x33132fE88fe8316881474b551CA2DDD277A320a0](https://optimistic.etherscan.io/address/0x33132fE88fe8316881474b551CA2DDD277A320a0)
 
 ## Development
 

@@ -9,6 +9,5 @@ export const SITE_URL = `https://www.${SITE_DOMAIN}`
 export const SOCIAL_TWITTER = 'wslyvh'
 export const SOCIAL_GITHUB = 'wslyvh/show-up'
 
-export const DEFAULT_APP_ID = 'showup-test'
 export const DEFAULT_REVALIDATE_PERIOD = 600 // in seconds // 600 = 10 mins // 3600 = 1 hour
 export const DEFAULT_STALE_TIME = 60 * 1000 // in milliseconds // 60 * 1000 = 1 min

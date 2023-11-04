@@ -1,9 +1,6 @@
 import { ethers, network, run } from 'hardhat'
-import { defaultTokenMint } from '../test/utils/types'
-
 export async function main() {
     console.log('Deploying Show Up Protocol..')
-    const [owner, attendee1, attendee2, attendee3, attendee4, attendee5] = await ethers.getSigners()
 
     console.log('NETWORK ID', network.config.chainId)
     const Registry = await ethers.getContractFactory('Registry')
@@ -23,22 +20,10 @@ export async function main() {
     console.log('BasicEther:', basicEtherModule.address)
     console.log('BasicToken:', basicTokenModule.address)
 
-    const Token = await ethers.getContractFactory('Token')
-    const token = await Token.deploy()
-    console.log('Token:', token.address)
-
-    if (network.config.chainId === 31337) {
-        await token.mint(attendee1.address, defaultTokenMint)
-        await token.mint(attendee2.address, defaultTokenMint)
-        await token.mint(attendee3.address, defaultTokenMint)
-        await token.mint(attendee4.address, defaultTokenMint)
-        await token.mint(attendee5.address, defaultTokenMint)
-    }
-
     // no need to verify on localhost or hardhat
     if (network.config.chainId != 31337 && process.env.ETHERSCAN_API_KEY) {
         console.log(`Waiting for block confirmations..`)
-        await token.deployTransaction.wait(10) // last contract deployed
+        await basicTokenModule.deployTransaction.wait(10) // last contract deployed
 
         console.log('Verifying Registry contract..')
         try {
@@ -55,7 +40,7 @@ export async function main() {
         try {
             run('verify:verify', {
                 address: basicEtherModule.address,
-                constructorArguments: [],
+                constructorArguments: [registry.address],
                 contract: 'contracts/conditions/BasicEther.sol:BasicEther',
             })
         } catch (e) {
@@ -66,19 +51,8 @@ export async function main() {
         try {
             run('verify:verify', {
                 address: basicTokenModule.address,
-                constructorArguments: [],
+                constructorArguments: [registry.address],
                 contract: 'contracts/conditions/BasicToken.sol:BasicToken',
-            })
-        } catch (e) {
-            console.log(e)
-        }
-
-        console.log('Verifying Token contract..')
-        try {
-            run('verify:verify', {
-                address: token.address,
-                constructorArguments: [],
-                contract: 'contracts/mocks/Token.sol:Token',
             })
         } catch (e) {
             console.log(e)

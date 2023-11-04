@@ -6,34 +6,21 @@ import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/utils/site'
 import { PropsWithChildren, useEffect, useState } from 'react'
-import { ETH_CHAINS } from '@/utils/network'
 import { ConnectKitProvider, getDefaultConfig } from 'connectkit'
+import { CONFIG } from '@/utils/config'
 
-const walletConnectProjectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? ''
-if (!walletConnectProjectId) {
-  console.warn('You need to provide a NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID env variable')
-}
-const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_KEY ?? ''
-if (!alchemyApiKey) {
-  console.warn('You need to provide a NEXT_PUBLIC_ALCHEMY_KEY env variable')
-}
-const infuraApiKey = process.env.NEXT_PUBLIC_INFURA_KEY ?? ''
-if (!infuraApiKey) {
-  console.warn('You need to provide a NEXT_PUBLIC_INFURA_KEY env variable')
-}
-
-const { chains, publicClient, webSocketPublicClient } = configureChains(ETH_CHAINS, [
-  alchemyProvider({ apiKey: alchemyApiKey }),
-  infuraProvider({ apiKey: infuraApiKey }),
+const { chains, publicClient, webSocketPublicClient } = configureChains(CONFIG.DEFAULT_CHAINS, [
+  alchemyProvider({ apiKey: CONFIG.NEXT_PUBLIC_ALCHEMY_KEY }),
+  infuraProvider({ apiKey: CONFIG.NEXT_PUBLIC_INFURA_KEY }),
   publicProvider(),
 ])
 
 const wagmiConfig = createConfig(
   getDefaultConfig({
     autoConnect: true,
-    alchemyId: alchemyApiKey,
-    infuraId: infuraApiKey,
-    walletConnectProjectId: walletConnectProjectId,
+    alchemyId: CONFIG.NEXT_PUBLIC_ALCHEMY_KEY,
+    infuraId: CONFIG.NEXT_PUBLIC_INFURA_KEY,
+    walletConnectProjectId: CONFIG.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     appName: SITE_NAME,
     appDescription: SITE_DESCRIPTION,
     appUrl: SITE_URL,

@@ -18,11 +18,15 @@ const infuraApiKey = process.env.INFURA_API_KEY ?? ''
 if (!infuraApiKey) {
   console.warn('INFURA_API_KEY not found in .env file.')
 }
+const optimisticApiKey = process.env.OPTIMISTIC_API_KEY ?? etherscanApiKey ?? ''
+if (!optimisticApiKey) {
+  console.warn('OPTIMISTIC_API_KEY not found in .env file. Will skip Etherscan verification')
+}
 
 const config: HardhatUserConfig = {
   defaultNetwork: 'hardhat',
   solidity: {
-    version: '0.8.21',
+    version: '0.8.22',
     settings: {
       optimizer: {
         enabled: true,
@@ -34,26 +38,8 @@ const config: HardhatUserConfig = {
     apiKey: {
       mainnet: etherscanApiKey,
       sepolia: etherscanApiKey,
-      scrollSepolia: 'D62920783A4311EE9D6600155D570C742E',
-      mantleTestnet: etherscanApiKey,
+      optimisticEthereum: optimisticApiKey,
     },
-    customChains: [{
-      network: 'scrollSepolia',
-      chainId: 534351,
-      urls: {
-        // apiURL: 'https://api-sepolia.scrollscan.com/api',
-        // browserURL: 'https://sepolia.scrollscan.dev/'
-        apiURL: 'https://sepolia-blockscout.scroll.io/api',
-        browserURL: 'https://sepolia-blockscout.scroll.io/'
-      },
-    }, {
-      network: "mantleTestnet",
-      chainId: 5001,
-      urls: {
-        apiURL: 'https://explorer.testnet.mantle.xyz/api',
-        browserURL: 'https://explorer.testnet.mantle.xyz/',
-      },
-    }],
   },
   networks: {
     hardhat: {
@@ -68,14 +54,9 @@ const config: HardhatUserConfig = {
       url: infuraApiKey ? `https://sepolia.infura.io/v3/${infuraApiKey}` : 'https://rpc.sepolia.org/', // https://rpc-sepolia.rockx.com/ || https://rpc.sepolia.org/
       accounts: [deployerKey as string],
     },
-    scrollSepolia: {
-      chainId: 534351,
-      url: 'https://scroll-sepolia.blockpi.network/v1/rpc/public', // 'https://sepolia-rpc.scroll.io/',
-      accounts: [deployerKey as string],
-    },
-    mantleTestnet: {
-      chainId: 5001,
-      url: 'https://rpc.testnet.mantle.xyz/',
+    optimism: {
+      chainId: 10,
+      url: 'https://mainnet.optimism.io/',
       accounts: [deployerKey as string],
     },
   },

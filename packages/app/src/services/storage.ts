@@ -1,10 +1,7 @@
+import { CONFIG } from '@/utils/config'
 import { Web3Storage } from 'web3.storage'
 
-if (!process.env.NEXT_PUBLIC_WEB3_STORAGE_API_KEY) {
-  console.error('NEXT_PUBLIC_WEB3_STORAGE_API_KEY is not defined')
-}
-
-const client = new Web3Storage({ token: process.env.NEXT_PUBLIC_WEB3_STORAGE_API_KEY ?? '' })
+const client = new Web3Storage({ token: CONFIG.NEXT_PUBLIC_WEB3_STORAGE_API_KEY ?? '' })
 
 export async function Store(name: string, serialized: string, verify: boolean = true) {
   return Upload(new File([Buffer.from(serialized)], name), verify)
