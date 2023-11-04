@@ -1,6 +1,6 @@
 'use client'
 
-import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react'
 import { ConditionModule, ConditionModuleData, ConditionModuleType, EventMetadata } from '@/utils/types'
 import { useAccount, useNetwork } from 'wagmi'
 import { erc20ABI, prepareWriteContract, waitForTransaction } from '@wagmi/core'
@@ -9,11 +9,11 @@ import { prepareWriteRegistry, writeRegistry } from '@/abis'
 import { encodeAbiParameters } from 'viem/utils'
 import { Store, Upload } from '@/services/storage'
 import { Slugify } from '@/utils/format'
-import { DEFAULT_APP_ID } from '@/utils/site'
 import { GetConditionModules } from '@/services/protocol'
 import { useNotifications } from './Notification'
-import dayjs from 'dayjs'
 import { useQueryClient } from '@tanstack/react-query'
+import { CONFIG } from '@/utils/config'
+import dayjs from 'dayjs'
 
 interface EventManagementContext {
   appId: string
@@ -30,7 +30,7 @@ interface EventManagementContext {
 }
 
 const defaultState: EventManagementContext = {
-  appId: DEFAULT_APP_ID,
+  appId: CONFIG.DEFAULT_APP_ID,
   loading: false,
   message: '',
   modules: [],

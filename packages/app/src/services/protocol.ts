@@ -1,5 +1,6 @@
-import { DEFAULT_CHAIN_ID, DEFAULT_IPFS_GATEWAY, ETH_CHAINS, GetGraphBaseUri } from '@/utils/network'
 import { ConditionModule, ConditionModuleData, EventMetadata, Participant, Record, Status } from '@/utils/types'
+import { GetGraphBaseUri } from '@/utils/network'
+import { CONFIG } from '@/utils/config'
 import dayjs from 'dayjs'
 
 export interface GetRecordsWhere {
@@ -14,12 +15,12 @@ export interface GetConditionModulesWhere {
   enabled?: boolean
 }
 
-export async function GetRecord(id: string, chainId: number = DEFAULT_CHAIN_ID) {
+export async function GetRecord(id: string, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
   const result = await GetRecords({ id: id }, chainId)
   return result.length > 0 ? result[0] : null
 }
 
-export async function GetRecords(params?: GetRecordsWhere, chainId: number = DEFAULT_CHAIN_ID) {
+export async function GetRecords(params?: GetRecordsWhere, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
   console.log('GetRecords', params, chainId)
 
   const response = await fetch(GetGraphBaseUri(chainId), {
@@ -95,7 +96,7 @@ export async function GetRecords(params?: GetRecordsWhere, chainId: number = DEF
   return results.filter((i) => !!i.metadata)
 }
 
-export async function GetParticipations(address: string, chainId: number = DEFAULT_CHAIN_ID) {
+export async function GetParticipations(address: string, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
   console.log('GetParticipations', address, chainId)
   const response = await fetch(GetGraphBaseUri(chainId), {
     method: 'POST',
@@ -167,7 +168,7 @@ export async function GetParticipations(address: string, chainId: number = DEFAU
   return results.filter((i) => !!i.metadata)
 }
 
-export async function GetConditionModules(params?: GetConditionModulesWhere, chainId: number = DEFAULT_CHAIN_ID) {
+export async function GetConditionModules(params?: GetConditionModulesWhere, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
   const response = await fetch(GetGraphBaseUri(chainId), {
     method: 'POST',
     headers: {
@@ -199,7 +200,7 @@ export async function GetConditionModules(params?: GetConditionModulesWhere, cha
 
 // Mapping Functions
 
-function toRecord(data: any, chainId: number = DEFAULT_CHAIN_ID) {
+function toRecord(data: any, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
   return {
     id: data.id,
     createdAt: dayjs.unix(data.createdAt).toISOString(),
@@ -215,19 +216,19 @@ function toRecord(data: any, chainId: number = DEFAULT_CHAIN_ID) {
   } as Record
 }
 
-function toMetadata(data: any, chainId: number = DEFAULT_CHAIN_ID) {
+function toMetadata(data: any, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
   if (!data) return undefined
 
   return {
     ...data,
     imageUrl: data?.imageUrl?.includes('ipfs://')
-      ? `${DEFAULT_IPFS_GATEWAY}/${data.imageUrl.replace('ipfs://', '')}`
+      ? `${CONFIG.DEFAULT_IPFS_GATEWAY}/${data.imageUrl.replace('ipfs://', '')}`
       : data?.imageUrl ?? '',
   } as EventMetadata
 }
 
-function toParticipant(data: any, chainId: number = DEFAULT_CHAIN_ID) {
-  const chain = ETH_CHAINS.find((c) => c.id === chainId)
+function toParticipant(data: any, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
+  const chain = CONFIG.DEFAULT_CHAINS.find((c) => c.id === chainId)
   return {
     id: data.id,
     createdAt: dayjs.unix(data.createdAt).toISOString(),
@@ -235,11 +236,11 @@ function toParticipant(data: any, chainId: number = DEFAULT_CHAIN_ID) {
     address: data.address,
     checkedIn: data.checkedIn,
     transactionHash: data.transactionHash,
-    url: chain ? `${chain.blockExplorers.default.url}/tx/${data.transactionHash}` : '',
+    url: chain ? `${chain.blockExplorers?.default.url}/tx/${data.transactionHash}` : '',
   } as Participant
 }
 
-function toConditionModule(data: any, chainId: number = DEFAULT_CHAIN_ID) {
+function toConditionModule(data: any, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
   return {
     type: data.name,
     address: data.id,
@@ -247,7 +248,7 @@ function toConditionModule(data: any, chainId: number = DEFAULT_CHAIN_ID) {
   } as ConditionModule
 }
 
-function toConditions(data: any, address: string, chainId: number = DEFAULT_CHAIN_ID) {
+function toConditions(data: any, address: string, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
   if (!data) return undefined
 
   return {

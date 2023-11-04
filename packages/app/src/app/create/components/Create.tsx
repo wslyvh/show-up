@@ -4,13 +4,13 @@ import React, { ChangeEvent, useState } from 'react'
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import { useEventManagement } from '@/context/EventManagement'
 import { ConditionModuleData, ConditionModuleType, EventMetadata } from '@/utils/types'
-import { DEFAULT_APP_ID } from '@/utils/site'
-import { AddressZero, DEFAULT_CHAIN_ID, WHITELISTED_TOKENS } from '@/utils/network'
+import { AddressZero, WHITELISTED_TOKENS } from '@/utils/network'
 import { formatUnits, parseUnits } from 'viem/utils'
 import { basicEtherAddress, basicTokenAddress } from '@/abis'
 import { SelectBox } from '@/components/SelectBox'
 import { useNetwork } from 'wagmi'
 import { ImageUpload } from './ImageUpload'
+import { CONFIG } from '@/utils/config'
 import dayjs from 'dayjs'
 
 export function CreateForm() {
@@ -18,7 +18,7 @@ export function CreateForm() {
   const eventManagement = useEventManagement()
   const { chain } = useNetwork()
   const [event, setEvent] = useState<EventMetadata>({
-    appId: DEFAULT_APP_ID,
+    appId: CONFIG.DEFAULT_APP_ID,
     title: '',
     description: '',
     start: dayjs().hour(10).minute(0).second(0).format('YYYY-MM-DDTHH:mm:ss'),
@@ -32,7 +32,7 @@ export function CreateForm() {
   })
   const [conditions, setConditions] = useState<ConditionModuleData>({
     type: ConditionModuleType.BasicEther,
-    address: (basicEtherAddress as any)[chain?.id ?? DEFAULT_CHAIN_ID],
+    address: (basicEtherAddress as any)[chain?.id ?? CONFIG.DEFAULT_CHAIN_ID],
     endDate: '', // use event.endDate as default
     depositFee: parseUnits('0.02', 18),
     maxParticipants: 0,
@@ -55,7 +55,7 @@ export function CreateForm() {
     if (e.target.id === 'depositFee' && floatRegExp.test(e.target.value)) {
       setConditions((state) => ({
         ...state,
-        [e.target.id]: Number(e.target.value) * 10 ** 18,
+        [e.target.id]: Number(e.target.value) * 10 ** 18, // TODO: Fix decimals based on token address
       }))
 
       return
@@ -72,14 +72,14 @@ export function CreateForm() {
       return setConditions((state) => ({
         ...state,
         type: ConditionModuleType.BasicEther,
-        address: (basicEtherAddress as any)[chain?.id ?? DEFAULT_CHAIN_ID],
+        address: (basicEtherAddress as any)[chain?.id ?? CONFIG.DEFAULT_CHAIN_ID],
       }))
     }
 
     setConditions((state) => ({
       ...state,
       type: ConditionModuleType.BasicToken,
-      address: (basicTokenAddress as any)[chain?.id ?? DEFAULT_CHAIN_ID],
+      address: (basicTokenAddress as any)[chain?.id ?? CONFIG.DEFAULT_CHAIN_ID],
       tokenAddress: value,
     }))
   }
@@ -236,8 +236,6 @@ export function CreateForm() {
                     {token.symbol}
                   </option>
                 ))}
-                <option disabled value=''>NFTs</option>
-                <option disabled value=''>Reputation</option>
               </select>
               <input
                 id='depositFee'
