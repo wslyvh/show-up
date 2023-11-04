@@ -17,15 +17,13 @@ The protocol is made up of the following core contracts:
 
 **Condition Modules**
 
-Condition modules manage the logic for keeping commitments and distributing rewards. Any record in the Registry must use a required condition module. Condition modules should implement the [IConditionModule](./contracts/interfaces/IConditionModule.sol) interface. The Registry can whitelist or disable condition modules. This allows for other use-cases to be built. E.g. reputation based modules, or modules that use other tokens, assets or fund public goods.
+Condition modules manage the logic for keeping commitments and distributing rewards. Any record in the Registry must use a required condition module. Condition modules should implement the [IConditionModule](./contracts/interfaces/IConditionModule.sol) interface. The Condition Module is owned and can only get called by the Registry. The owner of the Registry can whitelist or disable condition modules. This allows for other use-cases to be built. E.g. reputation based modules, or modules that use other tokens, assets or fund public goods.
 
 The following condition modules are available:
 
 - [BasicEther](./contracts/conditions/BasicEther.sol) - a condition module that allows deposits and distribution of funds using Ether as native currency
 - [BasicToken](./contracts/conditions/BasicToken.sol) - a condition module that allows deposits and distribution of funds using any ERC20 tokens
 - [AbstractBasicModule](./contracts/conditions/AbstractBasicModule.sol) - a base contract for the BasicEther and BasicToken modules. It defines the interface and implements the shared functionality that between both modules.
-
-Condition modules could be used independently (although it's not specifically designed that way and untested).
 
 **Mocks**
 
