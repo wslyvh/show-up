@@ -121,14 +121,15 @@ export function NotificationProvider(props: PropsWithChildren) {
       if (name) notification.from = name
     }
 
+    const notifications = [...state.notifications, notification]
     if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.setItem(localStorageKey, JSON.stringify([...state.notifications, notification]))
+      localStorage.setItem(localStorageKey, JSON.stringify(notifications))
     }
 
     setState((state) => ({
       ...state,
       new: true,
-      notifications: [...state.notifications, notification],
+      notifications: notifications,
     }))
   }
 
