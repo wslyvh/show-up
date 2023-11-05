@@ -1,7 +1,7 @@
 'use client'
 
 import { DateCard } from '@/components/Date'
-import { BanknotesIcon, CalendarDaysIcon, MapPinIcon, UserIcon } from '@heroicons/react/24/outline'
+import { BanknotesIcon, CalendarDaysIcon, CheckBadgeIcon, MapPinIcon, UserIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import { ConditionModuleType } from '@/utils/types'
 import dayjs from 'dayjs'
@@ -12,6 +12,8 @@ import { AdminActions } from './Admin/Actions'
 import { Register } from './Register'
 import { useEventData } from '@/context/EventData'
 import { GetTokenDecimals, GetTokenSymbol } from '@/utils/network'
+import { TruncateMiddle } from '@/utils/format'
+import { CONFIG } from '@/utils/config'
 
 export function EventDetails() {
   const eventData = useEventData()
@@ -52,6 +54,13 @@ export function EventDetails() {
         <div className='px-4 py-8 mt-4'>
           <div className='flex flex-col mt-4 gap-2'>
             <p className='flex flex-row items-center gap-2'>
+              <CheckBadgeIcon className='h-5 w-5 text-info shrink-0' />
+              <LinkComponent className='underline truncate hover:text-white' href={`${CONFIG.DEFAULT_CHAIN.blockExplorers?.default.url}/address/${record.createdBy}`}>
+                {TruncateMiddle(record.createdBy)}
+              </LinkComponent>
+            </p>
+
+            <p className='flex flex-row items-center gap-2'>
               <CalendarDaysIcon className='h-5 w-5 text-info shrink-0' />
               {dayjs(event.start).format(eventData.sameDay ? 'ddd MMM DD · HH:mm' : 'MMM DD · HH:mm')}
               {' → '}
@@ -91,6 +100,14 @@ export function EventDetails() {
             {!eventData.isAdmin && <Register event={record}
               buttonText={registerButtonText()}
               disabled={eventData.canRegister} />}
+
+            {event.website && (
+              <p className='mt-4'>
+                <LinkComponent href={event.website}>
+                  <button type='button' className='btn btn-accent btn-sm w-full'>Website</button>
+                </LinkComponent>
+              </p>
+            )}
           </div>
 
           <h1 className='text-xl text-white font-bold mt-8'>{event.title}</h1>

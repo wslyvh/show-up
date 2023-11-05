@@ -10,6 +10,7 @@ interface Props {
 }
 
 export function LinkComponent(props: Props) {
+  if (!props.href) return <>{props.children}</>
   const className = props.className ?? ''
   const isExternal = props.href.match(/^([a-z0-9]*:|.{0})\/\/.*$/) || props.isExternal
 
