@@ -72,7 +72,7 @@ export function Confirm(props: Props) {
                 * It can take up to 10 mins for your event to be visible due to decentralized indexing.
               </p>
               <p className='text-sm'>
-                ** The protocol has been thoughtfully designed, built and reviewed by external developers. However, it has not been audited yet.
+                ** The protocol has been thoughtfully designed, built and has been reviewed by external developers. However, it has not been audited yet.
                 Check our <LinkComponent className='underline' href='https://github.com/wslyvh/show-up'>Github</LinkComponent> for more details.
               </p>
             </>
