@@ -8,7 +8,7 @@ import makeBlockie from 'ethereum-blockies-base64'
 import { TruncateMiddle } from '@/utils/format'
 import { LinkComponent } from '@/components/LinkComponent'
 import { CalendarIcon, PlusIcon } from '@heroicons/react/24/outline'
-import { useEvents } from '@/hooks/useEvents'
+import { useMyEvents } from '@/hooks/useEvents'
 import { TicketBadge } from '@/app/tickets/components/Ticket'
 
 export function Profile() {
@@ -17,7 +17,7 @@ export function Profile() {
   const { isConnected } = useAccount()
   const { data: name } = useEnsName({ address, chainId: 1 })
   const { data: avatar } = useEnsAvatar({ name, chainId: 1 })
-  const { data: events } = useEvents({ createdBy: address })
+  const { data: events } = useMyEvents(address)
 
   if (!isConnected) {
     return <Login />
