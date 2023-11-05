@@ -8,6 +8,8 @@ import makeBlockie from 'ethereum-blockies-base64'
 import { TruncateMiddle } from '@/utils/format'
 import { LinkComponent } from '@/components/LinkComponent'
 import { CalendarIcon, PlusIcon } from '@heroicons/react/24/outline'
+import { useEvents } from '@/hooks/useEvents'
+import { TicketBadge } from '@/app/tickets/components/Ticket'
 
 export function Profile() {
   const { address } = useAccount()
@@ -15,6 +17,7 @@ export function Profile() {
   const { isConnected } = useAccount()
   const { data: name } = useEnsName({ address, chainId: 1 })
   const { data: avatar } = useEnsAvatar({ name, chainId: 1 })
+  const { data: events } = useEvents({ createdBy: address })
 
   if (!isConnected) {
     return <Login />
@@ -44,12 +47,23 @@ export function Profile() {
             <PlusIcon className='w-6 h-6' />
           </>
         </LinkComponent>
-        <LinkComponent href='/' className='flex items-center justify-between p-2'>
-          <>
-            <span>My Events</span>
-            <CalendarIcon className='w-6 h-6' />
-          </>
-        </LinkComponent>
+        <div className='flex items-center justify-between p-2'>
+          <span>My Events</span>
+          <CalendarIcon className='w-6 h-6' />
+        </div>
+
+        {events && events.length > 0 && (
+          <ul className='list-inside list-disc p-2 gap-2'>
+            {events?.map((event) => {
+              return (
+                <li key={event.id} className='flex items-center justify-between my-2'>
+                  <LinkComponent href={`/events/${event.id}`} className='text-sm truncate'>· {event.metadata?.title}</LinkComponent>
+                  <TicketBadge status={event.status} size='xs' />
+                </li>
+              )
+            })}
+          </ul>
+        )}
       </div>
     </div>
   )

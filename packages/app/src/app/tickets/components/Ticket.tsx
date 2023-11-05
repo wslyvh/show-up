@@ -10,6 +10,8 @@ interface Props {
 
 interface StatusProps {
   status: Status
+  size?: 'xs' | 'sm' | 'md' | 'lg'
+  className?: string
 }
 
 export function TicketBadge(props: StatusProps) {
@@ -17,6 +19,8 @@ export function TicketBadge(props: StatusProps) {
   if (Status[props.status.valueOf()] == Status.Active.toString()) className += ' badge-info'
   if (Status[props.status.valueOf()] == Status.Cancelled.toString()) className += ' badge-error'
   if (Status[props.status.valueOf()] == Status.Settled.toString()) className += ' badge-success'
+  if (props.size) className += ` badge-${props.size}`
+  if (props.className) className += ` ${props.className}`
 
   return <span className={className}>{props.status}</span>
 }

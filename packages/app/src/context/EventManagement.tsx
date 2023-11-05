@@ -74,6 +74,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
   async function Create(event: EventMetadata, conditions: ConditionModuleData, image?: File) {
     console.log('Create Event', event.title, conditions.type)
+
     if (!account) {
       setState({ ...state, loading: false, message: 'Not connected.' })
       return
@@ -119,9 +120,9 @@ export function EventManagementProvider(props: PropsWithChildren) {
       })
 
       const createTx = await writeRegistry(createConfig)
-      await sendTransactionNotification(createTx.hash, 'Creating event. It can take up to 10 mins for an event to be indexed.')
+      await sendTransactionNotification(createTx.hash, 'Creating event')
 
-      setState({ ...state, loading: false, message: '' })
+      setState({ ...state, loading: false, message: 'Event Created' })
     } catch (e) {
       console.error(e)
       setState({ ...state, loading: false, message: 'Unable to create event' })

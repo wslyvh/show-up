@@ -203,7 +203,7 @@ export function ValidateMetadata(event: EventMetadata) {
 }
 
 export function ValidateConditions(conditions: ConditionModuleData) {
-  if (!conditions.type || !conditions.depositFee || conditions.maxParticipants < 0) {
+  if (!conditions.type || conditions.depositFee < 0 || conditions.maxParticipants < 0) {
     return false
   }
 
