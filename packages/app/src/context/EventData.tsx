@@ -21,6 +21,8 @@ interface EventDataContext {
     isAdmin: boolean
     isParticipant: boolean
     canRegister: boolean
+    canCancel: boolean
+    canSettle: boolean
 }
 
 const defaultState: EventDataContext = {
@@ -36,7 +38,9 @@ const defaultState: EventDataContext = {
     isSettled: false,
     isAdmin: false,
     isParticipant: false,
-    canRegister: false
+    canRegister: false,
+    canCancel: false,
+    canSettle: false,
 }
 
 interface Props extends PropsWithChildren {
@@ -69,6 +73,8 @@ export default function EventDataProvider(props: Props) {
     const isAdmin = record.createdBy.toLowerCase() === address?.toLowerCase()
     const isParticipant = record.participants.map((i) => i.address.toLowerCase()).includes(address?.toLowerCase())
     const canRegister = !isActive || hasEnded || isParticipant || !hasBalance
+    const canCancel = isActive && isAdmin && !hasEnded && !hasAttendees
+    const canSettle = hasEnded && isActive && hasAttendees && !isSettled
 
     return <EventDataContext.Provider value={{
         record: record,
@@ -83,7 +89,9 @@ export default function EventDataProvider(props: Props) {
         isSettled,
         isAdmin,
         isParticipant,
-        canRegister
+        canRegister,
+        canCancel,
+        canSettle
     }}>
         <>
             {isCancelled && (

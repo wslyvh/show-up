@@ -1,15 +1,12 @@
-'use client'
-
 import { GetRecords, GetRecordsWhere } from "@/services/protocol"
 import { useQuery } from "@tanstack/react-query"
 import { Status } from "@/utils/types"
-import { useNetwork } from "wagmi"
+import { CONFIG } from "@/utils/config"
 
 export function useEvents(params: GetRecordsWhere = { status: Status.Active }) {
-    const { chain } = useNetwork()
     const { data, isError, isPending } = useQuery({
-        queryKey: ['events', chain?.id],
-        queryFn: () => GetRecords(params, chain?.id)
+        queryKey: ['events', CONFIG.DEFAULT_CHAIN_ID],
+        queryFn: () => GetRecords(params, CONFIG.DEFAULT_CHAIN_ID)
     })
 
     return {

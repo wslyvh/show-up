@@ -2,17 +2,17 @@
 
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react'
 import { ConditionModule, ConditionModuleData, ConditionModuleType, EventMetadata } from '@/utils/types'
-import { useAccount, useNetwork } from 'wagmi'
 import { erc20ABI, prepareWriteContract, waitForTransaction } from '@wagmi/core'
 import { AddressZero } from '@/utils/network'
 import { prepareWriteRegistry, writeRegistry } from '@/abis'
 import { encodeAbiParameters } from 'viem/utils'
 import { Store, Upload } from '@/services/storage'
 import { Slugify } from '@/utils/format'
-import { GetConditionModules } from '@/services/protocol'
+import { GetConditionModules, ValidateConditions, ValidateMetadata } from '@/services/protocol'
 import { useNotifications } from './Notification'
 import { useQueryClient } from '@tanstack/react-query'
 import { CONFIG } from '@/utils/config'
+import { useAccount } from 'wagmi'
 import dayjs from 'dayjs'
 
 interface EventManagementContext {
@@ -22,11 +22,10 @@ interface EventManagementContext {
   modules: ConditionModule[]
   Create: (event: EventMetadata, conditions: ConditionModuleData, image?: File) => Promise<void>
   Cancel: (id: string, reason?: string) => Promise<void>
+  ApproveToken: (spender: string, tokenAddress: string, fee: bigint) => Promise<void>
   Register: (id: string, module: ConditionModuleData, participant?: string) => Promise<void>
   Checkin: (id: string, attendees: string[]) => Promise<void>
   Settle: (id: string) => Promise<void>
-  validateMetadata: (event: EventMetadata) => boolean
-  validateConditions: (conditions: ConditionModuleData) => boolean
 }
 
 const defaultState: EventManagementContext = {
@@ -36,11 +35,10 @@ const defaultState: EventManagementContext = {
   modules: [],
   Create: () => Promise.resolve(),
   Cancel: () => Promise.resolve(),
+  ApproveToken: () => Promise.resolve(),
   Register: () => Promise.resolve(),
   Checkin: () => Promise.resolve(),
   Settle: () => Promise.resolve(),
-  validateMetadata: () => false,
-  validateConditions: () => false,
 }
 
 export const useEventManagement = () => useContext(EventManagementContext)
@@ -49,7 +47,6 @@ const EventManagementContext = createContext(defaultState)
 
 export function EventManagementProvider(props: PropsWithChildren) {
   const { address: account } = useAccount()
-  const { chain } = useNetwork()
   const notifications = useNotifications()
   const queryClient = useQueryClient()
   const [state, setState] = useState<EventManagementContext>({
@@ -57,11 +54,10 @@ export function EventManagementProvider(props: PropsWithChildren) {
     modules: [],
     Create,
     Cancel,
+    ApproveToken,
     Register,
     Checkin,
     Settle,
-    validateMetadata,
-    validateConditions,
   })
 
   useEffect(() => {
@@ -77,16 +73,16 @@ export function EventManagementProvider(props: PropsWithChildren) {
   }, [])
 
   async function Create(event: EventMetadata, conditions: ConditionModuleData, image?: File) {
-    console.log('Create Event on', chain?.id)
-    if (!account || !chain) {
+    console.log('Create Event', event.title, conditions.type)
+    if (!account) {
       setState({ ...state, loading: false, message: 'Not connected.' })
       return
     }
-    if (!validateMetadata(event)) {
+    if (!ValidateMetadata(event)) {
       setState({ ...state, loading: false, message: 'Invalid metadata. Please check required fields.' })
       return
     }
-    if (!validateConditions(conditions)) {
+    if (!ValidateConditions(conditions)) {
       setState({ ...state, loading: false, message: 'Invalid conditions. Please check required fields.' })
       return
     }
@@ -117,7 +113,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
     try {
       const createConfig = await prepareWriteRegistry({
-        chainId: chain.id as any,
+        chainId: CONFIG.DEFAULT_CHAIN_ID as any,
         functionName: 'create',
         args: [contentUrl, conditions.address, params],
       })
@@ -134,7 +130,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
   async function Cancel(id: string, reason: string = '') {
     console.log('Cancel Event', id)
-    if (!account || !chain) {
+    if (!account) {
       setState({ ...state, loading: false, message: 'Not connected.' })
       return
     }
@@ -143,7 +139,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
     try {
       const cancelConfig = await prepareWriteRegistry({
-        chainId: chain.id as any,
+        chainId: CONFIG.DEFAULT_CHAIN_ID as any,
         functionName: 'cancel',
         args: [id, reason, '0x'],
       })
@@ -161,9 +157,33 @@ export function EventManagementProvider(props: PropsWithChildren) {
     queryClient.invalidateQueries({ queryKey: ['events'] })
   }
 
+  async function ApproveToken(spender: string, tokenAddress: string, fee: bigint) {
+    console.log('Approve Token', spender, tokenAddress, fee)
+    if (!account) {
+      setState({ ...state, loading: false, message: 'Not connected.' })
+      return
+    }
+
+    setState({ ...state, loading: true, message: '' })
+
+    const approveConfig = await prepareWriteContract({
+      chainId: CONFIG.DEFAULT_CHAIN_ID as any,
+      address: tokenAddress,
+      abi: erc20ABI,
+      functionName: 'approve',
+      args: [spender, fee],
+    })
+
+    const approveTx = await writeRegistry(approveConfig)
+    await sendTransactionNotification(approveTx.hash, 'Approving ERC20 token')
+
+    await waitForTransaction({ hash: approveTx.hash })
+    setState({ ...state, loading: false, message: '' })
+  }
+
   async function Register(id: string, module: ConditionModuleData, participant = account) {
-    console.log(`Register ${participant} for Event ${id} at ${chain?.id}`)
-    if (!participant || !chain) {
+    console.log(`Register ${participant} for Event ${id}`)
+    if (!participant) {
       setState({ ...state, loading: false, message: 'Not connected.' })
       return
     }
@@ -173,7 +193,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
     try {
       if (module.type === ConditionModuleType.BasicEther) {
         const registerConfig = await prepareWriteRegistry({
-          chainId: chain?.id as any,
+          chainId: CONFIG.DEFAULT_CHAIN_ID as any,
           functionName: 'register',
           args: [id, participant, '0x'],
           value: module.depositFee,
@@ -185,22 +205,31 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
       if (module.type === ConditionModuleType.BasicToken) {
         // TODO: Check if user has set (enough) allowance already
-        // Approve token
-        const approveConfig = await prepareWriteContract({
-          chainId: chain?.id as any,
-          address: module.tokenAddress,
-          abi: erc20ABI,
-          functionName: 'approve',
-          args: [module.address, module.depositFee],
-        })
+        // const allowance = readContract(
+        //   {
+        //     chainId: CONFIG.DEFAULT_CHAIN_ID,
+        //     address: tokenAddress,
+        //     abi: erc20ABI,
+        //     functionName: "allowance",
+        //     args: [owner, spender],
+        //   })
 
-        const approveTx = await writeRegistry(approveConfig)
-        await sendTransactionNotification(approveTx.hash, 'Approving ERC20 token')
+        // // Approve token
+        // const approveConfig = await prepareWriteContract({
+        //   chainId: CONFIG.DEFAULT_CHAIN_ID as any,
+        //   address: module.tokenAddress,
+        //   abi: erc20ABI,
+        //   functionName: 'approve',
+        //   args: [module.address, module.depositFee],
+        // })
 
-        await waitForTransaction({ hash: approveTx.hash })
+        // const approveTx = await writeRegistry(approveConfig)
+        // await sendTransactionNotification(approveTx.hash, 'Approving ERC20 token')
+
+        // await waitForTransaction({ hash: approveTx.hash })
 
         const registerConfig = await prepareWriteRegistry({
-          chainId: chain?.id as any,
+          chainId: CONFIG.DEFAULT_CHAIN_ID as any,
           functionName: 'register',
           args: [id, participant, '0x'],
           value: BigInt(0),
@@ -221,7 +250,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
   async function Checkin(id: string, attendees: string[]) {
     console.log('Checkin for Event', id, attendees)
 
-    if (!account || !chain) {
+    if (!account) {
       setState({ ...state, loading: false, message: 'Not connected.' })
       return
     }
@@ -235,7 +264,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
     try {
       const checkinConfig = await prepareWriteRegistry({
-        chainId: chain.id as any,
+        chainId: CONFIG.DEFAULT_CHAIN_ID as any,
         functionName: 'checkin',
         args: [id, attendees, '0x'],
       })
@@ -255,7 +284,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
   async function Settle(id: string) {
     console.log('Settle Event', id)
 
-    if (!account || !chain) {
+    if (!account) {
       setState({ ...state, loading: false, message: 'Not connected.' })
       return
     }
@@ -264,7 +293,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
     try {
       const settleConfig = await prepareWriteRegistry({
-        chainId: chain.id as any,
+        chainId: CONFIG.DEFAULT_CHAIN_ID as any,
         functionName: 'settle',
         args: [id, '0x'],
       })
@@ -290,26 +319,10 @@ export function EventManagementProvider(props: PropsWithChildren) {
       from: account,
       cta: {
         label: 'View transaction',
-        href: `${chain?.blockExplorers?.default.url}/tx/${hash}`,
+        href: `${CONFIG.DEFAULT_CHAIN.blockExplorers?.default.url}/tx/${hash}`,
       },
       data: { hash },
     })
-  }
-
-  function validateMetadata(event: EventMetadata) {
-    if (!event.title || !event.start || !event.end || !event.timezone || !event.location) {
-      return false
-    }
-
-    return true
-  }
-
-  function validateConditions(conditions: ConditionModuleData) {
-    if (!conditions.type || !conditions.depositFee || conditions.maxParticipants < 0) {
-      return false
-    }
-
-    return true
   }
 
   if (typeof window === 'undefined') {

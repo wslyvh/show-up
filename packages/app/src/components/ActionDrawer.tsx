@@ -1,30 +1,20 @@
 'use client'
 
-import { Fragment, PropsWithChildren, useState } from 'react'
+import { Fragment, PropsWithChildren, ReactElement, cloneElement, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
 interface Props extends PropsWithChildren {
   title: string
-  disabled?: boolean
-  buttonText?: string
-  className?: string
+  actionComponent: ReactElement
 }
 
 export function ActionDrawer(props: Props) {
   const [open, setOpen] = useState(false)
-  let className = 'btn btn-accent btn-outline btn-sm w-full'
-  if (props.className) className += ` ${props.className}`
 
   return (
     <>
-      <button
-        type='button'
-        disabled={props.disabled}
-        onClick={() => setOpen(true)}
-        className={className}>
-        {props.buttonText ?? props.title}
-      </button>
+      {cloneElement(props.actionComponent, { onClick: () => setOpen(true) })}
 
       <Transition.Root show={open} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={setOpen}>
@@ -42,7 +32,7 @@ export function ActionDrawer(props: Props) {
 
           <div className="fixed">
             <div className="absolute">
-              <div className="pointer-events-none w-full fixed bottom-0 h-3/5">
+              <div className="pointer-events-none w-full fixed bottom-0 h-3/4 md:h-1/2">
                 <Transition.Child
                   as={Fragment}
                   enter="transform transition ease-in-out duration-150 sm:duration-300"
@@ -62,7 +52,8 @@ export function ActionDrawer(props: Props) {
                         <Dialog.Title className="text-xl font-bold h-12">
                           {props.title}
                         </Dialog.Title>
-                        <div className='grow'>{props.children}</div>
+
+                        <div className='grow overflow-y-auto'>{props.children}</div>
                       </div>
                     </div>
                   </Dialog.Panel>

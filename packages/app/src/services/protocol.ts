@@ -21,8 +21,6 @@ export async function GetRecord(id: string, chainId: number = CONFIG.DEFAULT_CHA
 }
 
 export async function GetRecords(params?: GetRecordsWhere, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
-  console.log('GetRecords', params, chainId)
-
   const response = await fetch(GetGraphBaseUri(chainId), {
     method: 'POST',
     headers: {
@@ -97,7 +95,6 @@ export async function GetRecords(params?: GetRecordsWhere, chainId: number = CON
 }
 
 export async function GetParticipations(address: string, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
-  console.log('GetParticipations', address, chainId)
   const response = await fetch(GetGraphBaseUri(chainId), {
     method: 'POST',
     headers: {
@@ -197,6 +194,21 @@ export async function GetConditionModules(params?: GetConditionModulesWhere, cha
   return results as ConditionModule[]
 }
 
+export function ValidateMetadata(event: EventMetadata) {
+  if (!event.title || !event.start || !event.end || !event.timezone || !event.location) {
+    return false
+  }
+
+  return true
+}
+
+export function ValidateConditions(conditions: ConditionModuleData) {
+  if (!conditions.type || !conditions.depositFee || conditions.maxParticipants < 0) {
+    return false
+  }
+
+  return true
+}
 
 // Mapping Functions
 
@@ -228,7 +240,6 @@ function toMetadata(data: any, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
 }
 
 function toParticipant(data: any, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
-  const chain = CONFIG.DEFAULT_CHAINS.find((c) => c.id === chainId)
   return {
     id: data.id,
     createdAt: dayjs.unix(data.createdAt).toISOString(),
@@ -236,7 +247,7 @@ function toParticipant(data: any, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
     address: data.address,
     checkedIn: data.checkedIn,
     transactionHash: data.transactionHash,
-    url: chain ? `${chain.blockExplorers?.default.url}/tx/${data.transactionHash}` : '',
+    url: `${CONFIG.DEFAULT_CHAIN.blockExplorers?.default.url}/tx/${data.transactionHash}`,
   } as Participant
 }
 

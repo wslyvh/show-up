@@ -11,6 +11,7 @@ import { LinkComponent } from '@/components/LinkComponent'
 import { AdminActions } from './Admin/Actions'
 import { Register } from './Register'
 import { useEventData } from '@/context/EventData'
+import { GetTokenDecimals, GetTokenSymbol } from '@/utils/network'
 
 export function EventDetails() {
   const eventData = useEventData()
@@ -23,7 +24,7 @@ export function EventDetails() {
     if (eventData.isParticipant) return 'Already registered'
     if (!eventData.hasBalance) return `Insufficient ${record.condition.tokenSymbol ?? 'ETH'} balance`
 
-    return 'Attend Event'
+    return 'Register'
   }
 
   return (
@@ -65,14 +66,10 @@ export function EventDetails() {
             </p>
             <p className='flex flex-row items-center gap-2'>
               <UserIcon className='h-5 w-5 text-info shrink-0' /> {record.participants.length} going
-              {record.condition?.maxParticipants > 0 && (
-                <>
-                  <span> · </span>
-                  <span className='text-accent'>
-                    {record.condition?.maxParticipants - record.participants.length} left
-                  </span>
-                </>
-              )}
+              <span> · </span>
+              <span className='text-accent'>
+                {record.condition?.maxParticipants > 0 ? <>{record.condition?.maxParticipants - record.participants.length} left</> : 'unlimited'}
+              </span>
             </p>
             <p className='flex flex-row items-center gap-2'>
               <BanknotesIcon className='h-5 w-5 text-info shrink-0' />
@@ -81,8 +78,8 @@ export function EventDetails() {
               )}
               {record.condition.type == ConditionModuleType.BasicToken && (
                 <>
-                  {formatUnits(record.condition.depositFee, record.condition.tokenDecimals ?? 18)}{' '}
-                  {record.condition.tokenSymbol}
+                  {formatUnits(record.condition.depositFee, record.condition.tokenDecimals ?? GetTokenDecimals(record.condition.tokenAddress))}{' '}
+                  {GetTokenSymbol(record.condition.tokenAddress)}
                 </>
               )}
             </p>

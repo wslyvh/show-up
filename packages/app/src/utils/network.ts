@@ -1,6 +1,8 @@
+import { parseUnits } from "viem/utils"
 import { CONFIG } from "./config"
 
 export const AddressZero = '0x0000000000000000000000000000000000000000'
+export const DefaultDepositFee = parseUnits('0.01', 18)
 
 export function GetNetworkColor(chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
   if (chainId === 1) return 'green'
@@ -41,3 +43,15 @@ export const WHITELISTED_TOKENS = [
 
   { chainId: 11155111, symbol: 'SUP-DAI', address: '0x7ef7024B76791BD1f31Ac482724c76f0e24a2dD0', decimals: 18 },
 ]
+
+export function GetTokenSymbol(address?: string) {
+  if (!address || address == AddressZero) return 'ETH'
+
+  return WHITELISTED_TOKENS.find((t) => t.address.toLowerCase() === address.toLowerCase())?.symbol || 'ETH'
+}
+
+export function GetTokenDecimals(address?: string) {
+  if (!address || address == AddressZero) return 18
+
+  return WHITELISTED_TOKENS.find((t) => t.address.toLowerCase() === address.toLowerCase())?.decimals || 18
+}

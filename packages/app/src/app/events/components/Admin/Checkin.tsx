@@ -1,5 +1,3 @@
-'use client'
-
 import { ActionDrawer } from '@/components/ActionDrawer'
 import { useEventManagement } from '@/context/EventManagement'
 import { useState } from 'react'
@@ -11,6 +9,11 @@ interface Props {
 export function Checkin(props: Props) {
     const eventManagement = useEventManagement()
     const [attendees, setAttendees] = useState<string[]>([])
+    const actionButton = (
+        <button type='button' className='btn btn-accent btn-outline btn-sm w-full'>
+            Check-in Attendees
+        </button>
+    )
 
     function onAttendeeChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
         if (!e.target.value) return
@@ -19,11 +22,11 @@ export function Checkin(props: Props) {
     }
 
     return (
-        <ActionDrawer title="Check-in attendees">
+        <ActionDrawer title="Check-in attendees" actionComponent={actionButton}>
             <div className='flex flex-col h-full'>
-                <p>Provide a list of addresses to check-in. Addresses must be registered before being able to check in.</p>
-
                 <div className='flex-1 flex-grow'>
+                    <p>Provide a list of addresses to check-in. Addresses must have registered before being able to check them in. You can continue to check in address after this.</p>
+
                     <div className='form-control w-full mt-4'>
                         <label className='label' htmlFor='timezone'>
                             <span className='label-text'>
@@ -42,9 +45,16 @@ export function Checkin(props: Props) {
                 <div>
                     <button
                         type='button'
+                        disabled={eventManagement.loading}
                         onClick={() => eventManagement.Checkin(props.id, attendees)}
                         className='btn btn-accent btn-sm w-full'>
-                        Check-in
+                        {eventManagement.loading && (
+                            <>
+                                Loading
+                                <span className='loading loading-spinner h-4 w-4' />
+                            </>
+                        )}
+                        {!eventManagement.loading && <>Check-in Attendees</>}
                     </button>
                 </div>
             </div>

@@ -4,19 +4,20 @@ import React, { ChangeEvent, useState } from 'react'
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import { useEventManagement } from '@/context/EventManagement'
 import { ConditionModuleData, ConditionModuleType, EventMetadata } from '@/utils/types'
-import { AddressZero, WHITELISTED_TOKENS } from '@/utils/network'
-import { formatUnits, parseUnits } from 'viem/utils'
+import { AddressZero, DefaultDepositFee, GetTokenDecimals, WHITELISTED_TOKENS } from '@/utils/network'
+import { formatUnits } from 'viem/utils'
 import { basicEtherAddress, basicTokenAddress } from '@/abis'
 import { SelectBox } from '@/components/SelectBox'
-import { useNetwork } from 'wagmi'
 import { ImageUpload } from './ImageUpload'
 import { CONFIG } from '@/utils/config'
+import { Confirm } from './Confirm'
+import { InfoDrawer } from './Info'
+import NP from 'number-precision'
 import dayjs from 'dayjs'
 
 export function CreateForm() {
   const floatRegExp = new RegExp('^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$')
   const eventManagement = useEventManagement()
-  const { chain } = useNetwork()
   const [event, setEvent] = useState<EventMetadata>({
     appId: CONFIG.DEFAULT_APP_ID,
     title: '',
@@ -32,9 +33,9 @@ export function CreateForm() {
   })
   const [conditions, setConditions] = useState<ConditionModuleData>({
     type: ConditionModuleType.BasicEther,
-    address: (basicEtherAddress as any)[chain?.id ?? CONFIG.DEFAULT_CHAIN_ID],
-    endDate: '', // use event.endDate as default
-    depositFee: parseUnits('0.02', 18),
+    address: (basicEtherAddress as any)[CONFIG.DEFAULT_CHAIN_ID],
+    endDate: '', // uses event.endDate as default
+    depositFee: DefaultDepositFee,
     maxParticipants: 0,
     tokenAddress: AddressZero,
   })
@@ -55,7 +56,7 @@ export function CreateForm() {
     if (e.target.id === 'depositFee' && floatRegExp.test(e.target.value)) {
       setConditions((state) => ({
         ...state,
-        [e.target.id]: Number(e.target.value) * 10 ** 18, // TODO: Fix decimals based on token address
+        [e.target.id]: NP.times(e.target.value, 10 ** GetTokenDecimals(conditions.tokenAddress)),
       }))
 
       return
@@ -72,14 +73,14 @@ export function CreateForm() {
       return setConditions((state) => ({
         ...state,
         type: ConditionModuleType.BasicEther,
-        address: (basicEtherAddress as any)[chain?.id ?? CONFIG.DEFAULT_CHAIN_ID],
+        address: (basicEtherAddress as any)[CONFIG.DEFAULT_CHAIN_ID],
       }))
     }
 
     setConditions((state) => ({
       ...state,
       type: ConditionModuleType.BasicToken,
-      address: (basicTokenAddress as any)[chain?.id ?? CONFIG.DEFAULT_CHAIN_ID],
+      address: (basicTokenAddress as any)[CONFIG.DEFAULT_CHAIN_ID],
       tokenAddress: value,
     }))
   }
@@ -101,9 +102,13 @@ export function CreateForm() {
         </div>
       )}
 
-      <form className='my-4'>
+      <form className='relative my-4'>
         {/* Event Metadata */}
         <>
+          <div className='absolute -top-4 right-0'>
+            <InfoDrawer />
+          </div>
+
           <div className='form-control w-full'>
             <label className='label' htmlFor='title'>
               <span className='label-text'>
@@ -231,7 +236,7 @@ export function CreateForm() {
                 value={conditions.tokenAddress ? conditions.tokenAddress : ''}
                 required>
                 <option value=''>Ether</option>
-                {WHITELISTED_TOKENS.filter((i) => i.chainId === chain?.id).map((token) => (
+                {WHITELISTED_TOKENS.filter((i) => i.chainId === CONFIG.DEFAULT_CHAIN_ID).map((token) => (
                   <option key={token.address} value={token.address}>
                     {token.symbol}
                   </option>
@@ -279,15 +284,7 @@ export function CreateForm() {
       </form>
 
       <div className='flex justify-end mt-4'>
-        <button className='btn btn-sm btn-primary' onClick={submit}>
-          {eventManagement.loading && (
-            <>
-              Loading
-              <span className='loading loading-spinner h-4 w-4' />
-            </>
-          )}
-          {!eventManagement.loading && <>Create</>}
-        </button>
+        <Confirm event={event} conditions={conditions} image={image} />
       </div>
     </div>
   )

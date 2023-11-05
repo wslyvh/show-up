@@ -1,6 +1,6 @@
 import { sepolia, optimism, Chain } from 'viem/chains'
 
-let defaultChainId = 10 // Optimism 
+let defaultChainId = process.env.NODE_ENV === 'development' ? 11155111 : 10
 if (process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID && !isNaN(parseInt(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID ?? '', 10))) {
     defaultChainId = parseInt(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID, 10)
 }
@@ -22,6 +22,7 @@ export const CONFIG = {
 
     DEFAULT_IPFS_GATEWAY: process.env.NEXT_PUBLIC_DEFAULT_IPFS_GATEWAY ?? 'https://cloudflare-ipfs.com/ipfs',
     DEFAULT_CHAIN_ID: defaultChainId,
+    DEFAULT_CHAIN: chains[0],
     DEFAULT_APP_ID: defaultAppId,
     DEFAULT_CHAINS: chains,
 }
