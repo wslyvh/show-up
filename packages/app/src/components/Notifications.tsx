@@ -13,6 +13,7 @@ import { LinkComponent } from './LinkComponent'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { TruncateMiddle } from '@/utils/format'
+import { Empty } from './Empty'
 dayjs.extend(relativeTime)
 
 export function Notifications() {
@@ -21,6 +22,8 @@ export function Notifications() {
   useEffect(() => {
     MarkAsRead()
   }, [])
+
+  if (notifications.length === 0) return <Empty text='No notifications' />
 
   return (
     <div className='flex flex-col gap-2'>

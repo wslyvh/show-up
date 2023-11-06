@@ -19,6 +19,11 @@ export default async function Image({ params }: { params: { id: string } }) {
   if (!record || !record.metadata) return defaultOpenGraphImage()
 
   const sameDay = dayjs(record.metadata.start).isSame(record.metadata.end, 'day')
+  const title = record.metadata.title
+  let fontSize = 96
+  if (title.length > 50) fontSize = 72
+  if (title.length > 100) fontSize = 60
+  if (title.length > 150) fontSize = 48
 
   return new ImageResponse(
     (
@@ -33,7 +38,7 @@ export default async function Image({ params }: { params: { id: string } }) {
           justifyContent: 'center',
         }}>
 
-        <h1 style={{ fontSize: 96, color: 'white' }}>{record.metadata.title}</h1>
+        <h1 style={{ fontSize: fontSize, color: 'white', textAlign: 'center', padding: '0 48px' }}>{title}</h1>
         <div style={{
           display: 'flex',
           flexDirection: 'row',
@@ -52,7 +57,7 @@ export default async function Image({ params }: { params: { id: string } }) {
           </p>
         </div>
 
-        <p style={{ position: 'absolute', top: '18px', left: '36px', fontSize: 24, color: 'rgb(206, 208, 212)' }}>{SITE_EMOJI}</p>
+        <p style={{ position: 'absolute', top: '24px', left: '48px', fontSize: 24, color: 'rgb(206, 208, 212)' }}>{SITE_EMOJI}</p>
       </div>
     )
   )

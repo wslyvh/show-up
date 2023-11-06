@@ -27,7 +27,6 @@ export function TicketBadge(props: StatusProps) {
 
 export function Ticket(props: Props) {
   const { address } = useAccount()
-  const { chain } = useNetwork()
   const ticket = props.record.participants.find((p) => p.address.toLowerCase() == address.toLowerCase())
 
   if (!ticket) return null
