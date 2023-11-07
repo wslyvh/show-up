@@ -14,8 +14,10 @@ import { useEventData } from '@/context/EventData'
 import { GetTokenDecimals, GetTokenSymbol } from '@/utils/network'
 import { TruncateMiddle } from '@/utils/format'
 import { CONFIG } from '@/utils/config'
+import { useAccount } from 'wagmi'
 
 export function EventDetails() {
+  const { address } = useAccount()
   const eventData = useEventData()
   const record = eventData.record
   const event = eventData.event
@@ -97,7 +99,15 @@ export function EventDetails() {
           <div className='mt-8'>
             {eventData.isAdmin && <AdminActions id={record.id} />}
 
-            {!eventData.isAdmin && <Register event={record}
+            {!address && (
+              <LinkComponent href='/profile'>
+                <button type='button' className='btn btn-accent btn-outline btn-sm w-full'>
+                  Connect to register
+                </button>
+              </LinkComponent>
+            )}
+
+            {address && !eventData.isAdmin && <Register event={record}
               buttonText={registerButtonText()}
               disabled={eventData.canRegister} />}
 
