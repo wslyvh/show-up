@@ -50,6 +50,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## Acknowledgements
 
-Show Up has been built on the ideas and experiences from @wearekickback
+Show Up has been built on the ideas and experiences from [@wearekickback](https://github.com/wearekickback/)
 
 Shout/out to @makoto @jefflau @hiddentao 👏👏
