@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import { Metadata } from 'next/types'
 import { PropsWithChildren } from 'react'
 import { DEFAULT_REVALIDATE_PERIOD, SITE_DESCRIPTION, SITE_DOMAIN, SITE_NAME, SITE_URL, SOCIAL_TWITTER } from '@/utils/site'
 import { MobileLayout } from '@/components/MobileLayout'
@@ -12,8 +12,8 @@ import '../assets/globals.css'
 export const metadata: Metadata = {
   applicationName: SITE_NAME,
   title: {
-    default: SITE_NAME,
-    template: `%s · ${SITE_NAME}`,
+    default: `${SITE_NAME} Events`,
+    template: `${SITE_NAME} @ %s`,
   },
   metadataBase: new URL(SITE_URL),
   description: SITE_DESCRIPTION,
