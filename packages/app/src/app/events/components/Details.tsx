@@ -6,7 +6,6 @@ import Image from 'next/image'
 import { ConditionModuleType } from '@/utils/types'
 import dayjs from 'dayjs'
 import { formatEther, formatUnits } from 'viem/utils'
-import makeBlockie from 'ethereum-blockies-base64'
 import { LinkComponent } from '@/components/LinkComponent'
 import { AdminActions } from './Admin/Actions'
 import { Register } from './Register'
@@ -58,7 +57,7 @@ export function EventDetails() {
             <p className='flex flex-row items-center gap-2'>
               <CheckBadgeIcon className='h-5 w-5 text-info shrink-0' />
               <LinkComponent className='underline truncate hover:text-white' href={`${CONFIG.DEFAULT_CHAIN.blockExplorers?.default.url}/address/${record.createdBy}`}>
-                {TruncateMiddle(record.createdBy)}
+                {record.creatorProfile.name}
               </LinkComponent>
             </p>
 
@@ -129,13 +128,17 @@ export function EventDetails() {
         <div>
           <h2 className='text-xl text-white font-bold mt-8'>Attendees</h2>
 
-          <div className='flex flex-wrap justify-center gap-8 mt-8'>
+          <div className='flex flex-row flex-wrap gap-8 mt-8'>
             {record.participants.map((participant) => {
               return (
-                <div key={participant.address} className="avatar">
-                  <div className={`w-20 rounded-full ${participant.checkedIn ? 'ring ring-success ring-offset-base-100 ring-offset-2' : ''}`}>
-                    <img src={makeBlockie(participant.address)} alt={participant.address} />
+                <div key={participant.address} className='w-24 text-center grow'>
+                  <div className="avatar shrink-0">
+                    <div className={`w-20 rounded-full ${participant.checkedIn ? 'ring ring-success ring-offset-base-100 ring-offset-2' : ''}`}>
+                      <img src={participant.profile.avatar} alt={participant.address} />
+                    </div>
                   </div>
+
+                  <p className='text-xs mt-2'>{participant.profile.name}</p>
                 </div>
               )
             })}

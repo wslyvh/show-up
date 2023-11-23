@@ -14,6 +14,7 @@ export interface Record {
   id: string
   createdAt: string | number
   createdBy: string
+  creatorProfile: EnsProfile
   updatedAt?: string | number
   status: Status
   message?: string
@@ -35,6 +36,7 @@ export interface Participant {
   checkedIn: boolean
   transactionHash: string
   url: string
+  profile: EnsProfile
 }
 
 export interface EventMetadata {
@@ -51,8 +53,10 @@ export interface EventMetadata {
   tags: string[]
 }
 
-export interface Profile {
+export interface EnsProfile {
   address: string
+  name: string
+  avatar: string
 }
 
 export enum ConditionModuleType {

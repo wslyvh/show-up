@@ -1,6 +1,7 @@
 import { ConditionModule, ConditionModuleData, EventMetadata, Participant, Record, Status } from '@/utils/types'
 import { GetGraphBaseUri } from '@/utils/network'
 import { CONFIG } from '@/utils/config'
+import { getEnsProfile } from './ens'
 import dayjs from 'dayjs'
 
 export interface GetRecordsWhere {
@@ -32,10 +33,8 @@ export async function GetRecords(params?: GetRecordsWhere, chainId: number = CON
                     ${params?.id ? `id: "${params.id}"` : ''},
                     ${params?.status !== undefined ? `status: ${Status[params.status.valueOf()]}` : ''}, 
                     ${params?.createdBy ? `createdBy: "${params.createdBy}"` : ''}
-                    ${params?.past == true
-          ? `condition_: {endDate_lte: "${dayjs().unix()}"}`
-          : `condition_: {endDate_gte: "${dayjs().unix()}"}`
-        }
+                    ${params?.past == true ? `condition_: {endDate_lte: "${dayjs().unix()}"}` : ''}
+                    ${params?.past == false ? `condition_: {endDate_gte: "${dayjs().unix()}"}` : ''}
                 })
                 {
                     id
@@ -90,7 +89,7 @@ export async function GetRecords(params?: GetRecordsWhere, chainId: number = CON
   }
 
   const { data } = await response.json()
-  const results: Record[] = data.records.map((i: any) => toRecord(i, chainId))
+  const results: Record[] = await Promise.all(data.records.map(async (i: any) => toRecord(i, chainId)))
   return results.filter((i) => !!i.metadata)
 }
 
@@ -156,11 +155,11 @@ export async function GetParticipations(address: string, chainId: number = CONFI
   }
 
   const { data } = await response.json()
-  const results: Record[] = data.users.flatMap((user: any) => {
-    return user.participations.flatMap((i: any) => {
+  const results = await Promise.all(data.users.flatMap(async (user: any) => {
+    return user.participations.flatMap(async (i: any) => {
       return toRecord(i.record, chainId)
     })
-  })
+  }))
 
   return results.filter((i) => !!i.metadata)
 }
@@ -212,11 +211,12 @@ export function ValidateConditions(conditions: ConditionModuleData) {
 
 // Mapping Functions
 
-function toRecord(data: any, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
+async function toRecord(data: any, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
   return {
     id: data.id,
     createdAt: dayjs.unix(data.createdAt).toISOString(),
     createdBy: data.createdBy,
+    creatorProfile: await getEnsProfile(data.createdBy),
     updatedAt: data.updatedAt ? dayjs.unix(data.updatedAt).toISOString() : undefined,
     status: data.status,
     message: data.message ?? '',
@@ -224,7 +224,7 @@ function toRecord(data: any, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
     condition: toConditions(data.condition, data.conditionModule, chainId),
     contentUri: data.contentUri,
     metadata: toMetadata(data.metadata),
-    participants: data.participants?.map((p: any) => toParticipant(p, chainId)) ?? [],
+    participants: await Promise.all(data.participants?.map(async (p: any) => toParticipant(p, chainId))) ?? [],
   } as Record
 }
 
@@ -239,7 +239,7 @@ function toMetadata(data: any, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
   } as EventMetadata
 }
 
-function toParticipant(data: any, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
+async function toParticipant(data: any, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
   return {
     id: data.id,
     createdAt: dayjs.unix(data.createdAt).toISOString(),
@@ -248,6 +248,7 @@ function toParticipant(data: any, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
     checkedIn: data.checkedIn,
     transactionHash: data.transactionHash,
     url: `${CONFIG.DEFAULT_CHAIN.blockExplorers?.default.url}/tx/${data.transactionHash}`,
+    profile: await getEnsProfile(data.address),
   } as Participant
 }
 

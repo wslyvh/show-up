@@ -8,8 +8,8 @@ export default async function Home() {
   const queryClient = new QueryClient()
 
   await queryClient.prefetchQuery({
-    queryKey: ['events', CONFIG.DEFAULT_CHAIN_ID],
-    queryFn: () => GetRecords({ status: Status.Active }, CONFIG.DEFAULT_CHAIN_ID),
+    queryKey: ['events', CONFIG.DEFAULT_CHAIN_ID, 'upcoming'],
+    queryFn: () => GetRecords({ status: Status.Active, past: false }, CONFIG.DEFAULT_CHAIN_ID),
   })
 
   return (

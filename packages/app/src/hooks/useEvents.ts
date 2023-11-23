@@ -5,8 +5,8 @@ import { CONFIG } from "@/utils/config"
 
 export function useEvents() {
     const { data, isError, isPending } = useQuery({
-        queryKey: ['events', CONFIG.DEFAULT_CHAIN_ID],
-        queryFn: () => GetRecords({ status: Status.Active }, CONFIG.DEFAULT_CHAIN_ID)
+        queryKey: ['events', CONFIG.DEFAULT_CHAIN_ID, 'upcoming'],
+        queryFn: () => GetRecords({ status: Status.Active, past: false }, CONFIG.DEFAULT_CHAIN_ID)
     })
 
     return {
