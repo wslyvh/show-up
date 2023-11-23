@@ -22,10 +22,12 @@ export async function generateMetadata({ params }: Params) {
     openGraph: {
       title: `${SITE_NAME} @ ${event.metadata.title}`,
       description: event.metadata.description,
+      images: `${baseUri}/opengraph-image`,
     },
     twitter: {
       title: `${SITE_NAME} @ ${event.metadata.title}`,
       description: event.metadata.description,
+      images: `${baseUri}/opengraph-image`,
     },
   }
 }
