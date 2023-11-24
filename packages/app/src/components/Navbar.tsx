@@ -13,7 +13,7 @@ export function Navbar() {
 
   return (
     <footer className='btm-nav'>
-      <LinkComponent href='/' ariaLabel='Home' className={pathname === '/' ? 'active bg-neutral' : ''}>
+      <LinkComponent href='/' ariaLabel='Home' className={pathname === '/' || pathname === '/past' || pathname.startsWith('/events/') ? 'active bg-neutral' : ''}>
         <HomeIcon className={iconClassName} />
       </LinkComponent>
       <LinkComponent href='/tickets' ariaLabel='Tickets' className={pathname === '/tickets' ? 'active bg-neutral' : ''}>
