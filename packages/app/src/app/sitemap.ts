@@ -12,6 +12,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'always',
       priority: 1,
     },
+    {
+      url: `${SITE_URL}/past`,
+      lastModified: new Date(),
+      changeFrequency: 'always',
+      priority: 0.8,
+    },
     ...events.map((i) => {
       const isActive = Status[i.status.valueOf()] == Status.Active.toString()
       const isCancelled = Status[i.status.valueOf()] == Status.Cancelled.toString()
@@ -19,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         url: `${SITE_URL}/events/${i.id}`,
         lastModified: new Date(i.updatedAt ?? i.createdAt),
         changeFrequency: isActive ? 'daily' : 'never',
-        priority: isCancelled ? 0.1 : isActive ? 0.8 : 0.5,
+        priority: isCancelled ? 0.1 : isActive ? 0.6 : 0.4,
       } as any
     })
   ]
