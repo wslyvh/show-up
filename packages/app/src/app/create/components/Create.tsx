@@ -15,6 +15,9 @@ import { InfoDrawer } from './Info'
 import NP from 'number-precision'
 import dayjs from 'dayjs'
 
+const defaultStartDate = dayjs().hour(10).minute(0).second(0).format('YYYY-MM-DDTHH:mm:ss')
+const defaultEndDate = dayjs().hour(13).minute(0).second(0).format('YYYY-MM-DDTHH:mm:ss')
+
 export function CreateForm() {
   const floatRegExp = new RegExp('^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$')
   const eventManagement = useEventManagement()
@@ -22,8 +25,8 @@ export function CreateForm() {
     appId: CONFIG.DEFAULT_APP_ID,
     title: '',
     description: '',
-    start: dayjs().hour(10).minute(0).second(0).format('YYYY-MM-DDTHH:mm:ss'),
-    end: dayjs().hour(13).minute(0).second(0).format('YYYY-MM-DDTHH:mm:ss'),
+    start: defaultStartDate,
+    end: defaultEndDate,
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     location: '',
     website: '',
@@ -43,6 +46,16 @@ export function CreateForm() {
 
   function handleEventChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     if (!e.target.id) return
+
+    if (e.target.id === 'start' && (dayjs(event.end).isSame(defaultEndDate)) || dayjs(event.end).isBefore(dayjs(e.target.value))) {
+      setEvent((state) => ({
+        ...state,
+        [e.target.id]: e.target.value,
+        end: dayjs(e.target.value).add(2, 'hour').format('YYYY-MM-DDTHH:mm:ss'),
+      }))
+
+      return
+    }
 
     setEvent((state) => ({
       ...state,

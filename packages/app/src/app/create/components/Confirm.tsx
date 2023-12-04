@@ -69,7 +69,7 @@ export function Confirm(props: Props) {
           {!isCreated && (
             <>
               <p className='text-sm'>
-                * It can take up to 10 mins for your event to be visible due to decentralized indexing.
+                * It can take up to 30 mins for your event to be visible due to decentralized indexing.
               </p>
               <p className='text-sm'>
                 ** The protocol has been thoughtfully designed, built and has been reviewed by external developers. However, it has not been audited yet.
