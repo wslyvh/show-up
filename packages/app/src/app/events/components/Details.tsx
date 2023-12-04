@@ -11,11 +11,12 @@ import { AdminActions } from './Admin/Actions'
 import { Register } from './Register'
 import { useEventData } from '@/context/EventData'
 import { GetTokenDecimals, GetTokenSymbol } from '@/utils/network'
-import { TruncateMiddle } from '@/utils/format'
 import { CONFIG } from '@/utils/config'
 import { useAccount } from 'wagmi'
+import { usePathname } from 'next/navigation'
 
 export function EventDetails() {
+  const pathname = usePathname()
   const { address } = useAccount()
   const eventData = useEventData()
   const record = eventData.record
@@ -99,7 +100,7 @@ export function EventDetails() {
             {eventData.isAdmin && <AdminActions id={record.id} />}
 
             {!address && (
-              <LinkComponent href='/profile'>
+              <LinkComponent href={`/profile?redirect=${pathname}`}>
                 <button type='button' className='btn btn-accent btn-outline btn-sm w-full'>
                   Connect to register
                 </button>

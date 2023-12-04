@@ -10,6 +10,7 @@ import { LinkComponent } from '@/components/LinkComponent'
 import { CalendarIcon, PlusIcon } from '@heroicons/react/24/outline'
 import { useMyEvents } from '@/hooks/useEvents'
 import { TicketBadge } from '@/app/tickets/components/Ticket'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 export function Profile() {
   const { address } = useAccount()
@@ -19,8 +20,16 @@ export function Profile() {
   const { data: avatar } = useEnsAvatar({ name, chainId: 1 })
   const { data: events } = useMyEvents(address)
 
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get('redirect')
+
   if (!isConnected) {
     return <Login />
+  }
+
+  if (isConnected && !!redirect) {
+    router.push(redirect)
   }
 
   const displayName = name ?? TruncateMiddle(address, 6)
