@@ -1,11 +1,33 @@
 import { GetPosts } from "@/utils/data"
 import { LinkComponent } from "app/src/components/LinkComponent"
-import dayjs from "dayjs"
 import { marked } from "marked"
+import { metadata as LayoutMetadata } from "../layout"
+import { BLOG_NAME } from "app/src/utils/site"
+import dayjs from "dayjs"
 
 interface Params {
   params: { slug: string }
   searchParams: { [key: string]: string | string[] | undefined }
+}
+
+export async function generateMetadata({ params }: Params) {
+  const posts = GetPosts()
+  const post = posts.find((post) => post.slug === params.slug)
+  if (!post) return {}
+
+  return {
+    ...LayoutMetadata,
+    title: post.title,
+    description: post.description,
+    openGraph: {
+      title: `${post.title} · ${BLOG_NAME}`,
+      description: post.description,
+    },
+    twitter: {
+      title: `${post.title} · ${BLOG_NAME}`,
+      description: post.description,
+    },
+  }
 }
 
 export default async function BlogPost({ params }: Params) {
