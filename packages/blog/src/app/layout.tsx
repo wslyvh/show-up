@@ -20,14 +20,14 @@ export const metadata: Metadata = {
     siteName: BLOG_NAME,
     description: SITE_DESCRIPTION,
     url: BLOG_URL,
-    images: '/opengraph-image',
+    images: `${BLOG_URL}/opengraph-image`,
   },
   twitter: {
     card: 'summary_large_image',
     site: SOCIAL_TWITTER,
     title: BLOG_NAME,
     description: SITE_DESCRIPTION,
-    images: '/opengraph-image',
+    images: `${BLOG_URL}/opengraph-image`,
   },
 }
 
