@@ -22,8 +22,9 @@ export default async function Image() {
         justifyContent: 'center',
       }}>
 
-      <h1 style={{ fontSize: 96, color: 'white' }}>{SITE_EMOJI}</h1>
-      <p style={{ fontSize: 28, color: 'rgb(206, 208, 212)' }}>{BLOG_NAME}</p>
+      <h1 style={{ fontSize: 90, color: 'white' }}>{SITE_EMOJI}</h1>
+      <span style={{ fontSize: 42, color: 'rgb(206, 208, 212)' }}>{SITE_NAME}</span>
+      <span style={{ fontSize: 52, color: 'rgb(206, 208, 212)' }}>B L O G</span>
     </div>
   )
 }
