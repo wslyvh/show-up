@@ -2,7 +2,7 @@ import { GetPosts } from "@/utils/data"
 import { LinkComponent } from "app/src/components/LinkComponent"
 import { marked } from "marked"
 import { metadata as LayoutMetadata } from "../layout"
-import { BLOG_NAME } from "app/src/utils/site"
+import { BLOG_NAME, BLOG_URL } from "app/src/utils/site"
 import dayjs from "dayjs"
 
 interface Params {
@@ -22,10 +22,12 @@ export async function generateMetadata({ params }: Params) {
     openGraph: {
       title: `${post.title} · ${BLOG_NAME}`,
       description: post.description,
+      images: `${BLOG_URL}/opengraph-image`,
     },
     twitter: {
       title: `${post.title} · ${BLOG_NAME}`,
       description: post.description,
+      images: `${BLOG_URL}/opengraph-image`,
     },
   }
 }
