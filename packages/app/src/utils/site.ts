@@ -6,6 +6,10 @@ export const SITE_INFO = 'Onchain RSVP and Event management'
 export const SITE_DOMAIN = 'showup.events'
 export const SITE_URL = `https://www.${SITE_DOMAIN}`
 
+export const BLOG_NAME = 'Blog @ Show Up'
+export const BLOG_DOMAIN = 'blog.showup.events'
+export const BLOG_URL = `https://${BLOG_DOMAIN}`
+
 export const SOCIAL_TWITTER = 'wslyvh'
 export const SOCIAL_GITHUB = 'wslyvh/show-up'
 
