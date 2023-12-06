@@ -30,6 +30,7 @@ export function CreateForm() {
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     location: '',
     website: '',
+    visibility: 'Public',
     imageUrl: '',
     links: [],
     tags: [],
@@ -52,6 +53,15 @@ export function CreateForm() {
         ...state,
         [e.target.id]: e.target.value,
         end: dayjs(e.target.value).add(2, 'hour').format('YYYY-MM-DDTHH:mm:ss'),
+      }))
+
+      return
+    }
+
+    if (e.target.id === 'public' || e.target.id === 'unlisted') {
+      setEvent((state) => ({
+        ...state,
+        visibility: e.target.value as 'Public' | 'Unlisted',
       }))
 
       return
@@ -100,10 +110,6 @@ export function CreateForm() {
 
   async function handleFileUpload(file?: File) {
     setImage(file)
-  }
-
-  async function submit() {
-    await eventManagement.Create(event, conditions, image)
   }
 
   return (
@@ -230,9 +236,47 @@ export function CreateForm() {
               onChange={handleEventChange}
             />
           </div>
+
+          <div className='form-control w-full'>
+            <label className='label' htmlFor='visibility'>
+              <span className='label-text'>Visibility</span>
+            </label>
+
+            <div className='flex gap-4'>
+              <div className='flex gap-2 items-center'>
+                <input
+                  className="radio radio-sm"
+                  type="radio"
+                  value="Public"
+                  id="public"
+                  checked={event.visibility === 'Public'}
+                  onChange={handleEventChange} />
+
+                <label className='label' htmlFor='public'>
+                  <span className='label-text'>Public</span>
+                </label>
+              </div>
+
+              <div className='flex gap-2 items-center'>
+                <input
+                  className="radio radio-sm"
+                  type="radio"
+                  value="Unlisted"
+                  id="unlisted"
+                  checked={event.visibility === 'Unlisted'}
+                  onChange={handleEventChange}
+                />
+                <label className='label' htmlFor='unlisted'>
+                  <span className='label-text'>Unlisted</span>
+                </label>
+              </div>
+            </div>
+          </div>
         </>
 
         {/* Condition Modules */}
+        <div className="divider divider-start mt-8">Conditions</div>
+
         <>
           <div className='form-control w-full'>
             <label className='label' htmlFor='title'>

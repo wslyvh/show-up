@@ -29,6 +29,12 @@ export class ConditionModule extends Entity {
     }
   }
 
+  static loadInBlock(id: Bytes): ConditionModule | null {
+    return changetype<ConditionModule | null>(
+      store.get_in_block("ConditionModule", id.toHexString())
+    );
+  }
+
   static load(id: Bytes): ConditionModule | null {
     return changetype<ConditionModule | null>(
       store.get("ConditionModule", id.toHexString())
@@ -143,6 +149,10 @@ export class Record extends Entity {
       );
       store.set("Record", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): Record | null {
+    return changetype<Record | null>(store.get_in_block("Record", id));
   }
 
   static load(id: string): Record | null {
@@ -321,13 +331,12 @@ export class Record extends Entity {
     }
   }
 
-  get participants(): Array<string> {
-    let value = this.get("participants");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toStringArray();
-    }
+  get participants(): ParticipantLoader {
+    return new ParticipantLoader(
+      "Record",
+      this.get("id")!.toString(),
+      "participants"
+    );
   }
 }
 
@@ -349,6 +358,12 @@ export class User extends Entity {
     }
   }
 
+  static loadInBlock(id: Bytes): User | null {
+    return changetype<User | null>(
+      store.get_in_block("User", id.toHexString())
+    );
+  }
+
   static load(id: Bytes): User | null {
     return changetype<User | null>(store.get("User", id.toHexString()));
   }
@@ -366,13 +381,12 @@ export class User extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
-  get participations(): Array<string> | null {
-    let value = this.get("participations");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
+  get participations(): ParticipantLoader {
+    return new ParticipantLoader(
+      "User",
+      this.get("id")!.toString(),
+      "participations"
+    );
   }
 }
 
@@ -392,6 +406,12 @@ export class Participant extends Entity {
       );
       store.set("Participant", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): Participant | null {
+    return changetype<Participant | null>(
+      store.get_in_block("Participant", id)
+    );
   }
 
   static load(id: string): Participant | null {
@@ -519,6 +539,10 @@ export class Event extends Entity {
       );
       store.set("Event", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): Event | null {
+    return changetype<Event | null>(store.get_in_block("Event", id));
   }
 
   static load(id: string): Event | null {
@@ -670,6 +694,23 @@ export class Event extends Entity {
       this.set("imageUrl", Value.fromString(<string>value));
     }
   }
+
+  get visibility(): string | null {
+    let value = this.get("visibility");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set visibility(value: string | null) {
+    if (!value) {
+      this.unset("visibility");
+    } else {
+      this.set("visibility", Value.fromString(<string>value));
+    }
+  }
 }
 
 export class Condition extends Entity {
@@ -688,6 +729,10 @@ export class Condition extends Entity {
       );
       store.set("Condition", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): Condition | null {
+    return changetype<Condition | null>(store.get_in_block("Condition", id));
   }
 
   static load(id: string): Condition | null {
@@ -847,5 +892,23 @@ export class Condition extends Entity {
     } else {
       this.set("tokenDecimals", Value.fromBigInt(<BigInt>value));
     }
+  }
+}
+
+export class ParticipantLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): Participant[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<Participant[]>(value);
   }
 }

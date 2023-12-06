@@ -68,6 +68,7 @@ type Event @entity {
   location: String!
   website: String
   imageUrl: String
+  visibility: String
 }
 
 type Condition @entity(immutable: true) {

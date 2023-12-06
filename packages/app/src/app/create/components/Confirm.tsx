@@ -63,7 +63,7 @@ export function Confirm(props: Props) {
 
         <div className='flex flex-col justify-end gap-4 mt-4'>
           {isCreated && (
-            <Alert type='success' message='Event Created. Please wait for it to get indexed' />
+            <Alert type='success' message='Event Created. Please wait for it to get indexed. This can take up to 30 mins.' />
           )}
 
           {!isCreated && (

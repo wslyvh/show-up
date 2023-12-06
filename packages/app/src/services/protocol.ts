@@ -10,6 +10,7 @@ export interface GetRecordsWhere {
   createdBy?: string
   checkedIn?: boolean
   past?: boolean
+  inclUnlisted?: boolean
 }
 
 export interface GetConditionModulesWhere {
@@ -17,7 +18,7 @@ export interface GetConditionModulesWhere {
 }
 
 export async function GetRecord(id: string, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
-  const result = await GetRecords({ id: id }, chainId)
+  const result = await GetRecords({ id: id, inclUnlisted: true }, chainId)
   return result.length > 0 ? result[0] : null
 }
 
@@ -35,6 +36,7 @@ export async function GetRecords(params?: GetRecordsWhere, chainId: number = CON
                     ${params?.createdBy ? `createdBy: "${params.createdBy}"` : ''}
                     ${params?.past == true ? `condition_: {endDate_lte: "${dayjs().unix()}"}` : ''}
                     ${params?.past == false ? `condition_: {endDate_gte: "${dayjs().unix()}"}` : ''}
+                    ${params?.inclUnlisted == true ? `metadata_: {visibility_in: ["Public","Unlisted"]}` : 'metadata_: {visibility: "Public"}'}
                 })
                 {
                     id
@@ -66,6 +68,7 @@ export async function GetRecords(params?: GetRecordsWhere, chainId: number = CON
                         location
                         website
                         imageUrl
+                        visibility
                     }
                     participants(first: 100, where: {
                         ${params?.checkedIn ? `checkedIn: ${params.checkedIn}` : ''}
@@ -135,6 +138,7 @@ export async function GetParticipations(address: string, chainId: number = CONFI
                               location
                               website
                               imageUrl
+                              visibility
                             }
                             participants {
                               id

@@ -48,9 +48,15 @@ export interface EventMetadata {
   timezone: string
   location: string
   website: string
+  visibility: 'Public' | 'Unlisted'
   imageUrl: string
   links: string[]
   tags: string[]
+}
+
+export enum Visibility {
+  Public = 'Public',
+  Unlisted = 'Unlisted'
 }
 
 export interface EnsProfile {

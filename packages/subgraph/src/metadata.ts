@@ -16,6 +16,7 @@ export function handleEventMetadata(content: Bytes): void {
         const location = value.get('location')
         const website = value.get('website')
         const imageUrl = value.get('imageUrl')
+        const visibility = value.get('visibility')
 
         if (appId) metadata.appId = appId.toString()
         if (title) metadata.title = title.toString()
@@ -26,6 +27,11 @@ export function handleEventMetadata(content: Bytes): void {
         if (location) metadata.location = location.toString()
         if (website) metadata.website = website.toString()
         if (imageUrl) metadata.imageUrl = imageUrl.toString()
+        if (visibility) {
+            metadata.visibility = visibility.toString()
+        } else {
+            metadata.visibility = 'Public'
+        }
 
         metadata.save()
     }
