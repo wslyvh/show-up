@@ -29,6 +29,19 @@ export function CheckinOverview() {
     setCheckins(newCheckins)
   }
 
+  function toggleAllParticipants() {
+    const newCheckins = [...checkins]
+    if (newCheckins.length == record.participants.length) {
+      newCheckins.length = 0
+    } else {
+      newCheckins.length = 0
+      record.participants.forEach((participant) => {
+        if (!participant.checkedIn) newCheckins.push(participant.address)
+      })
+    }
+    setCheckins(newCheckins)
+  }
+
   const actionButton = (
     <button type='button' className='btn btn-accent btn-outline btn-sm w-full'>
       Check-in Attendees
@@ -37,11 +50,21 @@ export function CheckinOverview() {
 
   return (
     <div>
-      <div className="overflow-x-auto">
-        <table className="table table table-sm table-auto">
+      <h1 className='text-xl text-white font-bold'>Check-in</h1>
+      <p className='my-4'>Confirm attendees for {event.title}.</p>
+
+      <div className='overflow-x-auto'>
+        <table className='table table table-sm table-auto'>
           <thead>
             <tr>
-              <th></th>
+              <th>
+                <input
+                  type='checkbox'
+                  className='checkbox'
+                  onClick={toggleAllParticipants}
+                  disabled={record.participants.filter((i) => i.checkedIn).length == record.participants.length}
+                />
+              </th>
               <th>Name</th>
               <th className='min-w-[8rem]'>Registered</th>
             </tr>
@@ -49,22 +72,28 @@ export function CheckinOverview() {
           <tbody>
             {record.participants.map((participant) => {
               return (
-                <tr key={participant.address} className="hover" onClick={() => onParticipantChange(participant)}>
+                <tr key={participant.address} className='hover' onClick={() => onParticipantChange(participant)}>
                   <th>
                     <label>
-                      <input type="checkbox" className="checkbox" disabled={participant.checkedIn} checked={participant.checkedIn || checkins.includes(participant.address)} readOnly />
+                      <input
+                        type='checkbox'
+                        className='checkbox'
+                        disabled={participant.checkedIn}
+                        checked={participant.checkedIn || checkins.includes(participant.address)}
+                        readOnly
+                      />
                     </label>
                   </th>
                   <td>
-                    <div className="flex items-center gap-3">
-                      <div className="avatar">
-                        <div className="w-8 rounded-full">
+                    <div className='flex items-center gap-3'>
+                      <div className='avatar'>
+                        <div className='w-8 rounded-full'>
                           <img src={participant.profile.avatar} alt={participant.address} />
                         </div>
                       </div>
                       <div>
-                        <div className="font-bold">{participant.profile.name}</div>
-                        <div className="text-xs opacity-50">{participant.profile.address}</div>
+                        <div className='font-bold'>{participant.profile.name}</div>
+                        <div className='text-xs opacity-50'>{participant.profile.address}</div>
                       </div>
                     </div>
                   </td>
@@ -77,10 +106,13 @@ export function CheckinOverview() {
       </div>
 
       <div className='mt-4'>
-        <ActionDrawer title="Check-in attendees" actionComponent={actionButton}>
+        <ActionDrawer title='Check-in attendees' actionComponent={actionButton}>
           <div className='flex flex-col h-full'>
             <div className='flex-1 flex-grow'>
-              <p>Confirm addresses to check-in. You can continue to check in more addresses later, but not 'uncheck' any address.</p>
+              <p>
+                Confirm addresses to check-in. You can continue to check in more addresses later, but not 'uncheck' any
+                address.
+              </p>
 
               <div className='form-control w-full mt-4'>
                 <label className='label' htmlFor='timezone'>
