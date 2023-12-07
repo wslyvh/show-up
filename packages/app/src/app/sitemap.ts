@@ -27,7 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: isActive ? 'daily' : 'never',
         priority: isCancelled ? 0.1 : isActive ? 0.6 : 0.4,
       } as any
-    })
+    }),
   ]
 
   return pages

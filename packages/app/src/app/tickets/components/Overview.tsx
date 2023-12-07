@@ -14,9 +14,7 @@ export function Overview() {
   return (
     <>
       <div className='flex flex-col gap-4'>
-        {tickets.data?.map((ticket) => (
-          <Ticket key={ticket.id} record={ticket} />
-        ))}
+        {tickets.data?.map((ticket) => <Ticket key={ticket.id} record={ticket} />)}
       </div>
     </>
   )

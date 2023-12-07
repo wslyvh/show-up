@@ -1,5 +1,5 @@
-import { parseUnits } from "viem/utils"
-import { CONFIG } from "./config"
+import { parseUnits } from 'viem/utils'
+import { CONFIG } from './config'
 
 export const AddressZero = '0x0000000000000000000000000000000000000000'
 export const DefaultDepositFee = parseUnits('0.01', 18)

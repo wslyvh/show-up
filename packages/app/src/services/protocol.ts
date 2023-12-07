@@ -36,7 +36,11 @@ export async function GetRecords(params?: GetRecordsWhere, chainId: number = CON
                     ${params?.createdBy ? `createdBy: "${params.createdBy}"` : ''}
                     ${params?.past == true ? `condition_: {endDate_lte: "${dayjs().unix()}"}` : ''}
                     ${params?.past == false ? `condition_: {endDate_gte: "${dayjs().unix()}"}` : ''}
-                    ${params?.inclUnlisted == true ? `metadata_: {visibility_in: ["Public","Unlisted"]}` : 'metadata_: {visibility: "Public"}'}
+                    ${
+                      params?.inclUnlisted == true
+                        ? `metadata_: {visibility_in: ["Public","Unlisted"]}`
+                        : 'metadata_: {visibility: "Public"}'
+                    }
                 })
                 {
                     id
@@ -159,16 +163,21 @@ export async function GetParticipations(address: string, chainId: number = CONFI
   }
 
   const { data } = await response.json()
-  const results = await Promise.all(data.users.flatMap(async (user: any) => {
-    return user.participations.flatMap(async (i: any) => {
-      return toRecord(i.record, chainId)
+  const results = await Promise.all(
+    data.users.flatMap(async (user: any) => {
+      return user.participations.flatMap(async (i: any) => {
+        return toRecord(i.record, chainId)
+      })
     })
-  }))
+  )
 
   return results.filter((i) => !!i.metadata)
 }
 
-export async function GetConditionModules(params?: GetConditionModulesWhere, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
+export async function GetConditionModules(
+  params?: GetConditionModulesWhere,
+  chainId: number = CONFIG.DEFAULT_CHAIN_ID
+) {
   const response = await fetch(GetGraphBaseUri(chainId), {
     method: 'POST',
     headers: {
@@ -228,7 +237,7 @@ async function toRecord(data: any, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
     condition: toConditions(data.condition, data.conditionModule, chainId),
     contentUri: data.contentUri,
     metadata: toMetadata(data.metadata),
-    participants: await Promise.all(data.participants?.map(async (p: any) => toParticipant(p, chainId))) ?? [],
+    participants: (await Promise.all(data.participants?.map(async (p: any) => toParticipant(p, chainId)))) ?? [],
   } as Record
 }
 

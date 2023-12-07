@@ -57,7 +57,9 @@ export function EventDetails() {
           <div className='flex flex-col mt-4 gap-2'>
             <p className='flex flex-row items-center gap-2'>
               <CheckBadgeIcon className='h-5 w-5 text-info shrink-0' />
-              <LinkComponent className='underline truncate hover:text-white' href={`${CONFIG.DEFAULT_CHAIN.blockExplorers?.default.url}/address/${record.createdBy}`}>
+              <LinkComponent
+                className='underline truncate hover:text-white'
+                href={`${CONFIG.DEFAULT_CHAIN.blockExplorers?.default.url}/address/${record.createdBy}`}>
                 {record.creatorProfile.name}
               </LinkComponent>
             </p>
@@ -71,7 +73,9 @@ export function EventDetails() {
             <p className='flex flex-row items-center gap-2'>
               <MapPinIcon className='h-5 w-5 text-info shrink-0' />
               {event.location.startsWith('https://') && (
-                <LinkComponent href={event.location} className='underline truncate hover:text-white'>{event.location}</LinkComponent>
+                <LinkComponent href={event.location} className='underline truncate hover:text-white'>
+                  {event.location}
+                </LinkComponent>
               )}
               {!event.location.startsWith('https://') && event.location}
             </p>
@@ -79,7 +83,11 @@ export function EventDetails() {
               <UserIcon className='h-5 w-5 text-info shrink-0' /> {record.participants.length} going
               <span> · </span>
               <span className='text-accent'>
-                {record.condition?.maxParticipants > 0 ? <>{record.condition?.maxParticipants - record.participants.length} left</> : 'unlimited'}
+                {record.condition?.maxParticipants > 0 ? (
+                  <>{record.condition?.maxParticipants - record.participants.length} left</>
+                ) : (
+                  'unlimited'
+                )}
               </span>
             </p>
             <p className='flex flex-row items-center gap-2'>
@@ -89,7 +97,10 @@ export function EventDetails() {
               )}
               {record.condition.type == ConditionModuleType.BasicToken && (
                 <>
-                  {formatUnits(record.condition.depositFee, record.condition.tokenDecimals ?? GetTokenDecimals(record.condition.tokenAddress))}{' '}
+                  {formatUnits(
+                    record.condition.depositFee,
+                    record.condition.tokenDecimals ?? GetTokenDecimals(record.condition.tokenAddress)
+                  )}{' '}
                   {GetTokenSymbol(record.condition.tokenAddress)}
                 </>
               )}
@@ -107,14 +118,16 @@ export function EventDetails() {
               </LinkComponent>
             )}
 
-            {address && !eventData.isAdmin && <Register event={record}
-              buttonText={registerButtonText()}
-              disabled={eventData.canRegister} />}
+            {address && !eventData.isAdmin && (
+              <Register event={record} buttonText={registerButtonText()} disabled={eventData.canRegister} />
+            )}
 
             {event.website && (
               <p className='mt-4'>
                 <LinkComponent href={event.website}>
-                  <button type='button' className='btn btn-accent btn-sm w-full'>Website</button>
+                  <button type='button' className='btn btn-accent btn-sm w-full'>
+                    Website
+                  </button>
                 </LinkComponent>
               </p>
             )}
@@ -133,8 +146,11 @@ export function EventDetails() {
             {record.participants.map((participant) => {
               return (
                 <div key={participant.address} className='w-24 text-center grow'>
-                  <div className="avatar shrink-0">
-                    <div className={`w-20 rounded-full ${participant.checkedIn ? 'ring ring-success ring-offset-base-100 ring-offset-2' : ''}`}>
+                  <div className='avatar shrink-0'>
+                    <div
+                      className={`w-20 rounded-full ${
+                        participant.checkedIn ? 'ring ring-success ring-offset-base-100 ring-offset-2' : ''
+                      }`}>
                       <img src={participant.profile.avatar} alt={participant.address} />
                     </div>
                   </div>

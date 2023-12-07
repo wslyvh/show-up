@@ -6,7 +6,7 @@ interface Props {
 
 export function Tabs(props: Props) {
   return (
-    <div role="tablist" className='tabs tabs-boxed tabs-sm bg-black'>
+    <div role='tablist' className='tabs tabs-boxed tabs-sm bg-black'>
       {props.options.map((option) => (
         <a
           key={option}

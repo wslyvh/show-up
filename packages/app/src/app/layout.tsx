@@ -1,6 +1,13 @@
 import { Metadata } from 'next/types'
 import { PropsWithChildren } from 'react'
-import { DEFAULT_REVALIDATE_PERIOD, SITE_DESCRIPTION, SITE_DOMAIN, SITE_NAME, SITE_URL, SOCIAL_TWITTER } from '@/utils/site'
+import {
+  DEFAULT_REVALIDATE_PERIOD,
+  SITE_DESCRIPTION,
+  SITE_DOMAIN,
+  SITE_NAME,
+  SITE_URL,
+  SOCIAL_TWITTER,
+} from '@/utils/site'
 import { MobileLayout } from '@/components/MobileLayout'
 import { Web3Provider } from '@/context/Web3'
 import { EventManagementProvider } from '@/context/EventManagement'
@@ -48,9 +55,9 @@ export default function RootLayout(props: PropsWithChildren) {
     <html lang='en'>
       <head>
         <PlausibleProvider domain={SITE_DOMAIN} />
-        <link rel="icon" href="/icons/favicon.ico" sizes="any" />
-        <link rel="shortcut icon" href="/icons/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180x180.png" type="image/png" sizes="any" />
+        <link rel='icon' href='/icons/favicon.ico' sizes='any' />
+        <link rel='shortcut icon' href='/icons/favicon.ico' sizes='any' />
+        <link rel='apple-touch-icon' href='/icons/apple-touch-icon-180x180.png' type='image/png' sizes='any' />
       </head>
       <body>
         <Web3Provider>

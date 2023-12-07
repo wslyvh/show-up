@@ -16,7 +16,12 @@ export function LinkComponent(props: Props) {
 
   if (isExternal) {
     return (
-      <Link className={className} href={props.href} target='_blank' rel='noopener noreferrer' aria-label={props.ariaLabel}>
+      <Link
+        className={className}
+        href={props.href}
+        target='_blank'
+        rel='noopener noreferrer'
+        aria-label={props.ariaLabel}>
         {props.children}
       </Link>
     )

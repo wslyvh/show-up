@@ -66,7 +66,9 @@ export function Profile() {
             {events?.map((event) => {
               return (
                 <li key={event.id} className='flex items-center justify-between my-2'>
-                  <LinkComponent href={`/events/${event.id}`} className='text-sm truncate'>· {event.metadata?.title}</LinkComponent>
+                  <LinkComponent href={`/events/${event.id}`} className='text-sm truncate'>
+                    · {event.metadata?.title}
+                  </LinkComponent>
                   <TicketBadge status={event.status} size='xs' />
                 </li>
               )

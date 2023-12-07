@@ -56,7 +56,7 @@ export interface EventMetadata {
 
 export enum Visibility {
   Public = 'Public',
-  Unlisted = 'Unlisted'
+  Unlisted = 'Unlisted',
 }
 
 export interface EnsProfile {

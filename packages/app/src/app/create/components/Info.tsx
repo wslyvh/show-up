@@ -4,11 +4,11 @@ import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline'
 
 export function InfoDrawer() {
   return (
-    <ActionDrawer title='Show Up Protocol' actionComponent={<QuestionMarkCircleIcon className='h-6 w-6 cursor-pointer' />}>
+    <ActionDrawer
+      title='Show Up Protocol'
+      actionComponent={<QuestionMarkCircleIcon className='h-6 w-6 cursor-pointer' />}>
       <div className='flex flex-col'>
-        <p>
-          Show Up aligns the incentives between event organizers and attendees
-        </p>
+        <p>Show Up aligns the incentives between event organizers and attendees</p>
 
         <ul className='list-inside list-disc text-sm mt-4'>
           <li>Event organizers request a deposit fee to register</li>
@@ -27,9 +27,13 @@ export function InfoDrawer() {
         </ul>
 
         <p className='mt-4'>
-          Check <LinkComponent className='underline' href='https://github.com/wslyvh/show-up'>Github</LinkComponent> for more details.
+          Check{' '}
+          <LinkComponent className='underline' href='https://github.com/wslyvh/show-up'>
+            Github
+          </LinkComponent>{' '}
+          for more details.
         </p>
       </div>
-    </ActionDrawer >
+    </ActionDrawer>
   )
 }

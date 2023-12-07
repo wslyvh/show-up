@@ -25,8 +25,8 @@ const defaultState: NotificationContext = {
   new: false,
   notifications: [],
   Add: () => Promise.resolve(),
-  MarkAsRead: () => { },
-  Clear: () => { },
+  MarkAsRead: () => {},
+  Clear: () => {},
 }
 
 export const useNotifications = () => useContext(NotificationContext)

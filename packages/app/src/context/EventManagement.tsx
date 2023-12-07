@@ -147,7 +147,6 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
       const cancelTx = await writeRegistry(cancelConfig)
       await sendTransactionNotification(cancelTx.hash, 'Cancelling event')
-
     } catch (e) {
       console.error(e)
       setState({ ...state, loading: false, message: 'Unable to cancel event' })
@@ -301,7 +300,6 @@ export function EventManagementProvider(props: PropsWithChildren) {
 
       const settleTx = await writeRegistry(settleConfig)
       await sendTransactionNotification(settleTx.hash, 'Settling event')
-
     } catch (e) {
       console.error(e)
       setState({ ...state, loading: false, message: 'Error checking in to event' })

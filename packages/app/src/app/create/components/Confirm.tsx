@@ -33,18 +33,20 @@ export function Confirm(props: Props) {
       <div className='flex flex-col justify-between h-full'>
         <div className='flex flex-col'>
           <p>
-            Please check and confirm all details before creating your event. Once an event is created, it cannot be edited.
+            Please check and confirm all details before creating your event. Once an event is created, it cannot be
+            edited.
           </p>
 
           <div className='w-full divide-y divide-gray-800 text-sm gap-4 mt-4'>
             <div className='flex items-center justify-between py-2'>
               <span>Owner</span>
               <span>
-                <LinkComponent className='underline' href={`${CONFIG.DEFAULT_CHAIN.blockExplorers?.default.url}/address/${address}`}>
+                <LinkComponent
+                  className='underline'
+                  href={`${CONFIG.DEFAULT_CHAIN.blockExplorers?.default.url}/address/${address}`}>
                   {TruncateMiddle(address)}
                 </LinkComponent>
               </span>
-
             </div>
             <div className='flex items-center justify-between py-2'>
               <span>End Date</span>
@@ -56,14 +58,20 @@ export function Confirm(props: Props) {
             </div>
             <div className='flex items-center justify-between py-2'>
               <span>Deposit Fee</span>
-              <span>{formatUnits(props.conditions.depositFee, GetTokenDecimals(props.conditions.tokenAddress))} {GetTokenSymbol(props.conditions.tokenAddress)}</span>
+              <span>
+                {formatUnits(props.conditions.depositFee, GetTokenDecimals(props.conditions.tokenAddress))}{' '}
+                {GetTokenSymbol(props.conditions.tokenAddress)}
+              </span>
             </div>
           </div>
         </div>
 
         <div className='flex flex-col justify-end gap-4 mt-4'>
           {isCreated && (
-            <Alert type='success' message='Event Created. Please wait for it to get indexed. This can take up to 30 mins.' />
+            <Alert
+              type='success'
+              message='Event Created. Please wait for it to get indexed. This can take up to 30 mins.'
+            />
           )}
 
           {!isCreated && (
@@ -72,8 +80,12 @@ export function Confirm(props: Props) {
                 * It can take up to 30 mins for your event to be visible due to decentralized indexing.
               </p>
               <p className='text-sm'>
-                ** The protocol has been thoughtfully designed, built and has been reviewed by external developers. However, it has not been audited yet.
-                Check our <LinkComponent className='underline' href='https://github.com/wslyvh/show-up'>Github</LinkComponent> for more details.
+                ** The protocol has been thoughtfully designed, built and has been reviewed by external developers.
+                However, it has not been audited yet. Check our{' '}
+                <LinkComponent className='underline' href='https://github.com/wslyvh/show-up'>
+                  Github
+                </LinkComponent>{' '}
+                for more details.
               </p>
             </>
           )}
@@ -91,6 +103,6 @@ export function Confirm(props: Props) {
           </button>
         </div>
       </div>
-    </ActionDrawer >
+    </ActionDrawer>
   )
 }

@@ -48,7 +48,10 @@ export function CreateForm() {
   function handleEventChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     if (!e.target.id) return
 
-    if (e.target.id === 'start' && (dayjs(event.end).isSame(defaultEndDate)) || dayjs(event.end).isBefore(dayjs(e.target.value))) {
+    if (
+      (e.target.id === 'start' && dayjs(event.end).isSame(defaultEndDate)) ||
+      dayjs(event.end).isBefore(dayjs(e.target.value))
+    ) {
       setEvent((state) => ({
         ...state,
         [e.target.id]: e.target.value,
@@ -245,12 +248,13 @@ export function CreateForm() {
             <div className='flex gap-4'>
               <div className='flex gap-2 items-center'>
                 <input
-                  className="radio radio-sm"
-                  type="radio"
-                  value="Public"
-                  id="public"
+                  className='radio radio-sm'
+                  type='radio'
+                  value='Public'
+                  id='public'
                   checked={event.visibility === 'Public'}
-                  onChange={handleEventChange} />
+                  onChange={handleEventChange}
+                />
 
                 <label className='label' htmlFor='public'>
                   <span className='label-text'>Public</span>
@@ -259,10 +263,10 @@ export function CreateForm() {
 
               <div className='flex gap-2 items-center'>
                 <input
-                  className="radio radio-sm"
-                  type="radio"
-                  value="Unlisted"
-                  id="unlisted"
+                  className='radio radio-sm'
+                  type='radio'
+                  value='Unlisted'
+                  id='unlisted'
                   checked={event.visibility === 'Unlisted'}
                   onChange={handleEventChange}
                 />
@@ -275,7 +279,7 @@ export function CreateForm() {
         </>
 
         {/* Condition Modules */}
-        <div className="divider divider-start mt-8">Conditions</div>
+        <div className='divider divider-start mt-8'>Conditions</div>
 
         <>
           <div className='form-control w-full'>

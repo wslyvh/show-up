@@ -13,13 +13,21 @@ export function Navbar() {
 
   return (
     <footer className='btm-nav'>
-      <LinkComponent href='/' ariaLabel='Home' className={pathname === '/' || pathname === '/past' || pathname.startsWith('/events/') ? 'active bg-neutral' : ''}>
+      <LinkComponent
+        href='/'
+        ariaLabel='Home'
+        className={
+          pathname === '/' || pathname === '/past' || pathname.startsWith('/events/') ? 'active bg-neutral' : ''
+        }>
         <HomeIcon className={iconClassName} />
       </LinkComponent>
       <LinkComponent href='/tickets' ariaLabel='Tickets' className={pathname === '/tickets' ? 'active bg-neutral' : ''}>
         <TicketIcon className={iconClassName} />
       </LinkComponent>
-      <LinkComponent href='/notifications' ariaLabel='Notifications' className={pathname === '/notifications' ? 'active bg-neutral' : ''}>
+      <LinkComponent
+        href='/notifications'
+        ariaLabel='Notifications'
+        className={pathname === '/notifications' ? 'active bg-neutral' : ''}>
         <p className='relative'>
           <BellIcon className={iconClassName} />
           {notifications.new && <span className='absolute -top-2 left-4 badge badge-accent badge-xs'></span>}

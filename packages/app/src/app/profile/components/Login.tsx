@@ -23,7 +23,9 @@ export function Login() {
         </div>
 
         <div className='form-control w-full'>
-          <button className='btn btn-sm btn-primary' disabled>Coming soon</button>
+          <button className='btn btn-sm btn-primary' disabled>
+            Coming soon
+          </button>
         </div>
       </div>
     </div>

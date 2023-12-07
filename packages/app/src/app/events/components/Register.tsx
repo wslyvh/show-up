@@ -30,12 +30,16 @@ export function Register(props: Props) {
   )
 
   async function approve() {
-    eventManagement.ApproveToken(props.event.conditionModule, props.event.condition.tokenAddress!, props.event.condition.depositFee)
+    eventManagement.ApproveToken(
+      props.event.conditionModule,
+      props.event.condition.tokenAddress!,
+      props.event.condition.depositFee
+    )
     await refetch()
   }
 
   return (
-    <ActionDrawer title="Register" actionComponent={actionButton}>
+    <ActionDrawer title='Register' actionComponent={actionButton}>
       <div className='flex flex-col justify-between h-full'>
         <div className='flex flex-col'>
           <p>
@@ -46,7 +50,9 @@ export function Register(props: Props) {
             <div className='flex items-center justify-between py-2'>
               <span>Organizer</span>
               <span>
-                <LinkComponent className='underline' href={`${CONFIG.DEFAULT_CHAIN.blockExplorers?.default.url}/address/${props.event.createdBy}`}>
+                <LinkComponent
+                  className='underline'
+                  href={`${CONFIG.DEFAULT_CHAIN.blockExplorers?.default.url}/address/${props.event.createdBy}`}>
                   {TruncateMiddle(props.event.createdBy)}
                 </LinkComponent>
               </span>
@@ -54,13 +60,17 @@ export function Register(props: Props) {
             <div className='flex items-center justify-between py-2'>
               <span>Available Spots</span>
               <span>
-                {props.event.participants.length}{' / '}
+                {props.event.participants.length}
+                {' / '}
                 {props.event.condition.maxParticipants > 0 ? props.event.condition.maxParticipants : 'unlimited'}
               </span>
             </div>
             <div className='flex items-center justify-between py-2'>
               <span>Deposit Fee</span>
-              <span>{formatUnits(props.event.condition.depositFee, GetTokenDecimals(props.event.condition.tokenAddress))} {GetTokenSymbol(props.event.condition.tokenAddress)}</span>
+              <span>
+                {formatUnits(props.event.condition.depositFee, GetTokenDecimals(props.event.condition.tokenAddress))}{' '}
+                {GetTokenSymbol(props.event.condition.tokenAddress)}
+              </span>
             </div>
             <div className='flex items-center justify-between py-2'>
               <span>Current Allowance</span>
@@ -72,21 +82,44 @@ export function Register(props: Props) {
 
         <div className='flex flex-col justify-end gap-4 mt-4'>
           {eventData.isParticipant && (
-            <button type='button' className='btn btn-accent btn-sm w-full' disabled>Already registered</button>
+            <button type='button' className='btn btn-accent btn-sm w-full' disabled>
+              Already registered
+            </button>
           )}
 
-          {allowance < props.event.condition.depositFee && props.event.condition.type == ConditionModuleType.BasicToken && !eventData.isParticipant && (
-            <>
-              <p>
-                You need to approve the contract first to spend{' '}
-                {formatUnits(props.event.condition.depositFee, props.event.condition.tokenDecimals ?? 18)} {GetTokenSymbol(props.event.condition.tokenAddress)}.{' '}
-                You can register for the event after.
-              </p>
+          {allowance < props.event.condition.depositFee &&
+            props.event.condition.type == ConditionModuleType.BasicToken &&
+            !eventData.isParticipant && (
+              <>
+                <p>
+                  You need to approve the contract first to spend{' '}
+                  {formatUnits(props.event.condition.depositFee, props.event.condition.tokenDecimals ?? 18)}{' '}
+                  {GetTokenSymbol(props.event.condition.tokenAddress)}. You can register for the event after.
+                </p>
 
+                <button
+                  type='button'
+                  disabled={eventManagement.loading}
+                  onClick={approve}
+                  className='btn btn-accent btn-sm w-full'>
+                  {eventManagement.loading && (
+                    <>
+                      Loading
+                      <span className='loading loading-spinner h-4 w-4' />
+                    </>
+                  )}
+                  {!eventManagement.loading && <>Approve</>}
+                </button>
+              </>
+            )}
+
+          {(allowance >= props.event.condition.depositFee ||
+            props.event.condition.type == ConditionModuleType.BasicEther) &&
+            !eventData.isParticipant && (
               <button
                 type='button'
-                disabled={eventManagement.loading}
-                onClick={approve}
+                disabled={eventManagement.loading || eventData.isParticipant}
+                onClick={() => eventManagement.Register(props.event.id, props.event.condition, address)}
                 className='btn btn-accent btn-sm w-full'>
                 {eventManagement.loading && (
                   <>
@@ -94,26 +127,9 @@ export function Register(props: Props) {
                     <span className='loading loading-spinner h-4 w-4' />
                   </>
                 )}
-                {!eventManagement.loading && <>Approve</>}
+                {!eventManagement.loading && <>Register</>}
               </button>
-            </>
-          )}
-
-          {(allowance >= props.event.condition.depositFee || props.event.condition.type == ConditionModuleType.BasicEther) && !eventData.isParticipant && (
-            <button
-              type='button'
-              disabled={eventManagement.loading || eventData.isParticipant}
-              onClick={() => eventManagement.Register(props.event.id, props.event.condition, address)}
-              className='btn btn-accent btn-sm w-full'>
-              {eventManagement.loading && (
-                <>
-                  Loading
-                  <span className='loading loading-spinner h-4 w-4' />
-                </>
-              )}
-              {!eventManagement.loading && <>Register</>}
-            </button>
-          )}
+            )}
         </div>
       </div>
     </ActionDrawer>
