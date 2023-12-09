@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { PropsWithChildren } from 'react'
 import { BLOG_DOMAIN, BLOG_NAME, BLOG_URL, SITE_DESCRIPTION, SITE_NAME, SOCIAL_TWITTER } from "app/src/utils/site"
 import PlausibleProvider from 'next-plausible'
@@ -13,7 +13,6 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(BLOG_URL),
   description: SITE_DESCRIPTION,
-  viewport: 'width=device-width, initial-scale=1.0, viewport-fit=cover',
   openGraph: {
     type: 'website',
     title: BLOG_NAME,
@@ -29,6 +28,14 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     images: `${BLOG_URL}/opengraph-image`,
   },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  height: 'device-height',
+  initialScale: 1.0,
+  viewportFit: 'cover',
+  themeColor: '#000000',
 }
 
 export default function RootLayout(props: PropsWithChildren) {

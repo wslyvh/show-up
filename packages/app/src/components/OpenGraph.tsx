@@ -1,5 +1,5 @@
 import { SITE_EMOJI, SITE_INFO, SITE_SHORT_NAME } from '@/utils/site'
-import { ImageResponse } from 'next/server'
+import { ImageResponse } from 'next/og'
 
 export function defaultOpenGraphImage() {
   return new ImageResponse(

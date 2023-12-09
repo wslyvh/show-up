@@ -1,9 +1,8 @@
 import { defaultOpenGraphImage } from '@/components/OpenGraph'
 import { GetRecord } from '@/services/protocol'
 import { SITE_EMOJI, SITE_NAME } from '@/utils/site'
-import { CalendarDaysIcon } from '@heroicons/react/24/outline'
+import { ImageResponse } from 'next/og'
 import dayjs from 'dayjs'
-import { ImageResponse } from 'next/server'
 
 // Route segment config
 export const runtime = 'edge'

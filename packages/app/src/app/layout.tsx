@@ -1,4 +1,4 @@
-import { Metadata } from 'next/types'
+import { Metadata, Viewport } from 'next/types'
 import { PropsWithChildren } from 'react'
 import {
   DEFAULT_REVALIDATE_PERIOD,
@@ -25,7 +25,6 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   description: SITE_DESCRIPTION,
   manifest: '/manifest.json',
-  themeColor: '#000000',
   appleWebApp: {
     title: SITE_NAME,
     capable: true,
@@ -46,6 +45,14 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     images: '/opengraph-image',
   },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  height: 'device-height',
+  initialScale: 1.0,
+  viewportFit: 'cover',
+  themeColor: '#000000',
 }
 
 export const revalidate = DEFAULT_REVALIDATE_PERIOD
