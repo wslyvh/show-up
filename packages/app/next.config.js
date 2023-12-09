@@ -12,21 +12,8 @@ const nextConfig = {
   },
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-        port: '',
-      },
-      {
-        protocol: 'https',
-        hostname: 'source.unsplash.com',
-        port: '',
-      },
-      {
-        protocol: 'https',
-        hostname: 'cloudflare-ipfs.com',
-        port: '',
-      },
+      { protocol: 'https', hostname: '*.showup.events' },
+      { protocol: 'https', hostname: 'cloudflare-ipfs.com' },
     ],
   },
 }

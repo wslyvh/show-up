@@ -136,7 +136,7 @@ export function EventDetails() {
 
           <h1 className='text-xl text-white font-bold mt-8'>{event.title}</h1>
           <div className='prose max-w-none mt-8' dangerouslySetInnerHTML={{
-            __html: marked.parse(event.description, {
+            __html: marked.parse(event.description ?? '', {
               breaks: true,
               gfm: true,
             }) as string

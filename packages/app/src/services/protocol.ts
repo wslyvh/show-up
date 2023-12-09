@@ -2,6 +2,7 @@ import { ConditionModule, ConditionModuleData, EventMetadata, Participant, Recor
 import { GetGraphBaseUri } from '@/utils/network'
 import { CONFIG } from '@/utils/config'
 import { getEnsProfile } from './ens'
+import { SITE_URL } from '@/utils/site'
 import dayjs from 'dayjs'
 
 export interface GetRecordsWhere {
@@ -36,11 +37,10 @@ export async function GetRecords(params?: GetRecordsWhere, chainId: number = CON
                     ${params?.createdBy ? `createdBy: "${params.createdBy}"` : ''}
                     ${params?.past == true ? `condition_: {endDate_lte: "${dayjs().unix()}"}` : ''}
                     ${params?.past == false ? `condition_: {endDate_gte: "${dayjs().unix()}"}` : ''}
-                    ${
-                      params?.inclUnlisted == true
-                        ? `metadata_: {visibility_in: ["Public","Unlisted"]}`
-                        : 'metadata_: {visibility: "Public"}'
-                    }
+                    ${params?.inclUnlisted == true
+          ? `metadata_: {visibility_in: ["Public","Unlisted"]}`
+          : 'metadata_: {visibility: "Public"}'
+        }
                 })
                 {
                     id
@@ -236,19 +236,19 @@ async function toRecord(data: any, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
     conditionModule: data.conditionModule,
     condition: toConditions(data.condition, data.conditionModule, chainId),
     contentUri: data.contentUri,
-    metadata: toMetadata(data.metadata),
+    metadata: toMetadata(data.id, data.metadata),
     participants: (await Promise.all(data.participants?.map(async (p: any) => toParticipant(p, chainId)))) ?? [],
   } as Record
 }
 
-function toMetadata(data: any, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
+function toMetadata(id: string, data: any, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
   if (!data) return undefined
 
   return {
     ...data,
     imageUrl: data?.imageUrl?.includes('ipfs://')
       ? `${CONFIG.DEFAULT_IPFS_GATEWAY}/${data.imageUrl.replace('ipfs://', '')}`
-      : data?.imageUrl ?? '',
+      : data?.imageUrl ?? `${SITE_URL}/events/${id}/opengraph-image`,
   } as EventMetadata
 }
 

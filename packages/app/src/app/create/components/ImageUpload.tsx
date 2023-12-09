@@ -28,7 +28,7 @@ export function ImageUpload(props: Props) {
     onDrop,
     multiple: false,
     accept: {
-      'image/png': ['.png'],
+      'image/*': ['.jpeg', 'jpg', '.png']
     },
   })
 
@@ -50,7 +50,8 @@ export function ImageUpload(props: Props) {
                 <span className='font-semibold'>Click to upload</span> or drag and drop
               </p>
               <p className='text-xs text-gray-400 text-center px-4'>
-                .png format, with a recommended size of 1200:600 (2:1 ratio)
+                .png or .jpeg format <br />
+                recommended size of 1200:600 (2:1 ratio)
               </p>
             </div>
             <input id='dropzone-file' {...getInputProps()} />
