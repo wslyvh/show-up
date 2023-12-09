@@ -14,6 +14,7 @@ import { GetTokenDecimals, GetTokenSymbol } from '@/utils/network'
 import { CONFIG } from '@/utils/config'
 import { useAccount } from 'wagmi'
 import { usePathname } from 'next/navigation'
+import { marked } from 'marked'
 
 export function EventDetails() {
   const pathname = usePathname()
@@ -134,7 +135,7 @@ export function EventDetails() {
           </div>
 
           <h1 className='text-xl text-white font-bold mt-8'>{event.title}</h1>
-          <p className='mt-8'>{event.description}</p>
+          <div className='prose max-w-none mt-8' dangerouslySetInnerHTML={{ __html: marked.parse(event.description) as string }} />
         </div>
       </div>
 
