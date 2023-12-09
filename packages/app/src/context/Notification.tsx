@@ -25,8 +25,8 @@ const defaultState: NotificationContext = {
   new: false,
   notifications: [],
   Add: () => Promise.resolve(),
-  MarkAsRead: () => {},
-  Clear: () => {},
+  MarkAsRead: () => { },
+  Clear: () => { },
 }
 
 export const useNotifications = () => useContext(NotificationContext)
@@ -113,12 +113,16 @@ export function NotificationProvider(props: PropsWithChildren) {
 
   async function saveNotification(notification: Notification) {
     if (notification.from) {
-      const name = await fetchEnsName({
-        address: notification.from,
-        chainId: 1,
-      })
+      try {
+        const name = await fetchEnsName({
+          address: notification.from,
+          chainId: 1,
+        })
 
-      if (name) notification.from = name
+        if (name) notification.from = name
+      } catch (e) {
+        // Unable to fetch ENS name (unsupported chain)
+      }
     }
 
     const notifications = [...state.notifications, notification]
