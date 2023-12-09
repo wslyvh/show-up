@@ -34,10 +34,10 @@ export function EventDetails() {
   return (
     <>
       <div className='flex flex-col bg-neutral rounded-lg'>
-        <div className='w-full h-[240px]'>
+        <div className='w-full aspect-[2/1] max-h-xs'>
           <Image
             width={0}
-            height='240'
+            height='320'
             src={event.imageUrl}
             alt={event.title}
             placeholder='blur'
@@ -148,9 +148,8 @@ export function EventDetails() {
                 <div key={participant.address} className='w-24 text-center grow'>
                   <div className='avatar shrink-0'>
                     <div
-                      className={`w-20 rounded-full ${
-                        participant.checkedIn ? 'ring ring-success ring-offset-base-100 ring-offset-2' : ''
-                      }`}>
+                      className={`w-20 rounded-full ${participant.checkedIn ? 'ring ring-success ring-offset-base-100 ring-offset-2' : ''
+                        }`}>
                       <img src={participant.profile.avatar} alt={participant.address} />
                     </div>
                   </div>
