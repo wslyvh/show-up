@@ -109,56 +109,57 @@ export async function GetParticipations(address: string, chainId: number = CONFI
     },
     body: JSON.stringify({
       query: `{
-                users(where: { id: "${address}" }) {
-                    id
-                    participations {
+          users(where: { id: "${address}" }) {
+              id
+              participations {
+                  id
+                  transactionHash
+                  record {
+                      id
+                      createdAt
+                      createdBy
+                      updatedAt
+                      status
+                      message
+                      conditionModule
+                      condition {
+                        name
+                        endDate
+                        depositFee
+                        maxParticipants
+                        tokenAddress
+                        tokenName
+                        tokenSymbol
+                        tokenDecimals
+                      }
+                      contentUri
+                      metadata {
+                        appId
+                        title
+                        description
+                        start
+                        end
+                        timezone
+                        location
+                        website
+                        imageUrl
+                        visibility
+                      }
+                      participants {
                         id
+                        createdAt
+                        createdBy
+                        address
+                        checkedIn
                         transactionHash
-                        record {
-                            id
-                            createdAt
-                            createdBy
-                            updatedAt
-                            status
-                            message
-                            conditionModule
-                            condition {
-                              name
-                              endDate
-                              depositFee
-                              maxParticipants
-                              tokenAddress
-                              tokenName
-                              tokenSymbol
-                              tokenDecimals
-                            }
-                            contentUri
-                            metadata {
-                              appId
-                              title
-                              description
-                              start
-                              end
-                              timezone
-                              location
-                              website
-                              imageUrl
-                              visibility
-                            }
-                            participants {
-                              id
-                              createdAt
-                              createdBy
-                              address
-                              checkedIn
-                              transactionHash
-                            }
-                        }
-                    }
-                }
-            }`,
+                      }
+                  }
+              }
+          }
+      }`,
     }),
   })
+
   if (!response.ok) {
     throw new Error('Failed to fetch records')
   }
@@ -166,13 +167,15 @@ export async function GetParticipations(address: string, chainId: number = CONFI
   const { data } = await response.json()
   const results = await Promise.all(
     data.users.flatMap(async (user: any) => {
-      return user.participations.flatMap(async (i: any) => {
-        return toRecord(i.record, chainId)
-      })
+      return Promise.all(
+        user.participations.flatMap(async (i: any) => {
+          return toRecord(i.record, chainId)
+        })
+      )
     })
   )
 
-  return results.filter((i) => !!i.metadata)
+  return results.flat().filter((i) => !!i.metadata) as Record[]
 }
 
 export async function GetConditionModules(

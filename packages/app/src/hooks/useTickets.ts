@@ -8,6 +8,7 @@ export function useTickets() {
   const { data, isError, isPending } = useQuery({
     queryKey: ['tickets', address, CONFIG.DEFAULT_CHAIN_ID],
     queryFn: () => GetParticipations(address, CONFIG.DEFAULT_CHAIN_ID),
+    enabled: !!address,
   })
 
   return {
