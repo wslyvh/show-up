@@ -15,6 +15,7 @@ export function useAllowance(owner: string, spender: string, tokenAddress: strin
     functionName: 'allowance',
     args: [owner, spender],
     watch: true,
+    enabled: tokenAddress !== AddressZero,
   })
 
   return {
