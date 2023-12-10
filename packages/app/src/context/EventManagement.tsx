@@ -13,6 +13,7 @@ import { useNotifications } from './Notification'
 import { useQueryClient } from '@tanstack/react-query'
 import { CONFIG } from '@/utils/config'
 import { useAccount } from 'wagmi'
+import { revalidateAll } from '@/app/actions/cache'
 import dayjs from 'dayjs'
 
 interface EventManagementContext {
@@ -154,7 +155,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
     }
 
     setState({ ...state, loading: false, message: '' })
-    queryClient.invalidateQueries({ queryKey: ['events'] })
+    revalidateCache()
   }
 
   async function ApproveToken(spender: string, tokenAddress: string, fee: bigint) {
@@ -244,7 +245,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
     }
 
     setState({ ...state, loading: false, message: '' })
-    queryClient.invalidateQueries({ queryKey: ['events'] })
+    revalidateCache()
   }
 
   async function Checkin(id: string, attendees: string[]) {
@@ -278,7 +279,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
     }
 
     setState({ ...state, loading: false, message: '' })
-    queryClient.invalidateQueries({ queryKey: ['events'] })
+    revalidateCache()
   }
 
   async function Settle(id: string) {
@@ -307,7 +308,7 @@ export function EventManagementProvider(props: PropsWithChildren) {
     }
 
     setState({ ...state, loading: false, message: '' })
-    queryClient.invalidateQueries({ queryKey: ['events'] })
+    revalidateCache()
   }
 
   async function sendTransactionNotification(hash: string, message: string = 'Transaction sent') {
@@ -322,6 +323,11 @@ export function EventManagementProvider(props: PropsWithChildren) {
       },
       data: { hash },
     })
+  }
+
+  async function revalidateCache() {
+    await revalidateAll()
+    queryClient.invalidateQueries({ queryKey: ['events'] })
   }
 
   if (typeof window === 'undefined') {
