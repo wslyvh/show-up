@@ -43,7 +43,7 @@ export function Register(props: Props) {
       <div className='flex flex-col justify-between h-full'>
         <div className='flex flex-col'>
           <p>
-            You're registering for <strong>{props.event.metadata?.title}</strong>.
+            You&apos;re registering for <strong>{props.event.metadata?.title}</strong>.
           </p>
 
           <div className='w-full divide-y divide-gray-800 text-sm gap-4 mt-4'>

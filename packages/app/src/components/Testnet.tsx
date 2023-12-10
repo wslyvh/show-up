@@ -20,7 +20,7 @@ export function TestnetAlert() {
         </svg>
         <div>
           <h3 className='font-bold'>Show Up Testnet</h3>
-          <div className='text-xs'>Please note that you're connected to a test network on Sepolia.</div>
+          <div className='text-xs'>Please note that you&apos;re connected to a test network on Sepolia.</div>
         </div>
         <LinkComponent href={SITE_URL} className='btn btn-sm'>
           Go to Main

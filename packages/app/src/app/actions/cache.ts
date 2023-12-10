@@ -1,7 +1,7 @@
 'use server'
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath } from 'next/cache'
 
 export async function revalidateAll() {
-    revalidatePath('/', 'layout')
+  revalidatePath('/', 'layout')
 }

@@ -37,10 +37,11 @@ export async function GetRecords(params?: GetRecordsWhere, chainId: number = CON
                     ${params?.createdBy ? `createdBy: "${params.createdBy}"` : ''}
                     ${params?.past == true ? `condition_: {endDate_lte: "${dayjs().unix()}"}` : ''}
                     ${params?.past == false ? `condition_: {endDate_gte: "${dayjs().unix()}"}` : ''}
-                    ${params?.inclUnlisted == true
-          ? `metadata_: {visibility_in: ["Public","Unlisted"]}`
-          : 'metadata_: {visibility: "Public"}'
-        }
+                    ${
+                      params?.inclUnlisted == true
+                        ? `metadata_: {visibility_in: ["Public","Unlisted"]}`
+                        : 'metadata_: {visibility: "Public"}'
+                    }
                 })
                 {
                     id

@@ -135,12 +135,15 @@ export function EventDetails() {
           </div>
 
           <h1 className='text-xl text-white font-bold mt-8'>{event.title}</h1>
-          <div className='prose max-w-none mt-8' dangerouslySetInnerHTML={{
-            __html: marked.parse(event.description ?? '', {
-              breaks: true,
-              gfm: true,
-            }) as string
-          }} />
+          <div
+            className='prose max-w-none mt-8'
+            dangerouslySetInnerHTML={{
+              __html: marked.parse(event.description ?? '', {
+                breaks: true,
+                gfm: true,
+              }) as string,
+            }}
+          />
         </div>
       </div>
 
@@ -154,8 +157,9 @@ export function EventDetails() {
                 <div key={participant.address} className='w-24 text-center grow'>
                   <div className='avatar shrink-0'>
                     <div
-                      className={`w-20 rounded-full ${participant.checkedIn ? 'ring ring-success ring-offset-base-100 ring-offset-2' : ''
-                        }`}>
+                      className={`w-20 rounded-full ${
+                        participant.checkedIn ? 'ring ring-success ring-offset-base-100 ring-offset-2' : ''
+                      }`}>
                       <img src={participant.profile.avatar} alt={participant.address} />
                     </div>
                   </div>

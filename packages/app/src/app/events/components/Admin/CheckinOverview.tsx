@@ -110,8 +110,8 @@ export function CheckinOverview() {
           <div className='flex flex-col h-full'>
             <div className='flex-1 flex-grow'>
               <p>
-                Confirm addresses to check-in. You can continue to check in more addresses later, but not 'uncheck' any
-                address.
+                Confirm addresses to check-in. You can continue to check in more addresses later, but not
+                &apos;uncheck&apos; any address.
               </p>
 
               <div className='form-control w-full mt-4'>

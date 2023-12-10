@@ -13,7 +13,7 @@ export function Protected(props: PropsWithChildren) {
     if (!isConnected) {
       router.push(`/profile?redirect=${pathname}`)
     }
-  }, [isConnected])
+  }, [router, pathname, isConnected])
 
   return <>{props.children}</>
 }

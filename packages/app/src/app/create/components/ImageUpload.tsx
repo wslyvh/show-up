@@ -28,7 +28,7 @@ export function ImageUpload(props: Props) {
     onDrop,
     multiple: false,
     accept: {
-      'image/*': ['.jpeg', 'jpg', '.png']
+      'image/*': ['.jpeg', 'jpg', '.png'],
     },
   })
 

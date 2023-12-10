@@ -149,7 +149,9 @@ export function CreateForm() {
 
           <div className='form-control w-full'>
             <label className='label' htmlFor='description'>
-              <span className='label-text'>Description <span className='text-xs'>(supports markdown)</span></span>
+              <span className='label-text'>
+                Description <span className='text-xs'>(supports markdown)</span>
+              </span>
             </label>
             <textarea
               id='description'

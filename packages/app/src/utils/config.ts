@@ -14,6 +14,7 @@ const chains: Chain[] = defaultChainId === 11155111 ? [sepolia] : [optimism]
 
 export const CONFIG = {
   NODE_ENV: process.env.NODE_ENV || 'development',
+  NETWORK_ENV: process.env.NETWORK_ENV || 'test',
 
   NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? '',
   NEXT_PUBLIC_ALCHEMY_KEY: process.env.NEXT_PUBLIC_ALCHEMY_KEY ?? '',
@@ -28,8 +29,6 @@ export const CONFIG = {
   DEFAULT_CHAINS: chains,
 }
 ;(() => {
-  console.log('Running in', CONFIG.NODE_ENV, 'mode')
-
   if (!process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID) {
     console.error('You need to provide a NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID env variable')
   }

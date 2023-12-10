@@ -4,7 +4,8 @@ export const SITE_SHORT_NAME = 'Sup'
 export const SITE_DESCRIPTION = 'Earn $$ by showing up!'
 export const SITE_INFO = 'Onchain RSVP and Event management'
 export const SITE_DOMAIN = 'showup.events'
-export const SITE_URL = process.env.NODE_ENV === 'development' ? `https://test.${SITE_DOMAIN}` : `https://www.${SITE_DOMAIN}`
+export const SITE_URL =
+  process.env.NETWORK_ENV === 'test' ? `https://test.${SITE_DOMAIN}` : `https://www.${SITE_DOMAIN}`
 
 export const BLOG_NAME = 'Show Up Blog'
 export const BLOG_DOMAIN = 'blog.showup.events'
