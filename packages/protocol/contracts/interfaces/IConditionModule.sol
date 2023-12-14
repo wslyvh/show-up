@@ -8,6 +8,8 @@ interface IConditionModule {
 
   function cancel(uint256 id, address[] calldata registrations, bytes calldata data) external returns (bool);
 
+  function fund(uint256 id, address sender, bytes calldata data) external payable returns (bool);
+
   function register(
     uint256 id,
     address participant,

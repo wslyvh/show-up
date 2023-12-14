@@ -23,6 +23,7 @@ interface IShowHub {
   );
   event Updated(uint256 indexed id, address sender, uint256 timestamp);
   event Canceled(uint256 indexed id, string reason, bytes data, address sender, uint256 timestamp);
+  event Funded(uint256 indexed id, bytes data, address sender, uint256 timestamp);
   event Registered(uint256 indexed id, address indexed participant, bytes data, address sender, uint256 timestamp);
   event CheckedIn(uint256 indexed id, address[] attendees, bytes data, address sender, uint256 timestamp);
   event Settled(uint256 indexed id, bytes data, address sender, uint256 timestamp);
@@ -46,6 +47,8 @@ interface IShowHub {
   function updateOwner(uint256 id, address owner) external;
 
   function cancel(uint256 id, string calldata reason, bytes calldata conditionModuleData) external;
+
+  function fund(uint256 id, bytes calldata conditionModuleData) external payable;
 
   function register(uint256 id, address participant, bytes calldata conditionModuleData) external payable;
 

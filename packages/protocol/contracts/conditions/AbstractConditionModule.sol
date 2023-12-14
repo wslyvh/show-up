@@ -24,6 +24,10 @@ contract AbstractConditionModule is Ownable, IConditionModule {
     revert('not implemented');
   }
 
+  function fund(uint256 id, address sender, bytes calldata data) external payable virtual onlyOwner returns (bool) {
+    revert('not implemented');
+  }
+
   function register(
     uint256 id,
     address participant,

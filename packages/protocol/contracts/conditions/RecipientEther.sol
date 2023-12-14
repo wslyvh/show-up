@@ -42,6 +42,18 @@ contract RecipientEther is Ownable, AbstractConditionModule {
     return true;
   }
 
+  function fund(
+    uint256 id,
+    address sender,
+    bytes calldata data
+  ) external payable virtual override onlyOwner returns (bool) {
+    if (msg.value == 0) revert IncorrectValue();
+
+    _totalDeposits[id] += msg.value;
+
+    return true;
+  }
+
   function register(
     uint256 id,
     address participant,

@@ -99,6 +99,16 @@ contract ShowHub is Ownable, IShowHub {
     emit Canceled(id, reason, conditionModuleData, msg.sender, block.timestamp);
   }
 
+  function fund(uint id, bytes calldata conditionModuleData) external payable {
+    verifyValidRecord(id);
+    verifyDateNotPassed(id);
+
+    bool result = IConditionModule(_records[id].conditionModule).fund(id, msg.sender, conditionModuleData);
+    if (!result) revert UnexpectedConditionModuleError();
+
+    emit Funded(id, conditionModuleData, msg.sender, block.timestamp);
+  }
+
   function register(uint id, address participant, bytes calldata conditionModuleData) external payable {
     verifyValidRecord(id);
     verifyDateNotPassed(id);

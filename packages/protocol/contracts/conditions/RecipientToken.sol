@@ -46,6 +46,23 @@ contract RecipientToken is Ownable, AbstractConditionModule {
     return true;
   }
 
+  function fund(
+    uint256 id,
+    address sender,
+    bytes calldata data
+  ) external payable virtual override onlyOwner returns (bool) {
+    if (msg.value > 0) revert IncorrectValue();
+    uint256 amount = abi.decode(data, (uint256));
+    if (amount == 0) revert IncorrectValue();
+
+    IERC20 token = IERC20(_conditions[id].tokenAddress);
+    require(token.transferFrom(sender, address(this), amount));
+
+    _totalDeposits[id] += amount;
+
+    return true;
+  }
+
   function register(
     uint256 id,
     address participant,
