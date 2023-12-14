@@ -46,6 +46,6 @@ It's the organizer's responsibility to check in people during the event when the
 
 Their deposit is distributed among checked-in attendees at the end of the event.
 
-### Where can I get support for Show Up?
+### I have another question. How can I get support for Show Up?
 
 Check the [blog](https://blog.showup.events/) for more information, or head over to [GitHub](https://github.com/wslyvh/show-up) to read the technical documentation or open an issue, or support-/feature request.
