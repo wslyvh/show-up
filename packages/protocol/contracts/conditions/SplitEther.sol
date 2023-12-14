@@ -37,6 +37,8 @@ contract SplitEther is Ownable, AbstractConditionModule {
       payable(registrations[i]).transfer(_conditions[id].depositFee);
     }
 
+    _totalDeposits[id] = 0;
+
     return true;
   }
 
@@ -72,6 +74,8 @@ contract SplitEther is Ownable, AbstractConditionModule {
     for (uint256 i = 0; i < attendees.length; i++) {
       payable(attendees[i]).transfer(attendanceFee);
     }
+
+    _totalDeposits[id] = 0;
 
     return true;
   }

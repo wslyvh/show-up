@@ -42,6 +42,7 @@ contract SplitToken is Ownable, AbstractConditionModule {
     }
 
     _totalDeposits[id] = 0;
+
     return true;
   }
 
@@ -53,10 +54,10 @@ contract SplitToken is Ownable, AbstractConditionModule {
   ) external payable virtual override onlyOwner returns (bool) {
     if (msg.value > 0) revert IncorrectValue();
 
-    _totalDeposits[id] += _conditions[id].depositFee;
-
     IERC20 token = IERC20(_conditions[id].tokenAddress);
     require(token.transferFrom(sender, address(this), _conditions[id].depositFee));
+
+    _totalDeposits[id] += _conditions[id].depositFee;
 
     return true;
   }
@@ -83,6 +84,7 @@ contract SplitToken is Ownable, AbstractConditionModule {
     }
 
     _totalDeposits[id] = 0;
+
     return true;
   }
 
