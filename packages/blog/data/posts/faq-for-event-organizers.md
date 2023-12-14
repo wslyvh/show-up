@@ -1,7 +1,7 @@
 ---
 title: FAQ for Event organizers
 description: Discover the details of Show Up in this comprehensive FAQ guide. Find answers to common questions about event creation, check-ins, RSVPs, deposits, and distributing funds.
-date: 2023-12-14T15:15:25.138Z
+date: 2023-12-14T10:15:25.138Z
 ---
 
 Discover the details of Show Up in this comprehensive FAQ guide. Find answers to common questions about event creation, check-ins, RSVPs, deposits, and distributing funds.
