@@ -16,19 +16,25 @@ const publicClient = createPublicClient({
 
 export async function getEnsProfile(address: string) {
   console.log('getEnsProfile', address)
-  const ensName = await publicClient.getEnsName({
-    address: address,
-  })
-
-  const ensAvatar = !ensName
-    ? makeBlockie(address)
-    : await publicClient.getEnsAvatar({
-        name: normalize(ensName),
-      })
-
   return {
     address: address,
-    name: ensName ?? TruncateMiddle(address),
-    avatar: ensAvatar ?? makeBlockie(address),
+    name: TruncateMiddle(address),
+    avatar: makeBlockie(address),
   }
+
+  // const ensName = await publicClient.getEnsName({
+  //   address: address,
+  // })
+
+  // const ensAvatar = !ensName
+  //   ? makeBlockie(address)
+  //   : await publicClient.getEnsAvatar({
+  //       name: normalize(ensName),
+  //     })
+
+  // return {
+  //   address: address,
+  //   name: ensName ?? TruncateMiddle(address),
+  //   avatar: ensAvatar ?? makeBlockie(address),
+  // }
 }
