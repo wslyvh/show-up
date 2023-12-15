@@ -15,7 +15,6 @@ const publicClient = createPublicClient({
 })
 
 export async function getEnsProfile(address: string) {
-  console.log('getEnsProfile', address)
   return {
     address: address,
     name: TruncateMiddle(address),
