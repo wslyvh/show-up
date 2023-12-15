@@ -15,6 +15,7 @@ const publicClient = createPublicClient({
 })
 
 export async function getEnsProfile(address: string) {
+  console.log('getEnsProfile', address)
   const ensName = await publicClient.getEnsName({
     address: address,
   })

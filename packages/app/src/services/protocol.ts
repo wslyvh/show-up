@@ -24,6 +24,7 @@ export async function GetRecord(id: string, chainId: number = CONFIG.DEFAULT_CHA
 }
 
 export async function GetRecords(params?: GetRecordsWhere, chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
+  console.log('GetRecords', params)
   const response = await fetch(GetGraphBaseUri(chainId), {
     method: 'POST',
     headers: {

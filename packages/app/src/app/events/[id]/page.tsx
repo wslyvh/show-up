@@ -35,6 +35,7 @@ export async function generateMetadata({ params }: Params) {
 export default async function EventsPage({ params }: Params) {
   const queryClient = new QueryClient()
 
+  console.log('Prefetching event data', params.id)
   await queryClient.prefetchQuery({
     queryKey: ['events', params.id, CONFIG.DEFAULT_CHAIN_ID],
     queryFn: () => GetRecord(params.id, CONFIG.DEFAULT_CHAIN_ID),
