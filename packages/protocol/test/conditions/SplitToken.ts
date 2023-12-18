@@ -1,7 +1,7 @@
 import { loadFixture, time } from '@nomicfoundation/hardhat-network-helpers'
 import { assert, expect } from 'chai'
 import { ethers } from 'hardhat'
-import { Status, defaultContentUri, defaultDepositFee, defaultMaxParticipants, defaultTokenFee, defaultTokenMint } from './utils/types'
+import { Status, defaultContentUri, defaultDepositFee, defaultFundFee, defaultMaxParticipants, defaultTokenFee, defaultTokenMint } from '../utils/types'
 
 describe('SplitToken', function () {
   async function deployFixture() {
@@ -52,6 +52,8 @@ describe('SplitToken', function () {
 
       const isWhitelisted = await showhub.isConditionModuleWhitelisted(splitTokenModule.address)
       expect(isWhitelisted).to.be.true
+
+      expect(await splitTokenModule.name()).to.be.equal('SplitToken')
     })
   })
 
@@ -83,6 +85,38 @@ describe('SplitToken', function () {
       expect(condition.owner).to.be.equal(owner.address)
       expect(condition.depositFee).to.be.equal(defaultDepositFee)
       expect(condition.tokenAddress).to.be.equal(token.address)
+    })
+
+    it('Should allow owner to cancel', async function () {
+      const { showhub, owner } = await loadFixture(deployFixture)
+      await loadFixture(createFixture)
+
+      const reason = 'Cancelled by owner'
+      const cancelTx = await showhub.cancel(0, reason, [])
+
+      const timestamp = await time.latest();
+      expect(cancelTx).to.emit(showhub, "Cancelled")
+        .withArgs(0, reason, owner, timestamp)
+    })
+
+    it('Should disperse funds when cancelling an event with registrations ', async function () {
+      const { showhub, attendee1, attendee2, token, splitTokenModule } = await loadFixture(deployFixture)
+      await loadFixture(createFixture)
+
+      await token.approve(splitTokenModule.address, defaultTokenFee.mul(2));
+      await showhub.register(0, attendee1.address, [])
+      await showhub.register(0, attendee2.address, [])
+
+      const attendee1BalanceBefore = await token.balanceOf(attendee1.address)
+      const attendee2BalanceBefore = await token.balanceOf(attendee2.address)
+
+      await showhub.cancel(0, 'Cancelled by owner', [])
+
+      const attendee1BalanceAfter = await token.balanceOf(attendee1.address)
+      const attendee2BalanceAfter = await token.balanceOf(attendee2.address)
+
+      expect(attendee1BalanceBefore).to.be.lessThan(attendee1BalanceAfter)
+      expect(attendee2BalanceBefore).to.be.lessThan(attendee2BalanceAfter)
     })
 
     it('Should allow to register yourself', async function () {
@@ -143,6 +177,9 @@ describe('SplitToken', function () {
       const timestamp = await time.latest();
       expect(checkinTx).to.emit(showhub, "CheckedIn")
         .withArgs(0, attendees, owner.address, timestamp)
+
+      const isCheckedIn = await showhub.isAttending(0, attendee1.address)
+      expect(isCheckedIn).to.be.true
 
       const getRegistrations = await showhub.getRegistrations(0)
       expect(getRegistrations).to.have.lengthOf(2)
@@ -213,6 +250,52 @@ describe('SplitToken', function () {
       // Pot is split between attendees
       expect(attendee1BalanceBefore).to.be.lessThan(attendee1BalanceAfter)
       expect(attendee2BalanceBefore).to.be.lessThan(attendee2BalanceAfter)
+    })
+
+    it('Should allow to fund a running event', async function () {
+      const { showhub, splitTokenModule, owner, token } = await loadFixture(deployFixture)
+      await loadFixture(createFixture)
+
+      await token.approve(splitTokenModule.address, defaultFundFee);
+      const fundTx = await showhub.fund(0, ethers.utils.defaultAbiCoder.encode(['uint256'], [defaultFundFee]))
+      expect(fundTx).not.to.be.reverted
+
+      const timestamp = await time.latest();
+      expect(fundTx).to.emit(showhub, "Funded")
+        .withArgs(0, [], owner.address, timestamp)
+
+      const totalFundAmount = await splitTokenModule.getTotalDeposits(0)
+      expect(totalFundAmount).to.be.equal(defaultFundFee)
+    })
+
+    it('Should disperse additional funds to attendees', async function () {
+      const { showhub, splitTokenModule, nextWeek, owner, token, attendee1, attendee2 } = await loadFixture(deployFixture)
+      await loadFixture(createFixture)
+
+      await token.approve(splitTokenModule.address, defaultFundFee);
+      await showhub.fund(0, ethers.utils.defaultAbiCoder.encode(['uint256'], [defaultFundFee]))
+
+      await token.approve(splitTokenModule.address, defaultTokenFee.mul(2));
+      await showhub.register(0, attendee1.address, [])
+      await showhub.register(0, attendee2.address, [])
+
+      const attendees = [attendee1.address, attendee2.address]
+      await showhub.checkin(0, attendees, [])
+
+      const attendee1BalanceBefore = await token.balanceOf(attendee1.address)
+      const attendee2BalanceBefore = await token.balanceOf(attendee2.address)
+
+      // Update timestamp to next week. Can only settle events that have passed their endDate
+      await time.increaseTo(nextWeek)
+      await showhub.connect(owner).settle(0, [])
+
+      const attendee1BalanceAfter = await token.balanceOf(attendee1.address)
+      const attendee2BalanceAfter = await token.balanceOf(attendee2.address)
+      expect(attendee1BalanceBefore).to.be.lessThan(attendee1BalanceAfter)
+      expect(attendee2BalanceBefore).to.be.lessThan(attendee2BalanceAfter)
+
+      const attendee1ExpectedBalancerAfter = attendee1BalanceBefore.add(defaultDepositFee).add(defaultFundFee.div(2)) // div by 2 check-ins
+      expect(attendee1BalanceAfter).to.be.equal(attendee1ExpectedBalancerAfter)
     })
   })
 })

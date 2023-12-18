@@ -3,17 +3,13 @@ pragma solidity ^0.8.20;
 
 import {Math} from '@openzeppelin/contracts/utils/math/Math.sol';
 import {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';
-
-import {IConditionModule} from '../interfaces/IConditionModule.sol';
 import '../Common.sol';
 
-contract AbstractConditionModule is Ownable, IConditionModule {
-  string internal _name;
-
+contract FalseCreateMock is Ownable {
   constructor(address owner) Ownable(owner) {}
 
   function initialize(uint256 id, bytes calldata data) external virtual onlyOwner returns (bool) {
-    revert('not implemented');
+    return true;
   }
 
   function cancel(
@@ -21,11 +17,11 @@ contract AbstractConditionModule is Ownable, IConditionModule {
     address[] calldata registrations,
     bytes calldata data
   ) external virtual onlyOwner returns (bool) {
-    revert('not implemented');
+    return false;
   }
 
   function fund(uint256 id, address sender, bytes calldata data) external payable virtual onlyOwner returns (bool) {
-    revert('not implemented');
+    return false;
   }
 
   function register(
@@ -34,7 +30,7 @@ contract AbstractConditionModule is Ownable, IConditionModule {
     address sender,
     bytes calldata data
   ) external payable virtual onlyOwner returns (bool) {
-    revert('not implemented');
+    return false;
   }
 
   function checkin(
@@ -42,7 +38,7 @@ contract AbstractConditionModule is Ownable, IConditionModule {
     address[] calldata attendees,
     bytes calldata data
   ) external virtual onlyOwner returns (bool) {
-    revert('not implemented');
+    return false;
   }
 
   function settle(
@@ -50,12 +46,6 @@ contract AbstractConditionModule is Ownable, IConditionModule {
     address[] calldata attendees,
     bytes calldata data
   ) external virtual onlyOwner returns (bool) {
-    revert('not implemented');
-  }
-
-  // View functions
-  // =======================
-  function name() external view returns (string memory) {
-    return _name;
+    return false;
   }
 }

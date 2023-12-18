@@ -103,7 +103,11 @@ contract ShowHub is Ownable, IShowHub {
     verifyValidRecord(id);
     verifyDateNotPassed(id);
 
-    bool result = IConditionModule(_records[id].conditionModule).fund(id, msg.sender, conditionModuleData);
+    bool result = IConditionModule(_records[id].conditionModule).fund{value: msg.value}(
+      id,
+      msg.sender,
+      conditionModuleData
+    );
     if (!result) revert UnexpectedConditionModuleError();
 
     emit Funded(id, conditionModuleData, msg.sender, block.timestamp);
