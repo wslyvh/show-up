@@ -1,0 +1,38 @@
+name: sup-indexer
+networks:
+  - id: 11155111
+    start_block: 4915988
+    contracts:
+      - name: ShowHub
+        address:
+          - 0x34F79a7C17DEe934A0ac94aEB3ad4d84F4a27032
+        handler: src/EventHandlers.ts
+        events:
+          - event: Canceled(uint256 indexed id, string reason, bytes data, address sender, uint256 timestamp)
+            requiredEntities:
+              - name: Record
+          - event: CheckedIn(uint256 indexed id, address[] attendees, bytes data, address sender, uint256 timestamp)
+            requiredEntities:
+              - name: Record
+          - event: ConditionModuleWhitelisted(address indexed conditionModule, bool indexed whitelisted, address sender, uint256 timestamp)
+            requiredEntities:
+              - name: ConditionModule
+              - name: Record
+          - event: Created(uint256 indexed id, string contentUri, address indexed conditionModule, bytes data, address sender, uint256 timestamp)
+            requiredEntities:
+              - name: Record
+          - event: Funded(uint256 indexed id, bytes data, address sender, uint256 timestamp)
+            requiredEntities:
+              - name: Record
+          - event: OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
+            requiredEntities:
+              - name: Record
+          - event: Registered(uint256 indexed id, address indexed participant, bytes data, address sender, uint256 timestamp)
+            requiredEntities:
+              - name: Record
+          - event: Settled(uint256 indexed id, bytes data, address sender, uint256 timestamp)
+            requiredEntities:
+              - name: Record
+          - event: Updated(uint256 indexed id, address sender, uint256 timestamp)
+            requiredEntities:
+              - name: Record

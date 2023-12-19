@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "build": "hardhat compile",
-    "deploy": "npx hardhat run scripts/deploy.ts",
+    "deploy": "npx hardhat run scripts/showhub.ts",
     "run:node": "hardhat node",
     "run:create": "npx hardhat run scripts/create.ts",
     "run:verify": "npx hardhat run scripts/verify.ts",

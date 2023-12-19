@@ -1,0 +1,39 @@
+type ConditionModule @entity {
+  id: Bytes! # address
+  createdAt: BigInt!
+  createdBy: Bytes! # address
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+
+  name: String!
+  whitelisted: Boolean! # true
+}
+
+type Record @entity {
+  id: String!
+  createdAt: BigInt!
+  createdBy: Bytes!
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+
+  endDate: BigInt!
+  limit: BigInt!
+  owner: Bytes!
+  status: Int!
+  contentUri: String!
+  conditionModule: Bytes!
+  message: String
+
+  totalRegistrations: BigInt!
+  totalAttendees: BigInt!
+
+  # Conditions
+  # Metadata
+}
+
+type User @entity {
+  id: Bytes! # address
+  address: Bytes!
+  name: String!
+  avatar: String
+}
