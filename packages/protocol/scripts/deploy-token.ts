@@ -19,6 +19,11 @@ export async function main() {
         await token.mint(attendee5.address, defaultTokenMint)
     }
 
+    if (network.config.chainId == 84532) {
+        // no auto verification on Base Sepolia
+        return
+    }
+
     // no need to verify on localhost or hardhat
     if (network.config.chainId != 31337 && process.env.ETHERSCAN_API_KEY) {
         console.log(`Waiting for block confirmations..`)

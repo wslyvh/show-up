@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "build": "hardhat compile",
-    "deploy": "npx hardhat run scripts/showhub.ts",
+    "deploy": "npx hardhat run scripts/deploy.ts",
+    "deploy:token": "npx hardhat run scripts/deploy-token.ts",
     "run:node": "hardhat node",
     "run:create": "npx hardhat run scripts/create.ts",
     "run:verify": "npx hardhat run scripts/verify.ts",
@@ -29,7 +30,7 @@
     "chai": "^4.2.0",
     "dotenv": "^16.3.1",
     "ethers": "5.7.2",
-    "hardhat": "^2.18.0",
+    "hardhat": "^2.19.3",
     "hardhat-gas-reporter": "^1.0.9",
     "solidity-coverage": "^0.8.5",
     "ts-node": "^10.9.1",

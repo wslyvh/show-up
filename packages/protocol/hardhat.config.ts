@@ -54,6 +54,11 @@ const config: HardhatUserConfig = {
       url: infuraApiKey ? `https://sepolia.infura.io/v3/${infuraApiKey}` : 'https://rpc.sepolia.org/', // https://rpc-sepolia.rockx.com/ || https://rpc.sepolia.org/
       accounts: [deployerKey as string],
     },
+    "base-sepolia": {
+      chainId: 84532,
+      url: "https://sepolia.base.org",
+      accounts: [deployerKey as string],
+    },
     optimism: {
       chainId: 10,
       url: 'https://mainnet.optimism.io/',
