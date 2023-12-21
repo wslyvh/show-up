@@ -47,7 +47,16 @@ contract ShowHub is Ownable, IShowHub {
 
     _recordCount++;
 
-    emit Created(_recordCount, contentUri, conditionModule, conditionModuleData, msg.sender, block.timestamp);
+    emit Created(
+      _recordCount,
+      contentUri,
+      endDate,
+      limit,
+      conditionModule,
+      conditionModuleData,
+      msg.sender,
+      block.timestamp
+    );
   }
 
   function updateContentUri(uint256 id, string calldata contentUri) external {
@@ -57,7 +66,7 @@ contract ShowHub is Ownable, IShowHub {
 
     _records[id].contentUri = contentUri;
 
-    emit Updated(id, msg.sender, block.timestamp);
+    emit Updated(id, contentUri, _records[id].limit, msg.sender, msg.sender, block.timestamp);
   }
 
   function updateLimit(uint256 id, uint256 limit) external {
@@ -67,7 +76,7 @@ contract ShowHub is Ownable, IShowHub {
 
     _records[id].limit = limit;
 
-    emit Updated(id, msg.sender, block.timestamp);
+    emit Updated(id, _records[id].contentUri, limit, msg.sender, msg.sender, block.timestamp);
   }
 
   function updateOwner(uint256 id, address owner) external {
@@ -77,7 +86,7 @@ contract ShowHub is Ownable, IShowHub {
 
     _records[id].owner = owner;
 
-    emit Updated(id, msg.sender, block.timestamp);
+    emit Updated(id, _records[id].contentUri, _records[id].limit, owner, msg.sender, block.timestamp);
   }
 
   function cancel(uint id, string calldata reason, bytes calldata conditionModuleData) external {

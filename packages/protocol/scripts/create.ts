@@ -10,25 +10,26 @@ export async function main() {
     console.log('NETWORK ID', network.config.chainId)
     let showhub, recipientEther, recipientToken, splitEther, splitToken, token
 
-    // Base
+    // Sepolia
+    if (network.config.chainId == 11155111) {
+        showhub = await ethers.getContractAt('ShowHub', '0x3FffFB76667170D7a8ed8dFFD1e040E90995D155')
+        recipientEther = await ethers.getContractAt('RecipientEther', '0x632E135b16Dc81C0b1daCd20A4055AaDb15b95Ac')
+        recipientToken = await ethers.getContractAt('RecipientToken', '0x8cE088579268ED24c04e200C0f293e0727881F81')
+        splitEther = await ethers.getContractAt('SplitEther', '0x1bCFfd336F5EA59f9c45BB6E6De13B0cDD17A3e6')
+        splitToken = await ethers.getContractAt('SplitToken', '0x8A2d90Fe822f45e0A1B5f846Ed56397F5A27F063')
+        token = await ethers.getContractAt('Token', '0x796b9850Be63Ffa903eD2854164c21189DbB4B89')
+    }
+
+    // Base Sepolia
     if (network.config.chainId == 84532) {
-        showhub = await ethers.getContractAt('ShowHub', '0x27346891DD55cd3dba663F6e2861793c83C84348')
-        recipientEther = await ethers.getContractAt('RecipientEther', '0xcc5A0D6268d70811eDad77799f2168aFe6382E89')
-        recipientToken = await ethers.getContractAt('RecipientToken', '0x6Ea20b54257A31473a17Bf00fe031d3a5638b5aF')
-        splitEther = await ethers.getContractAt('SplitEther', '0x797fa8d0bbAC596A2EC8Ec3ce75a24bbF65c2bCD')
-        splitToken = await ethers.getContractAt('SplitToken', '0x358f0163e1e1F2670Cc7f3F5195B0F4fCf702aEa')
+        showhub = await ethers.getContractAt('ShowHub', '0xB944AFeF3821062B4B813D5aCaE833Eca223db09')
+        recipientEther = await ethers.getContractAt('RecipientEther', '0x416CC531d3409786825155168003a5d574c4aD75')
+        recipientToken = await ethers.getContractAt('RecipientToken', '0xFbF05397d867379efAF3e8b1da54651bfb35B01D')
+        splitEther = await ethers.getContractAt('SplitEther', '0xA95579514dB88a1F7a561E46bEdBDA1C676E76A4')
+        splitToken = await ethers.getContractAt('SplitToken', '0x59A0498Ff92851b360e152d735E6Df8C192be815')
         token = await ethers.getContractAt('Token', '0x555B9c3B79EF437776F7E0833c234c802D741771')
     }
 
-    // Sepolia
-    if (network.config.chainId == 421611) {
-        showhub = await ethers.getContractAt('ShowHub', '0x34F79a7C17DEe934A0ac94aEB3ad4d84F4a27032')
-        recipientEther = await ethers.getContractAt('RecipientEther', '0xbEEaE3290dFa335C447C3D44Ef2De891c22968e5')
-        recipientToken = await ethers.getContractAt('RecipientToken', '0xA5b9086e0F243C239c44B9db9E0484C4A5cF97Cf')
-        splitEther = await ethers.getContractAt('SplitEther', '0xe70791D7E4623fDe99726D7cc2fd352a9487b396')
-        splitToken = await ethers.getContractAt('SplitToken', '0x667D9d7B6Fc5784384BeC882f3F8775597C35134')
-        token = await ethers.getContractAt('Token', '0x796b9850Be63Ffa903eD2854164c21189DbB4B89')
-    }
 
     if (!showhub || !recipientEther || !recipientToken || !splitEther || !splitToken || !token) {
         console.log('Contracts not found')
@@ -102,28 +103,28 @@ export async function main() {
     const splitEtherParams = ethers.utils.defaultAbiCoder.encode(
         ["address", 'uint256'],
         [owner.address, defaultDepositFee])
-    await showhub.create(defaultContentUri, tomorrow, defaultMaxParticipants, splitEther.address, splitEtherParams)
+    await showhub.create(defaultContentUri, tomorrow, defaultMaxParticipants, splitEther.address, splitEtherParams, { gasLimit: 350000 })
 
     // Split Token
     console.log('- SplitToken')
     const splitTokenParams = ethers.utils.defaultAbiCoder.encode(
         ["address", 'uint256', 'address'],
         [owner.address, defaultTokenFee, token.address])
-    await showhub.create(defaultContentUri, tomorrow, defaultMaxParticipants, splitEther.address, splitTokenParams)
+    await showhub.create(defaultContentUri, tomorrow, defaultMaxParticipants, splitEther.address, splitTokenParams, { gasLimit: 350000 })
 
     // Recipient Ether
     console.log('- RecipientEther')
     const recipientEtherParams = ethers.utils.defaultAbiCoder.encode(
         ["address", 'uint256', 'address'],
         [owner.address, defaultDepositFee, owner.address])
-    await showhub.create(defaultContentUri, tomorrow, defaultMaxParticipants, recipientEther.address, recipientEtherParams)
+    await showhub.create(defaultContentUri, tomorrow, defaultMaxParticipants, recipientEther.address, recipientEtherParams, { gasLimit: 350000 })
 
     // Recipient Token
     console.log('- RecipientToken')
     const recipientTokenParams = ethers.utils.defaultAbiCoder.encode(
         ["address", 'uint256', 'address', 'address'],
         [owner.address, defaultTokenFee, owner.address, token.address])
-    await showhub.create(defaultContentUri, tomorrow, defaultMaxParticipants, recipientToken.address, recipientTokenParams)
+    await showhub.create(defaultContentUri, tomorrow, defaultMaxParticipants, recipientToken.address, recipientTokenParams, { gasLimit: 350000 })
 
     // Other test events / scenarios
     console.log('Create other events..')
@@ -132,7 +133,7 @@ export async function main() {
     const cancelParams = ethers.utils.defaultAbiCoder.encode(
         ["address", 'uint256'],
         [owner.address, defaultDepositFee])
-    await showhub.create(cancelledEventUri, nextWeek, 0, splitEther.address, cancelParams)
+    await showhub.create(cancelledEventUri, nextWeek, 0, splitEther.address, cancelParams, { gasLimit: 350000 })
 }
 
 // We recommend this pattern to be able to use async/await everywhere

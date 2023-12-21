@@ -16,12 +16,14 @@ interface IShowHub {
   event Created(
     uint256 indexed id,
     string contentUri,
+    uint256 endDate,
+    uint256 limit,
     address indexed conditionModule,
     bytes data,
     address sender,
     uint256 timestamp
   );
-  event Updated(uint256 indexed id, address sender, uint256 timestamp);
+  event Updated(uint256 indexed id, string contentUri, uint256 limit, address owner, address sender, uint256 timestamp);
   event Canceled(uint256 indexed id, string reason, bytes data, address sender, uint256 timestamp);
   event Funded(uint256 indexed id, bytes data, address sender, uint256 timestamp);
   event Registered(uint256 indexed id, address indexed participant, bytes data, address sender, uint256 timestamp);
