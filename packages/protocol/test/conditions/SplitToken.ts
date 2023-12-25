@@ -35,9 +35,7 @@ describe('SplitToken', function () {
   async function createFixture() {
     const { showhub, tomorrow, owner, token, splitTokenModule } = await loadFixture(deployFixture)
 
-    const params = ethers.utils.defaultAbiCoder.encode(
-      ["address", 'uint256', 'address'],
-      [owner.address, defaultDepositFee, token.address])
+    const params = ethers.utils.defaultAbiCoder.encode(['uint256', 'address'], [defaultDepositFee, token.address])
 
     await showhub.create(defaultContentUri, tomorrow, defaultMaxParticipants, splitTokenModule.address, params)
   }
@@ -61,9 +59,7 @@ describe('SplitToken', function () {
     it('Should allow to create an event', async function () {
       const { showhub, tomorrow, owner, token, splitTokenModule } = await loadFixture(deployFixture)
 
-      const params = ethers.utils.defaultAbiCoder.encode(
-        ["address", 'uint256', 'address'],
-        [owner.address, defaultDepositFee, token.address])
+      const params = ethers.utils.defaultAbiCoder.encode(['uint256', 'address'], [defaultDepositFee, token.address])
 
       const createTx = await showhub.create(defaultContentUri, tomorrow, defaultMaxParticipants, splitTokenModule.address, params)
 
@@ -82,7 +78,6 @@ describe('SplitToken', function () {
       expect(record.conditionModule).to.be.equal(splitTokenModule.address)
 
       const condition = await splitTokenModule.getConditions(0)
-      expect(condition.owner).to.be.equal(owner.address)
       expect(condition.depositFee).to.be.equal(defaultDepositFee)
       expect(condition.tokenAddress).to.be.equal(token.address)
     })

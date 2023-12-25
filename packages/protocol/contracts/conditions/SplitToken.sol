@@ -8,7 +8,6 @@ import '../Common.sol';
 
 contract SplitToken is Ownable {
   struct Conditions {
-    address owner;
     uint256 depositFee;
     address tokenAddress;
   }

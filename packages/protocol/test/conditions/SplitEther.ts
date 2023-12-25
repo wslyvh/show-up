@@ -25,9 +25,7 @@ describe('SplitEther', function () {
   async function createFixture() {
     const { showhub, tomorrow, owner, splitEtherModule } = await loadFixture(deployFixture)
 
-    const params = ethers.utils.defaultAbiCoder.encode(
-      ["address", 'uint256'],
-      [owner.address, defaultDepositFee])
+    const params = ethers.utils.defaultAbiCoder.encode(['uint256'], [defaultDepositFee])
 
     await showhub.create(defaultContentUri, tomorrow, defaultMaxParticipants, splitEtherModule.address, params)
   }
@@ -51,9 +49,7 @@ describe('SplitEther', function () {
     it('Should allow to create an event', async function () {
       const { showhub, tomorrow, owner, splitEtherModule } = await loadFixture(deployFixture)
 
-      const params = ethers.utils.defaultAbiCoder.encode(
-        ["address", 'uint256'],
-        [owner.address, defaultDepositFee])
+      const params = ethers.utils.defaultAbiCoder.encode(['uint256'], [defaultDepositFee])
 
       const createTx = await showhub.create(defaultContentUri, tomorrow, defaultMaxParticipants, splitEtherModule.address, params)
       expect(createTx).not.to.be.reverted
@@ -71,7 +67,6 @@ describe('SplitEther', function () {
       expect(record.conditionModule).to.be.equal(splitEtherModule.address)
 
       const condition = await splitEtherModule.getConditions(0)
-      expect(condition.owner).to.be.equal(owner.address)
       expect(condition.depositFee).to.be.equal(defaultDepositFee)
     })
 

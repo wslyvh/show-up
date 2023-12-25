@@ -7,6 +7,7 @@ interface IShowHub {
   // Hub events
   event ConditionModuleWhitelisted(
     address indexed conditionModule,
+    string name,
     bool indexed whitelisted,
     address sender,
     uint256 timestamp

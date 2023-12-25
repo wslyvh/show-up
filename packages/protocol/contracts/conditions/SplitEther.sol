@@ -7,7 +7,6 @@ import '../Common.sol';
 
 contract SplitEther is Ownable {
   struct Conditions {
-    address owner;
     uint256 depositFee;
   }
 

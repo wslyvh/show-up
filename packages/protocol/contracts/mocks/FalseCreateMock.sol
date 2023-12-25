@@ -48,4 +48,8 @@ contract FalseCreateMock is Ownable {
   ) external virtual onlyOwner returns (bool) {
     return false;
   }
+
+  function name() external view returns (string memory) {
+    return 'FalseCreateMock';
+  }
 }

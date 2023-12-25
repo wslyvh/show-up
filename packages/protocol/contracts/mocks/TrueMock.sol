@@ -48,4 +48,8 @@ contract TrueMock is Ownable {
   ) external virtual onlyOwner returns (bool) {
     return true;
   }
+
+  function name() external view returns (string memory) {
+    return 'TrueMock';
+  }
 }

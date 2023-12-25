@@ -29,9 +29,7 @@ describe('RecipientToken', function () {
     await token.mint(attendee4.address, defaultTokenMint)
     await token.mint(attendee5.address, defaultTokenMint)
 
-    const params = ethers.utils.defaultAbiCoder.encode(
-      ["address", 'uint256', 'address', 'address'],
-      [owner.address, defaultDepositFee, token.address, recipient.address])
+    const params = ethers.utils.defaultAbiCoder.encode(['uint256', 'address', 'address'], [defaultDepositFee, token.address, recipient.address])
 
     return { showhub, tomorrow, nextWeek, owner, attendee1, attendee2, attendee3, attendee4, attendee5, token, recipient, recipientTokenModule, params }
   }
@@ -78,7 +76,6 @@ describe('RecipientToken', function () {
       expect(record.conditionModule).to.be.equal(recipientTokenModule.address)
 
       const condition = await recipientTokenModule.getConditions(0)
-      expect(condition.owner).to.be.equal(owner.address)
       expect(condition.depositFee).to.be.equal(defaultDepositFee)
       expect(condition.tokenAddress).to.be.equal(token.address)
     })

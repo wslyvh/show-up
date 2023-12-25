@@ -10,34 +10,29 @@ export async function main() {
 
     console.log('Deploying Condition modules..')
     const RecipientEther = await ethers.getContractFactory('RecipientEther')
-    const recipientEtherModule = await RecipientEther.deploy(showhub.address)
-    console.log('- RecipientEther Module deployed to:', recipientEtherModule.address)
+    const recipientEther = await RecipientEther.deploy(showhub.address)
 
     const RecipientToken = await ethers.getContractFactory('RecipientToken')
-    const recipientTokenModule = await RecipientToken.deploy(showhub.address)
-    console.log('- RecipientToken Module deployed to:', recipientTokenModule.address)
+    const recipientToken = await RecipientToken.deploy(showhub.address)
 
     const SplitEther = await ethers.getContractFactory('SplitEther')
-    const splitEtherModule = await SplitEther.deploy(showhub.address)
-    console.log('- SplitEther Module deployed to:', splitEtherModule.address)
+    const splitEther = await SplitEther.deploy(showhub.address)
 
     const SplitToken = await ethers.getContractFactory('SplitToken')
-    const splitTokenModule = await SplitToken.deploy(showhub.address)
-    console.log('- SplitToken Module deployed to:', splitTokenModule.address)
-
+    const splitToken = await SplitToken.deploy(showhub.address)
 
     console.log('Whitelist Condition modules..')
-    await showhub.whitelistConditionModule(recipientEtherModule.address, true)
-    await showhub.whitelistConditionModule(recipientTokenModule.address, true)
-    await showhub.whitelistConditionModule(splitEtherModule.address, true)
-    await showhub.whitelistConditionModule(splitTokenModule.address, true)
+    await showhub.whitelistConditionModule(recipientEther.address, true)
+    await showhub.whitelistConditionModule(recipientToken.address, true)
+    await showhub.whitelistConditionModule(splitEther.address, true)
+    await showhub.whitelistConditionModule(splitToken.address, true)
 
     console.log('Deployment addresses:')
     console.log('- ShowHub:', showhub.address)
-    console.log('- RecipientEther:', recipientEtherModule.address)
-    console.log('- RecipientToken:', recipientTokenModule.address)
-    console.log('- SplitEther:', splitEtherModule.address)
-    console.log('- SplitToken:', splitTokenModule.address)
+    console.log('- RecipientEther:', recipientEther.address)
+    console.log('- RecipientToken:', recipientToken.address)
+    console.log('- SplitEther:', splitEther.address)
+    console.log('- SplitToken:', splitToken.address)
 
     if (network.config.chainId == 84532) {
         // no auto verification on Base Sepolia
@@ -60,11 +55,11 @@ export async function main() {
             console.log(e)
         }
 
-        await recipientEtherModule.deployTransaction.wait(10)
-        console.log('Verifying RecipientEther module..')
+        await recipientEther.deployTransaction.wait(10)
+        console.log('Verifying recipientEther module..')
         try {
             run('verify:verify', {
-                address: recipientEtherModule.address,
+                address: recipientEther.address,
                 constructorArguments: [showhub.address],
                 contract: 'contracts/conditions/RecipientEther.sol:RecipientEther',
             })
@@ -72,11 +67,11 @@ export async function main() {
             console.log(e)
         }
 
-        await recipientTokenModule.deployTransaction.wait(10)
-        console.log('Verifying RecipientToken module..')
+        await recipientToken.deployTransaction.wait(10)
+        console.log('Verifying recipientToken module..')
         try {
             run('verify:verify', {
-                address: recipientTokenModule.address,
+                address: recipientToken.address,
                 constructorArguments: [showhub.address],
                 contract: 'contracts/conditions/RecipientToken.sol:RecipientToken',
             })
@@ -84,11 +79,11 @@ export async function main() {
             console.log(e)
         }
 
-        await splitEtherModule.deployTransaction.wait(10)
-        console.log('Verifying SplitEther module..')
+        await splitEther.deployTransaction.wait(10)
+        console.log('Verifying splitEther module..')
         try {
             run('verify:verify', {
-                address: splitEtherModule.address,
+                address: splitEther.address,
                 constructorArguments: [showhub.address],
                 contract: 'contracts/conditions/SplitEther.sol:SplitEther',
             })
@@ -96,11 +91,11 @@ export async function main() {
             console.log(e)
         }
 
-        await splitTokenModule.deployTransaction.wait(10)
-        console.log('Verifying SplitToken module..')
+        await splitToken.deployTransaction.wait(10)
+        console.log('Verifying splitToken module..')
         try {
             run('verify:verify', {
-                address: splitTokenModule.address,
+                address: splitToken.address,
                 constructorArguments: [showhub.address],
                 contract: 'contracts/conditions/SplitToken.sol:SplitToken',
             })

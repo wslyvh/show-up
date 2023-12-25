@@ -34,9 +34,7 @@ describe('ShowHub', function () {
     await showhub.whitelistConditionModule(falseCreateMockModule.address, true)
     await showhub.whitelistConditionModule(falseSettleMockModule.address, true)
 
-    const params = ethers.utils.defaultAbiCoder.encode(
-      ["address", 'uint256'],
-      [owner.address, defaultDepositFee])
+    const params = ethers.utils.defaultAbiCoder.encode(['uint256'], [defaultDepositFee])
 
     return { showhub, tomorrow, nextWeek, owner, attendee1, attendee2, attendee3, attendee4, attendee5, trueMockModule, falseMockModule, falseCreateMockModule, falseSettleMockModule, params }
   }
@@ -228,9 +226,7 @@ describe('ShowHub', function () {
     it('Should allow to register when no max. participants is set', async function () {
       const { showhub, tomorrow, owner, trueMockModule } = await loadFixture(deployFixture)
 
-      const params = ethers.utils.defaultAbiCoder.encode(
-        ["address", 'uint256'],
-        [owner.address, defaultDepositFee])
+      const params = ethers.utils.defaultAbiCoder.encode(['uint256'], [defaultDepositFee])
 
       await showhub.create(defaultContentUri, tomorrow, 0, trueMockModule.address, params)
 
@@ -302,9 +298,7 @@ describe('ShowHub', function () {
     it('Should reject when creating with an empty condition module', async function () {
       const { showhub, tomorrow, owner } = await loadFixture(deployFixture)
 
-      const params = ethers.utils.defaultAbiCoder.encode(
-        ["address", 'uint256'],
-        [owner.address, defaultDepositFee])
+      const params = ethers.utils.defaultAbiCoder.encode(['uint256'], [defaultDepositFee])
 
       await expect(showhub.create(defaultContentUri, tomorrow, 0, ethers.constants.AddressZero, params))
         .to.be.revertedWithCustomError(showhub, 'NotFound')
@@ -313,9 +307,7 @@ describe('ShowHub', function () {
     it('Should reject when creating with an invalid condition module', async function () {
       const { showhub, tomorrow, owner } = await loadFixture(deployFixture)
 
-      const params = ethers.utils.defaultAbiCoder.encode(
-        ["address", 'uint256'],
-        [owner.address, defaultDepositFee])
+      const params = ethers.utils.defaultAbiCoder.encode(['uint256'], [defaultDepositFee])
 
       await expect(showhub.create(defaultContentUri, tomorrow, 0, showhub.address, params))
         .to.be.revertedWithCustomError(showhub, 'NotWhitelisted')
@@ -341,9 +333,7 @@ describe('ShowHub', function () {
     it('Should reject above participation limit', async function () {
       const { showhub, owner, trueMockModule, tomorrow, attendee1, attendee2, attendee3 } = await loadFixture(deployFixture)
 
-      const params = ethers.utils.defaultAbiCoder.encode(
-        ["address", 'uint256'],
-        [owner.address, defaultDepositFee])
+      const params = ethers.utils.defaultAbiCoder.encode(['uint256'], [defaultDepositFee])
       await showhub.create(defaultContentUri, tomorrow, 2, trueMockModule.address, params)
 
       await showhub.register(0, attendee1.address, [], { value: defaultDepositFee })

@@ -19,9 +19,7 @@ describe('RecipientEther', function () {
 
     await showhub.whitelistConditionModule(recipientEtherModule.address, true)
 
-    const params = ethers.utils.defaultAbiCoder.encode(
-      ["address", 'uint256', 'address'],
-      [owner.address, defaultDepositFee, recipient.address])
+    const params = ethers.utils.defaultAbiCoder.encode(['uint256', 'address'], [defaultDepositFee, recipient.address])
 
     return { showhub, tomorrow, nextWeek, owner, attendee1, attendee2, attendee3, attendee4, attendee5, recipient, recipientEtherModule, params }
   }
@@ -67,7 +65,6 @@ describe('RecipientEther', function () {
       expect(record.conditionModule).to.be.equal(recipientEtherModule.address)
 
       const condition = await recipientEtherModule.getConditions(0)
-      expect(condition.owner).to.be.equal(owner.address)
       expect(condition.depositFee).to.be.equal(defaultDepositFee)
     })
 

@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import 'hardhat/console.sol';
-
 import {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';
-
 import {IConditionModule} from './interfaces/IConditionModule.sol';
 import {IShowHub} from './interfaces/IShowHub.sol';
 import './Common.sol';
@@ -20,7 +17,9 @@ contract ShowHub is Ownable, IShowHub {
   function whitelistConditionModule(address conditionModule, bool enable) external onlyOwner {
     _conditionModules[conditionModule] = enable;
 
-    emit ConditionModuleWhitelisted(conditionModule, enable, msg.sender, block.timestamp);
+    string memory name = IConditionModule(conditionModule).name();
+
+    emit ConditionModuleWhitelisted(conditionModule, name, enable, msg.sender, block.timestamp);
   }
 
   // Main Registry functions
@@ -45,8 +44,6 @@ contract ShowHub is Ownable, IShowHub {
     bool result = IConditionModule(conditionModule).initialize(_recordCount, conditionModuleData);
     if (!result) revert UnexpectedConditionModuleError();
 
-    _recordCount++;
-
     emit Created(
       _recordCount,
       contentUri,
@@ -57,6 +54,8 @@ contract ShowHub is Ownable, IShowHub {
       msg.sender,
       block.timestamp
     );
+
+    _recordCount++;
   }
 
   function updateContentUri(uint256 id, string calldata contentUri) external {

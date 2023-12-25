@@ -7,7 +7,6 @@ import '../Common.sol';
 
 contract RecipientEther is Ownable {
   struct Conditions {
-    address owner;
     uint256 depositFee;
     address recipient;
   }
