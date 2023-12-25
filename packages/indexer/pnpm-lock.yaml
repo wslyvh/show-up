@@ -8,12 +8,18 @@ importers:
 
   .:
     dependencies:
+      abitype:
+        specifier: ^0.10.3
+        version: 0.10.3(typescript@5.2.2)
       envio:
-        specifier: 0.0.26
-        version: 0.0.26
+        specifier: 0.0.0-force-npm-publish-loaderless-mode-20231220171223-3d8681f8
+        version: 0.0.0-force-npm-publish-loaderless-mode-20231220171223-3d8681f8
       ethers:
         specifier: 6.8.0
         version: 6.8.0
+      viem:
+        specifier: ^1.20.3
+        version: 1.20.3(typescript@5.2.2)
     devDependencies:
       '@types/expect':
         specifier: ^24.3.0
@@ -320,6 +326,20 @@ packages:
     dependencies:
       '@types/yargs-parser': 21.0.3
     dev: true
+
+  /abitype@0.10.3(typescript@5.2.2):
+    resolution: {integrity: sha512-tRN+7XIa7J9xugdbRzFv/95ka5ivR/sRe01eiWvM0HWWjHuigSZEACgKa0sj4wGuekTDtghCx+5Izk/cOi78pQ==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+      zod: ^3 >=3.22.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      zod:
+        optional: true
+    dependencies:
+      typescript: 5.2.2
+    dev: false
 
   /abitype@0.9.8(typescript@5.2.2):
     resolution: {integrity: sha512-puLifILdm+8sjyss4S+fsUN09obiT1g2YW6CtcQF+QDzxR0euzgEB29MZujC6zMk2a6SVmtttq1fc6+YFA7WYQ==}
@@ -720,37 +740,28 @@ packages:
       once: 1.4.0
     dev: false
 
-  /envio-darwin-arm64@0.0.26:
-    resolution: {integrity: sha512-+tcbenRVwzbzl8p6sQW4bvsMrkjNXySAIVTjh/Xo+2zo/PqJ0rxnndKwsTd4f12xaBBtOzWXhbqBLdVT7V54Kg==}
+  /envio-darwin-arm64@0.0.0-force-npm-publish-loaderless-mode-20231220171223-3d8681f8:
+    resolution: {integrity: sha512-lhVAKZB7xmvMvR+MMiRdutUCJdDQoA6Viv9b2LroB9QutWF892rE9IxnS2+aaCYY0Dmuzsy1afW3OgSGmaUF/w==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: false
     optional: true
 
-  /envio-darwin-x64@0.0.26:
-    resolution: {integrity: sha512-kgWChXI5+i94SOZRVoHXTJekvRyRIZDcj4ojpq/vPNLcn0s7kXnK7nL1d+dCRp4x5UsqTsXpIAqHUA3O1ATRjA==}
-    cpu: [x64]
-    os: [darwin]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /envio-linux-x64@0.0.26:
-    resolution: {integrity: sha512-hLFX8Fg8+qhf6aWPMBPdJuaRmSV0TipqYKEUQgLPDErXAfuBWoDvKy5Hbq+Hs14mFCMxLe9NpAwpxo78X4kItg==}
+  /envio-linux-x64@0.0.0-force-npm-publish-loaderless-mode-20231220171223-3d8681f8:
+    resolution: {integrity: sha512-8aEdPC0Nrja5vAu8lbVm4tGB2bkuF/vKgJQSRMGnyvgdbkUpD2J12W4smhlLHqQnN+OlYO1LLd8YRjDX8nUxcQ==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: false
     optional: true
 
-  /envio@0.0.26:
-    resolution: {integrity: sha512-3dfh53l3gmoLvhVpZqa/p1NjUoyTumfvbHyf9IyGlJpE67pOubGo3UMLXsHJVN/EeNM8hm6nW9MAPRCgRd7fPQ==}
+  /envio@0.0.0-force-npm-publish-loaderless-mode-20231220171223-3d8681f8:
+    resolution: {integrity: sha512-2QwRulyBsqtJqCvg32vmWvXeHuR8FdhAhH/FN09TuMCDzE7LXMzvcTU2h7U0b8gMeo6BhuftJ10Qfyj8JyKMFQ==}
     hasBin: true
     optionalDependencies:
-      envio-darwin-arm64: 0.0.26
-      envio-darwin-x64: 0.0.26
-      envio-linux-x64: 0.0.26
+      envio-darwin-arm64: 0.0.0-force-npm-publish-loaderless-mode-20231220171223-3d8681f8
+      envio-linux-x64: 0.0.0-force-npm-publish-loaderless-mode-20231220171223-3d8681f8
     dev: false
 
   /escalade@3.1.1:
@@ -2036,6 +2047,29 @@ packages:
         optional: true
     dependencies:
       '@adraffy/ens-normalize': 1.9.4
+      '@noble/curves': 1.2.0
+      '@noble/hashes': 1.3.2
+      '@scure/bip32': 1.3.2
+      '@scure/bip39': 1.2.1
+      abitype: 0.9.8(typescript@5.2.2)
+      isows: 1.0.3(ws@8.13.0)
+      typescript: 5.2.2
+      ws: 8.13.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - zod
+    dev: false
+
+  /viem@1.20.3(typescript@5.2.2):
+    resolution: {integrity: sha512-7CrmeCb2KYkeCgUmUyb1hsf+IX/PLwi+Np+Vm4YUTPeG82y3HRSgGHSaCOp3d0YtR2kXD3nv9y5kE7LBFE+wWw==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@adraffy/ens-normalize': 1.10.0
       '@noble/curves': 1.2.0
       '@noble/hashes': 1.3.2
       '@scure/bip32': 1.3.2

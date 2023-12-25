@@ -1,38 +1,49 @@
 name: sup-indexer
+description: Show Up Protocol indexer
+contracts:
+  - name: ShowHub
+    handler: src/EventHandlers.ts
+    events:
+      - event: Canceled(uint256 indexed id, string reason, bytes data, address sender, uint256 timestamp)
+        requiredEntities:
+          - name: Record
+      - event: CheckedIn(uint256 indexed id, address[] attendees, bytes data, address sender, uint256 timestamp)
+        requiredEntities:
+          - name: Record
+          - name: User
+      - event: ConditionModuleWhitelisted(address indexed conditionModule, string name, bool indexed whitelisted, address sender, uint256 timestamp)
+        requiredEntities:
+          - name: ConditionModule
+      - event: Created(uint256 indexed id, string contentUri, uint256 endDate, uint256 limit,address indexed conditionModule, bytes data, address sender, uint256 timestamp)
+        requiredEntities:
+          - name: Record
+          - name: ConditionModule
+      - event: Funded(uint256 indexed id, bytes data, address sender, uint256 timestamp)
+        requiredEntities:
+          - name: Record
+      - event: OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
+        requiredEntities:
+          - name: Record
+      - event: Registered(uint256 indexed id, address indexed participant, bytes data, address sender, uint256 timestamp)
+        requiredEntities:
+          - name: Record
+          - name: User
+      - event: Settled(uint256 indexed id, bytes data, address sender, uint256 timestamp)
+        requiredEntities:
+          - name: Record
+      - event: Updated(uint256 indexed id, string contentUri, uint256 limit, address owner, address sender, uint256 timestamp)
+        requiredEntities:
+          - name: Record
 networks:
-  - id: 11155111
-    start_block: 4915988
+  - id: 11155111 # Sepolia
+    start_block: 0
     contracts:
       - name: ShowHub
-        address:
-          - 0x34F79a7C17DEe934A0ac94aEB3ad4d84F4a27032
-        handler: src/EventHandlers.ts
-        events:
-          - event: Canceled(uint256 indexed id, string reason, bytes data, address sender, uint256 timestamp)
-            requiredEntities:
-              - name: Record
-          - event: CheckedIn(uint256 indexed id, address[] attendees, bytes data, address sender, uint256 timestamp)
-            requiredEntities:
-              - name: Record
-          - event: ConditionModuleWhitelisted(address indexed conditionModule, bool indexed whitelisted, address sender, uint256 timestamp)
-            requiredEntities:
-              - name: ConditionModule
-              - name: Record
-          - event: Created(uint256 indexed id, string contentUri, address indexed conditionModule, bytes data, address sender, uint256 timestamp)
-            requiredEntities:
-              - name: Record
-          - event: Funded(uint256 indexed id, bytes data, address sender, uint256 timestamp)
-            requiredEntities:
-              - name: Record
-          - event: OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
-            requiredEntities:
-              - name: Record
-          - event: Registered(uint256 indexed id, address indexed participant, bytes data, address sender, uint256 timestamp)
-            requiredEntities:
-              - name: Record
-          - event: Settled(uint256 indexed id, bytes data, address sender, uint256 timestamp)
-            requiredEntities:
-              - name: Record
-          - event: Updated(uint256 indexed id, address sender, uint256 timestamp)
-            requiredEntities:
-              - name: Record
+        address: 0x6abEaB74bc741ce8daf2e4614DB7485C19c8acc4
+  - id: 84532 # Base Sepolia
+    start_block: 0
+    contracts:
+      - name: ShowHub
+        address: 0x70cD0FB06F21aA528b311189A998d03C47CbC056
+    hypersync_config:
+      url: https://base-sepolia.hypersync.xyz

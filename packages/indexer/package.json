@@ -15,13 +15,15 @@
     "@types/expect": "^24.3.0",
     "@types/mocha": "10.0.6",
     "@types/node": "20.8.8",
+    "mocha": "10.2.0",
     "ts-mocha": "^10.0.0",
     "ts-node": "10.9.1",
-    "typescript": "5.2.2",
-    "mocha": "10.2.0"
+    "typescript": "5.2.2"
   },
   "dependencies": {
-    "envio": "0.0.26",
-    "ethers": "6.8.0"
+    "abitype": "^0.10.3",
+    "envio": "0.0.0-force-npm-publish-loaderless-mode-20231220171223-3d8681f8",
+    "ethers": "6.8.0",
+    "viem": "^1.20.3"
   }
 }

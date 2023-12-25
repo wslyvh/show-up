@@ -1,5 +1,6 @@
-type ConditionModule @entity {
-  id: Bytes! # address
+type ConditionModule {
+  id: ID! # Address
+  chainId: Int!
   createdAt: BigInt!
   createdBy: Bytes! # address
   blockNumber: BigInt!
@@ -9,8 +10,9 @@ type ConditionModule @entity {
   whitelisted: Boolean! # true
 }
 
-type Record @entity {
-  id: String!
+type Record {
+  id: ID! # Chain + Record ID
+  chainId: Int!
   createdAt: BigInt!
   createdBy: Bytes!
   blockNumber: BigInt!
@@ -20,19 +22,36 @@ type Record @entity {
   limit: BigInt!
   owner: Bytes!
   status: Int!
-  contentUri: String!
-  conditionModule: Bytes!
   message: String
+
+  contentUri: String!
+  metadata: Event
+
+  conditionModule: Bytes!
+  depositFee: BigInt!
+  tokenAddress: Bytes
+  recipient: Bytes
 
   totalRegistrations: BigInt!
   totalAttendees: BigInt!
-
-  # Conditions
-  # Metadata
 }
 
-type User @entity {
-  id: Bytes! # address
+type Event {
+  id: ID! # Content Hash
+  appId: String
+  title: String!
+  description: String
+  start: String!
+  end: String!
+  timezone: String!
+  location: String!
+  website: String
+  imageUrl: String
+  visibility: String
+}
+
+type User {
+  id: ID! # address
   address: Bytes!
   name: String!
   avatar: String
