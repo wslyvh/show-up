@@ -58,12 +58,10 @@ ShowHubContract_ConditionModuleWhitelisted_handler(async ({ event, context }) =>
     }
   }
 
-  entity = {
+  context.ConditionModule.set({
     ...entity,
     whitelisted: event.params.whitelisted,
-  }
-
-  context.ConditionModule.set(entity)
+  })
 })
 
 ShowHubContract_Created_handler(async ({ event, context }) => {
@@ -159,125 +157,150 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
 
 ShowHubContract_Updated_handlerAsync(async ({ event, context }) => {
   const chainId = GetChainId(event.srcAddress) // TODO: Get ChainId from context
-  context.log.info(`[info] Processing ShowHubContract_Updated @ chain ${chainId} | Block # ${event.blockNumber}`)
+  const eventId = `${chainId}-${event.params.id}`
+  context.log.info(`Processing ShowHubContract_Updated # ${eventId} @ Block # ${event.blockNumber}`)
 
-  let entity = await context.Record.get(event.params.id.toString())
+  let entity = await context.Record.get(eventId)
   if (entity == null) {
-    context.log.error(`[error] Record ${event.params.id.toString()} not found`)
+    context.log.error(`Record ${eventId} not found`)
     return
   }
 
-  entity = {
+  context.Record.set({
     ...entity,
     contentUri: event.params.contentUri,
     limit: BigInt(event.params.limit),
     owner: event.params.owner,
-  }
-
-  context.Record.set(entity)
+  })
 })
 
 ShowHubContract_Canceled_handlerAsync(async ({ event, context }) => {
   const chainId = GetChainId(event.srcAddress) // TODO: Get ChainId from context
-  context.log.info(`[info] Processing ShowHubContract_Canceled @ chain ${chainId} | Block # ${event.blockNumber}`)
+  const eventId = `${chainId}-${event.params.id}`
+  context.log.info(`Processing ShowHubContract_Canceled # ${eventId} @ Block # ${event.blockNumber}`)
 
-  let entity = await context.Record.get(event.params.id.toString())
+  let entity = await context.Record.get(eventId)
   if (entity == null) {
-    context.log.error(`[error] Record ${event.params.id.toString()} not found`)
+    context.log.error(`Record ${eventId} not found`)
     return
   }
 
-  entity = {
+  context.Record.set({
     ...entity,
     status: GetStatusId('Cancelled'),
     message: event.params.reason,
-  }
-
-  context.Record.set(entity)
+  })
 })
 
 ShowHubContract_Funded_handler(async ({ event, context }) => {
   const chainId = GetChainId(event.srcAddress) // TODO: Get ChainId from context
-  context.log.info(`[info] Processing ShowHubContract_Funded @ chain ${chainId} | Block # ${event.blockNumber}`)
+  const eventId = `${chainId}-${event.params.id}`
+  context.log.info(`Processing ShowHubContract_Funded # ${eventId} @ Block # ${event.blockNumber}`)
 
-  let entity = await context.Record.get(event.params.id.toString())
+  let entity = await context.Record.get(eventId)
   if (entity == null) {
-    context.log.error(`[error] Record ${event.params.id.toString()} not found`)
+    context.log.error(`Record ${eventId} not found`)
     return
   }
 
-  // TODO: Decode conditionModuleData
-  entity = {
-    ...entity,
-  }
+  // TODO: Decode conditionModuleData and keep track of deposits and funds
 
-  context.Record.set(entity)
+  context.Record.set({
+    ...entity,
+  })
 })
 
 ShowHubContract_Registered_handler(async ({ event, context }) => {
   const chainId = GetChainId(event.srcAddress) // TODO: Get ChainId from context
-  context.log.info(`[info] Processing ShowHubContract_Registered @ chain ${chainId} | Block # ${event.blockNumber}`)
+  const eventId = `${chainId}-${event.params.id}`
+  context.log.info(`Processing ShowHubContract_Registered # ${eventId} @ Block # ${event.blockNumber}`)
 
-  let entity = await context.Record.get(event.params.id.toString())
+  let entity = await context.Record.get(eventId)
   if (entity == null) {
-    context.log.error(`[error] Record ${event.params.id.toString()} not found`)
+    context.log.error(`Record ${eventId} not found`)
     return
   }
 
   let user = await context.User.get(event.params.participant)
   if (user == null) {
+    context.log.error(`User not found. Create user ${event.params.participant}`)
     user = {
-      id: event.params.id.toString(),
-      address: event.params.participant,
+      id: event.params.participant,
       name: TruncateMiddle(event.params.participant), // TODO: ENS Name
       avatar: null, // TODO: ENS Avatar
     }
 
     context.User.set(user)
   }
+  // TODO: Update User entity with ENS Name and Avatar
 
-  // TODO: Event-User relationship
-  entity = {
-    ...entity,
-    totalRegistrations: entity.totalRegistrations + BigInt(1),
+  const registration = {
+    id: `${eventId}-${event.params.participant}`,
+    createdAt: BigInt(event.params.timestamp),
+    createdBy: event.params.sender,
+    blockNumber: BigInt(event.blockNumber),
+    transactionHash: event.transactionHash,
+
+    checkedIn: false,
+    record: eventId,
+    user: user.id,
   }
 
-  context.Record.set(entity)
+  context.log.info(`Create Event Registration ${registration.id}`)
+  context.Registration.set(registration)
+
+  context.log.info(`Update Total Registrations ${entity.id}`)
+  context.Record.set({
+    ...entity,
+    totalRegistrations: entity.totalRegistrations + BigInt(1),
+  })
 })
 
 ShowHubContract_CheckedIn_handler(async ({ event, context }) => {
   const chainId = GetChainId(event.srcAddress) // TODO: Get ChainId from context
-  context.log.info(`[info] Processing ShowHubContract_CheckedIn @ chain ${chainId} | Block # ${event.blockNumber}`)
+  const eventId = `${chainId}-${event.params.id}`
+  context.log.info(`Processing ShowHubContract_CheckedIn # ${eventId} @ Block # ${event.blockNumber}`)
 
-  let entity = await context.Record.get(event.params.id.toString())
+  const entity = await context.Record.get(eventId)
   if (entity == null) {
-    context.log.error(`[error] Record ${event.params.id.toString()} not found`)
+    context.log.error(`Record ${eventId} not found`)
     return
   }
 
-  // TODO: Event-User relationship
-  entity = {
-    ...entity,
-    totalAttendees: entity.totalAttendees + BigInt(event.params.attendees.length),
+  // TODO: Update User entity with ENS Name and Avatar
+
+  for (let i = 0; i < event.params.attendees.length; i++) {
+    const attendee = event.params.attendees[i];
+    const registration = await context.Registration.get(`${eventId}-${attendee}`)
+
+    if (registration) {
+      context.log.info(`Checkin attendee ${attendee}`)
+      context.Registration.set({
+        ...registration,
+        checkedIn: true,
+      })
+    }
   }
 
-  context.Record.set(entity)
+  context.Record.set({
+    ...entity,
+    totalAttendees: entity.totalAttendees + BigInt(event.params.attendees.length),
+  })
 })
 
 ShowHubContract_Settled_handler(async ({ event, context }) => {
   const chainId = GetChainId(event.srcAddress) // TODO: Get ChainId from context
-  context.log.info(`[info] Processing ShowHubContract_Settled @ chain ${chainId} | Block # ${event.blockNumber}`)
+  const eventId = `${chainId}-${event.params.id}`
+  context.log.info(`Processing ShowHubContract_Settled # ${eventId} @ Block # ${event.blockNumber}`)
 
-  let entity = await context.Record.get(event.params.id.toString())
+  let entity = await context.Record.get(eventId)
   if (entity == null) {
-    context.log.error(`[error] Record ${event.params.id.toString()} not found`)
+    context.log.error(`Record ${eventId} not found`)
     return
   }
 
-  entity = {
+  context.Record.set({
     ...entity,
     status: GetStatusId('Settled'),
-  }
-
-  context.Record.set(entity)
+  })
 })

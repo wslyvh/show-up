@@ -34,6 +34,27 @@ type Record {
 
   totalRegistrations: BigInt!
   totalAttendees: BigInt!
+  registrations: [Registration!]! @derivedFrom(field: "record")
+}
+
+type Registration {
+  id: ID! # Chain + Record + User address
+  createdAt: BigInt!
+  createdBy: Bytes!
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+
+  checkedIn: Boolean! # false
+  record: Record!
+  user: User!
+}
+
+type User {
+  id: ID! # address
+  name: String!
+  avatar: String
+
+  registrations: [Registration!]! @derivedFrom(field: "user")
 }
 
 type Event {
@@ -48,11 +69,4 @@ type Event {
   website: String
   imageUrl: String
   visibility: String
-}
-
-type User {
-  id: ID! # address
-  address: Bytes!
-  name: String!
-  avatar: String
 }

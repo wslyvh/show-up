@@ -119,10 +119,37 @@ export async function main() {
 
     // Other test events / scenarios
     console.log('Create other events..')
+    console.log('- Event with attendees')
+    const registerParams = ethers.utils.defaultAbiCoder.encode(['uint256'], [0])
+    const registerTx = await showhub.create(defaultContentUri, nextWeek, 0, splitEther.address, registerParams, { gasLimit: 350000 })
+
+    console.log('Waiting for tx..')
+    const registerReceipt = await registerTx.wait()
+    const registerReceiptLogs = registerReceipt.events?.find((event) => event.event === 'Created')
+    const registerEventId = registerReceiptLogs?.args?.id
+    if (registerEventId) {
+        console.log('Register #1')
+        await showhub.register(registerEventId, owner.address, [], { value: 0, gasLimit: 200000 })
+        console.log('Register #2')
+        await showhub.register(registerEventId, '0x8289432ACD5EB0214B1C2526A5EDB480Aa06A9ab', [], { value: 0, gasLimit: 200000 })
+        console.log('Checkin')
+        await showhub.checkin(registerEventId, ['0x8289432ACD5EB0214B1C2526A5EDB480Aa06A9ab'], [], { gasLimit: 200000 })
+    }
+
     console.log('- Cancellable Event')
-    const cancelledEventUri = 'ipfs://bafkreiaf5svesha5s4nlvgsugfrb27rnv2k4k7wk2eqws4dw6wpfefkqsy'
-    const cancelParams = ethers.utils.defaultAbiCoder.encode(['uint256'], [defaultDepositFee])
-    await showhub.create(cancelledEventUri, nextWeek, 0, splitEther.address, cancelParams, { gasLimit: 350000 })
+    const cancelEventUri = 'ipfs://bafkreiaf5svesha5s4nlvgsugfrb27rnv2k4k7wk2eqws4dw6wpfefkqsy'
+    const cancelParams = ethers.utils.defaultAbiCoder.encode(['uint256'], [0])
+    const cancelTx = await showhub.create(cancelEventUri, nextWeek, 0, splitEther.address, cancelParams, { gasLimit: 350000 })
+    console.log('Waiting for tx..')
+    const cancelReceipt = await cancelTx.wait()
+    const cancelReceiptLogs = cancelReceipt.events?.find((event) => event.event === 'Created')
+    const cancelEventId = cancelReceiptLogs?.args?.id
+    if (cancelEventId) {
+        console.log('Cancel..')
+        await showhub.cancel(cancelEventId, "Cancel Test event", [], { gasLimit: 90000 })
+    }
+
+    console.log('All done!')
 }
 
 // We recommend this pattern to be able to use async/await everywhere

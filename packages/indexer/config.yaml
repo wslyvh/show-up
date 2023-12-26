@@ -11,6 +11,7 @@ contracts:
         requiredEntities:
           - name: Record
           - name: User
+          - name: Registration
       - event: ConditionModuleWhitelisted(address indexed conditionModule, string name, bool indexed whitelisted, address sender, uint256 timestamp)
         requiredEntities:
           - name: ConditionModule
@@ -28,6 +29,7 @@ contracts:
         requiredEntities:
           - name: Record
           - name: User
+          - name: Registration
       - event: Settled(uint256 indexed id, bytes data, address sender, uint256 timestamp)
         requiredEntities:
           - name: Record
