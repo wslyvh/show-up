@@ -16,6 +16,22 @@ export function GetStatusId(status: 'Active' | 'Cancelled' | 'Settled' = 'Active
     }
 }
 
+export function GetVisibilityName(number: number = 0) {
+    switch (number) {
+        case 0: return 'Public'
+        case 1: return 'Unlisted'
+    }
+
+    return 'Public'
+}
+
+export function GetVisibilityId(visibility: 'Public' | 'Unlisted' = 'Public') {
+    switch (visibility) {
+        case 'Public': return 0
+        case 'Unlisted': return 1
+    }
+}
+
 export function TruncateMiddle(text: string, length: number = 5) {
     if (text?.length > length * 2 + 1) {
         return `${text.substring(0, length)}...${text.substring(text.length - length, text.length)}`

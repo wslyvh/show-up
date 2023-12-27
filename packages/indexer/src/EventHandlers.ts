@@ -1,32 +1,19 @@
 
 import {
-  ShowHubContract_Canceled_loader,
-  ShowHubContract_Canceled_handler,
-  ShowHubContract_CheckedIn_loader,
   ShowHubContract_CheckedIn_handler,
-  ShowHubContract_ConditionModuleWhitelisted_loader,
   ShowHubContract_ConditionModuleWhitelisted_handler,
-  ShowHubContract_Created_loader,
   ShowHubContract_Created_handler,
-  ShowHubContract_Funded_loader,
   ShowHubContract_Funded_handler,
-  ShowHubContract_OwnershipTransferred_loader,
-  ShowHubContract_OwnershipTransferred_handler,
-  ShowHubContract_Registered_loader,
   ShowHubContract_Registered_handler,
-  ShowHubContract_Settled_loader,
   ShowHubContract_Settled_handler,
-  ShowHubContract_Updated_loader,
-  ShowHubContract_Updated_handler,
   ShowHubContract_Canceled_handlerAsync,
   ShowHubContract_Updated_handlerAsync,
 } from "../generated/src/Handlers.gen"
 
-import { ConditionModuleEntity, RecordEntity, conditionModuleEntity } from "../generated/src/Types.gen"
 import { GetChainId, GetClient } from "./utils/client"
 import { TryFetchIpfsFile } from "./utils/ipfs"
-import { GetStatusId, TruncateMiddle } from "./utils/mapping"
-import { decodeAbiParameters, parseAbiParameters } from 'viem'
+import { GetStatusId, GetVisibilityId, TruncateMiddle } from "./utils/mapping"
+import { decodeAbiParameters } from 'viem'
 
 interface ConditionModuleData {
   depositFee: BigInt
@@ -34,6 +21,7 @@ interface ConditionModuleData {
   recipient?: string
 }
 
+const TotalDepositsABI = [{ name: "getTotalDeposits", inputs: [{ name: "id", type: "uint256" }], outputs: [{ name: "", type: "uint256" }], }]
 const RecipientEtherDataParams = [{ name: "depositFee", type: "uint256" }, { name: "recipient", type: "address" }]
 const RecipientTokenDataParams = [{ name: "depositFee", type: "uint256" }, { name: "tokenAddress", type: "address" }, { name: "recipient", type: "address" }]
 const SplitEtherDataParams = [{ name: "depositFee", type: "uint256" }]
@@ -84,7 +72,11 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
       if (metadata) {
         context.log.info(`Save Event metadata`)
         metadataId = ipfsHash
-        context.Event.set({ ...metadata, id: ipfsHash })
+        context.Event.set({
+          ...metadata,
+          id: ipfsHash,
+          visibility: GetVisibilityId(metadata.visibility),
+        })
       }
     }
 
@@ -149,6 +141,7 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
 
       totalRegistrations: BigInt(0),
       totalAttendees: BigInt(0),
+      totalFunded: BigInt(0),
     }
 
     context.Record.set(entity)
@@ -203,10 +196,17 @@ ShowHubContract_Funded_handler(async ({ event, context }) => {
     return
   }
 
-  // TODO: Decode conditionModuleData and keep track of deposits and funds
+  const client = GetClient(chainId)
+  const funded = await client.readContract({
+    address: entity.conditionModule as any,
+    abi: TotalDepositsABI,
+    functionName: "getTotalDeposits",
+    args: [event.params.id],
+  }) as string
 
   context.Record.set({
     ...entity,
+    totalFunded: BigInt(funded ?? 0),
   })
 })
 
@@ -253,6 +253,7 @@ ShowHubContract_Registered_handler(async ({ event, context }) => {
   context.Record.set({
     ...entity,
     totalRegistrations: entity.totalRegistrations + BigInt(1),
+    totalFunded: entity.totalFunded + entity.depositFee,
   })
 })
 

@@ -27,13 +27,14 @@ type Record {
   contentUri: String!
   metadata: Event
 
-  conditionModule: Bytes!
+  conditionModule: ConditionModule!
   depositFee: BigInt!
   tokenAddress: Bytes
   recipient: Bytes
 
   totalRegistrations: BigInt!
   totalAttendees: BigInt!
+  totalFunded: BigInt!
   registrations: [Registration!]! @derivedFrom(field: "record")
 }
 
@@ -68,5 +69,5 @@ type Event {
   location: String!
   website: String
   imageUrl: String
-  visibility: String
+  visibility: Int!
 }
