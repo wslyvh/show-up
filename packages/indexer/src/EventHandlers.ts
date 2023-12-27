@@ -14,6 +14,7 @@ import { GetChainId, GetClient, GetEnsProfile } from "./utils/client"
 import { TryFetchIpfsFile } from "./utils/ipfs"
 import { GetStatusId, GetVisibilityId } from "./utils/mapping"
 import { decodeAbiParameters } from 'viem'
+import dayjs from 'dayjs'
 
 const Erc20ABI = [
   { name: "decimals", type: "function", inputs: [], outputs: [{ name: "", type: "uint8" }] },
@@ -74,6 +75,8 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
         context.Event.set({
           ...metadata,
           id: ipfsHash,
+          start: dayjs(metadata.start).unix(), // TODO: Fix on client input 
+          end: dayjs(metadata.end).unix(), // TODO: Fix on client input 
           visibility: GetVisibilityId(metadata.visibility),
         })
       }
@@ -135,21 +138,21 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
       try {
         const client = GetClient(chainId)
         const name = await client.readContract({
-          address: data.tokenAddress as any,
+          address: data.tokenAddress,
           abi: Erc20ABI,
           functionName: "name",
           args: []
         }) as string
 
         const symbol = await client.readContract({
-          address: data.tokenAddress as any,
+          address: data.tokenAddress,
           abi: Erc20ABI,
           functionName: "symbol",
           args: []
         }) as string
 
         const decimals = await client.readContract({
-          address: data.tokenAddress as any,
+          address: data.tokenAddress,
           abi: Erc20ABI,
           functionName: "decimals",
           args: []
@@ -258,7 +261,7 @@ ShowHubContract_Funded_handler(async ({ event, context }) => {
 
   const client = GetClient(chainId)
   const funded = await client.readContract({
-    address: entity.conditionModule as any,
+    address: entity.conditionModule,
     abi: TotalDepositsABI,
     functionName: "getTotalDeposits",
     args: [event.params.id],

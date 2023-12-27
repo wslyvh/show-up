@@ -11,6 +11,9 @@ importers:
       abitype:
         specifier: ^0.10.3
         version: 0.10.3(typescript@5.2.2)
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.10
       envio:
         specifier: 0.0.0-force-npm-publish-loaderless-mode-20231220171223-3d8681f8
         version: 0.0.0-force-npm-publish-loaderless-mode-20231220171223-3d8681f8
@@ -647,6 +650,10 @@ packages:
 
   /dateformat@4.6.3:
     resolution: {integrity: sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==}
+    dev: false
+
+  /dayjs@1.11.10:
+    resolution: {integrity: sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==}
     dev: false
 
   /debug@2.6.9:

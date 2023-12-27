@@ -61,8 +61,8 @@ type Event {
   appId: String
   title: String!
   description: String
-  start: String!
-  end: String!
+  start: Int!
+  end: Int!
   timezone: String!
   location: String!
   website: String
