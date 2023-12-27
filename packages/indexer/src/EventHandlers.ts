@@ -1,4 +1,3 @@
-
 import {
   ShowHubContract_CheckedIn_handler,
   ShowHubContract_ConditionModuleWhitelisted_handler,
@@ -10,9 +9,9 @@ import {
   ShowHubContract_Updated_handlerAsync,
 } from "../generated/src/Handlers.gen"
 
-import { GetChainId, GetClient } from "./utils/client"
+import { GetChainId, GetClient, GetEnsProfile } from "./utils/client"
 import { TryFetchIpfsFile } from "./utils/ipfs"
-import { GetStatusId, GetVisibilityId, TruncateMiddle } from "./utils/mapping"
+import { GetStatusId, GetVisibilityId } from "./utils/mapping"
 import { decodeAbiParameters } from 'viem'
 
 interface ConditionModuleData {
@@ -31,9 +30,9 @@ ShowHubContract_ConditionModuleWhitelisted_handler(async ({ event, context }) =>
   const chainId = GetChainId(event.srcAddress) // TODO: Get ChainId from context
   context.log.info(`Processing ShowHubContract_ConditionModuleWhitelisted @ chain ${chainId} | Block # ${event.blockNumber}`)
 
-  let entity = await context.ConditionModule.get(event.params.conditionModule)
-  if (entity == null) {
-    entity = {
+  let module = await context.ConditionModule.get(event.params.conditionModule)
+  if (module == null) {
+    module = {
       id: event.params.conditionModule,
       chainId: chainId,
       createdAt: BigInt(event.params.timestamp),
@@ -47,7 +46,7 @@ ShowHubContract_ConditionModuleWhitelisted_handler(async ({ event, context }) =>
   }
 
   context.ConditionModule.set({
-    ...entity,
+    ...module,
     whitelisted: event.params.whitelisted,
   })
 })
@@ -117,6 +116,11 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
       }
     }
 
+    // Add Owner ENS Profile
+    const user = await GetEnsProfile(event.params.sender)
+    context.User.set(user)
+
+    // Add Record Entity 
     entity = {
       id: eventId,
       chainId: chainId,
@@ -158,6 +162,9 @@ ShowHubContract_Updated_handlerAsync(async ({ event, context }) => {
     context.log.error(`Record ${eventId} not found`)
     return
   }
+
+  const user = await GetEnsProfile(event.params.owner)
+  context.User.set(user)
 
   context.Record.set({
     ...entity,
@@ -221,18 +228,8 @@ ShowHubContract_Registered_handler(async ({ event, context }) => {
     return
   }
 
-  let user = await context.User.get(event.params.participant)
-  if (user == null) {
-    context.log.error(`User not found. Create user ${event.params.participant}`)
-    user = {
-      id: event.params.participant,
-      name: TruncateMiddle(event.params.participant), // TODO: ENS Name
-      avatar: null, // TODO: ENS Avatar
-    }
-
-    context.User.set(user)
-  }
-  // TODO: Update User entity with ENS Name and Avatar
+  const user = await GetEnsProfile(event.params.participant)
+  context.User.set(user)
 
   const registration = {
     id: `${eventId}-${event.params.participant}`,
@@ -253,7 +250,6 @@ ShowHubContract_Registered_handler(async ({ event, context }) => {
   context.Record.set({
     ...entity,
     totalRegistrations: entity.totalRegistrations + BigInt(1),
-    totalFunded: entity.totalFunded + entity.depositFee,
   })
 })
 
@@ -267,8 +263,6 @@ ShowHubContract_CheckedIn_handler(async ({ event, context }) => {
     context.log.error(`Record ${eventId} not found`)
     return
   }
-
-  // TODO: Update User entity with ENS Name and Avatar
 
   for (let i = 0; i < event.params.attendees.length; i++) {
     const attendee = event.params.attendees[i];

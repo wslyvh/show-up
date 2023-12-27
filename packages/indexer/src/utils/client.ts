@@ -1,5 +1,7 @@
 import { Chain, createPublicClient, http } from 'viem'
-import { baseSepolia, sepolia, optimism } from 'viem/chains'
+import { normalize } from 'viem/ens'
+import { baseSepolia, sepolia, optimism, mainnet } from 'viem/chains'
+import { TruncateMiddle } from './mapping'
 
 const ADDRESS_SEPOLIA = '0x6abEaB74bc741ce8daf2e4614DB7485C19c8acc4'
 const ADDRESS_BASE_SEPOLIA = '0x70cD0FB06F21aA528b311189A998d03C47CbC056'
@@ -22,4 +24,42 @@ export function GetClient(chainId: number) {
         chain: chain,
         transport: http(),
     })
+}
+
+export async function GetEnsProfile(address: string) {
+    const client = createPublicClient({
+        chain: mainnet,
+        batch: {
+            multicall: true,
+        },
+        transport: http(),
+    })
+
+    let name = TruncateMiddle(address)
+    let avatar = null
+    try {
+        const ensName = await client.getEnsName({
+            address: address as any,
+        })
+        if (ensName) {
+            name = ensName
+            const ensAvatar = await client.getEnsAvatar({
+                name: normalize(ensName),
+            })
+
+            if (ensAvatar) {
+                avatar = ensAvatar
+            }
+        }
+
+    }
+    catch (e) {
+        // ignore
+    }
+
+    return {
+        id: address,
+        name: name,
+        avatar: avatar,
+    }
 }

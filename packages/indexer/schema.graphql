@@ -20,7 +20,7 @@ type Record {
 
   endDate: BigInt!
   limit: BigInt!
-  owner: Bytes!
+  owner: User!
   status: Int!
   message: String
 
