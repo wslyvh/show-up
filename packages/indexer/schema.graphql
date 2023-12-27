@@ -43,7 +43,7 @@ type Registration {
   blockNumber: BigInt!
   transactionHash: Bytes!
 
-  checkedIn: Boolean! # false
+  participated: Boolean! # false
   record: Record!
   user: User!
 }

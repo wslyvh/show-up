@@ -21,7 +21,7 @@ const Erc20ABI = [
   { name: "symbol", type: "function", inputs: [], outputs: [{ name: "", type: "string" }] },
   { name: "name", type: "function", inputs: [], outputs: [{ name: "", type: "string" }] },
 ]
-const TotalDepositsABI = [{ name: "getTotalDeposits", inputs: [{ name: "id", type: "uint256" }], outputs: [{ name: "", type: "uint256" }], }]
+const TotalDepositsABI = [{ name: "getTotalDeposits", type: "function", inputs: [{ name: "id", type: "uint256" }], outputs: [{ name: "", type: "uint256" }], }]
 const RecipientEtherDataParams = [{ name: "depositFee", type: "uint256" }, { name: "recipient", type: "address" }]
 const RecipientTokenDataParams = [{ name: "depositFee", type: "uint256" }, { name: "tokenAddress", type: "address" }, { name: "recipient", type: "address" }]
 const SplitEtherDataParams = [{ name: "depositFee", type: "uint256" }]
@@ -138,21 +138,21 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
       try {
         const client = GetClient(chainId)
         const name = await client.readContract({
-          address: data.tokenAddress,
+          address: data.tokenAddress as any,
           abi: Erc20ABI,
           functionName: "name",
           args: []
         }) as string
 
         const symbol = await client.readContract({
-          address: data.tokenAddress,
+          address: data.tokenAddress as any,
           abi: Erc20ABI,
           functionName: "symbol",
           args: []
         }) as string
 
         const decimals = await client.readContract({
-          address: data.tokenAddress,
+          address: data.tokenAddress as any,
           abi: Erc20ABI,
           functionName: "decimals",
           args: []
@@ -259,18 +259,22 @@ ShowHubContract_Funded_handler(async ({ event, context }) => {
     return
   }
 
-  const client = GetClient(chainId)
-  const funded = await client.readContract({
-    address: entity.conditionModule,
-    abi: TotalDepositsABI,
-    functionName: "getTotalDeposits",
-    args: [event.params.id],
-  }) as string
+  try {
+    const client = GetClient(chainId)
+    const funded = await client.readContract({
+      address: entity.conditionModule as any,
+      abi: TotalDepositsABI,
+      functionName: "getTotalDeposits",
+      args: [event.params.id],
+    }) as string
 
-  context.Record.set({
-    ...entity,
-    totalFunded: BigInt(funded ?? 0),
-  })
+    context.Record.set({
+      ...entity,
+      totalFunded: BigInt(funded ?? 0),
+    })
+  } catch (error) {
+    context.log.error(`Unable to fetch total funded ${entity.conditionModule} | Record ${eventId}`)
+  }
 })
 
 ShowHubContract_Registered_handler(async ({ event, context }) => {
@@ -294,7 +298,7 @@ ShowHubContract_Registered_handler(async ({ event, context }) => {
     blockNumber: BigInt(event.blockNumber),
     transactionHash: event.transactionHash,
 
-    checkedIn: false,
+    participated: false,
     record: eventId,
     user: user.id,
   }
@@ -328,7 +332,7 @@ ShowHubContract_CheckedIn_handler(async ({ event, context }) => {
       context.log.info(`Checkin attendee ${attendee}`)
       context.Registration.set({
         ...registration,
-        checkedIn: true,
+        participated: true,
       })
     }
   }

@@ -114,7 +114,7 @@ export async function main() {
 
     // Recipient Token
     console.log('- RecipientToken')
-    const recipientTokenParams = ethers.utils.defaultAbiCoder.encode(['uint256', 'address', 'address'], [defaultTokenFee, owner.address, token.address])
+    const recipientTokenParams = ethers.utils.defaultAbiCoder.encode(['uint256', 'address', 'address'], [defaultTokenFee, token.address, owner.address])
     await showhub.create(defaultContentUri, tomorrow, defaultMaxParticipants, recipientToken.address, recipientTokenParams, { gasLimit: 350000 })
 
     // Other test events / scenarios
@@ -145,8 +145,25 @@ export async function main() {
     const cancelReceiptLogs = cancelReceipt.events?.find((event) => event.event === 'Created')
     const cancelEventId = cancelReceiptLogs?.args?.id
     if (cancelEventId) {
-        console.log('Cancel..')
+        console.log('Cancel Event..')
         await showhub.cancel(cancelEventId, "Cancel Test event", [], { gasLimit: 90000 })
+    }
+
+    console.log('- Unlisted Event')
+    const unlistedParams = ethers.utils.defaultAbiCoder.encode(['uint256'], [defaultDepositFee])
+    const unlistedContentUri = 'ipfs://bafkreigoeobozhvn77676j3kuey3iidfzjbvkoewmnifyweshc2fjckwx4'
+    await showhub.create(unlistedContentUri, nextWeek, defaultMaxParticipants, splitEther.address, unlistedParams, { gasLimit: 350000 })
+
+    console.log('- Fund Event')
+    const fundEventParams = ethers.utils.defaultAbiCoder.encode(['uint256'], [0])
+    const fundEventTx = await showhub.create(defaultContentUri, nextWeek, defaultMaxParticipants, splitEther.address, fundEventParams, { gasLimit: 350000 })
+    console.log('Waiting for tx..')
+    const fundEventReceipt = await fundEventTx.wait()
+    const fundEventReceiptLogs = fundEventReceipt.events?.find((event) => event.event === 'Created')
+    const fundEventId = fundEventReceiptLogs?.args?.id
+    if (fundEventId) {
+        console.log('Fund Event..')
+        await showhub.fund(fundEventId, [], { value: defaultDepositFee, gasLimit: 90000 })
     }
 
     console.log('All done!')

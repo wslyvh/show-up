@@ -21,7 +21,6 @@
     "typescript": "5.2.2"
   },
   "dependencies": {
-    "abitype": "^0.10.3",
     "dayjs": "^1.11.10",
     "envio": "0.0.0-force-npm-publish-loaderless-mode-20231220171223-3d8681f8",
     "ethers": "6.8.0",
