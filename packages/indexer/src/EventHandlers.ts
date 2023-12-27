@@ -8,18 +8,18 @@ import {
   ShowHubContract_Canceled_handlerAsync,
   ShowHubContract_Updated_handlerAsync,
 } from "../generated/src/Handlers.gen"
+import { conditionModuleDataEntity } from "./src/Types.gen"
 
 import { GetChainId, GetClient, GetEnsProfile } from "./utils/client"
 import { TryFetchIpfsFile } from "./utils/ipfs"
 import { GetStatusId, GetVisibilityId } from "./utils/mapping"
 import { decodeAbiParameters } from 'viem'
 
-interface ConditionModuleData {
-  depositFee: BigInt
-  tokenAddress?: string
-  recipient?: string
-}
-
+const Erc20ABI = [
+  { name: "decimals", type: "function", inputs: [], outputs: [{ name: "", type: "uint8" }] },
+  { name: "symbol", type: "function", inputs: [], outputs: [{ name: "", type: "string" }] },
+  { name: "name", type: "function", inputs: [], outputs: [{ name: "", type: "string" }] },
+]
 const TotalDepositsABI = [{ name: "getTotalDeposits", inputs: [{ name: "id", type: "uint256" }], outputs: [{ name: "", type: "uint256" }], }]
 const RecipientEtherDataParams = [{ name: "depositFee", type: "uint256" }, { name: "recipient", type: "address" }]
 const RecipientTokenDataParams = [{ name: "depositFee", type: "uint256" }, { name: "tokenAddress", type: "address" }, { name: "recipient", type: "address" }]
@@ -80,14 +80,25 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
     }
 
     // Process Condition Module data
-    let data: ConditionModuleData | null = null
+    let data: conditionModuleDataEntity = {
+      id: event.params.conditionModule,
+      depositFee: BigInt(0),
+
+      recipient: null,
+      tokenAddress: null,
+      tokenSymbol: null,
+      tokenName: null,
+      tokenDecimals: null
+    }
+
     const conditionModule = await context.ConditionModule.get(event.params.conditionModule)
     context.log.info(`Process ConditionModule data ${event.params.conditionModule} | ${conditionModule?.name}`)
 
     if (conditionModule?.name == 'RecipientEther') {
       const value = decodeAbiParameters(RecipientEtherDataParams, event.params.data as any) as any[]
       data = {
-        depositFee: value[0],
+        ...data,
+        depositFee: BigInt(value[0]),
         recipient: value[1],
       }
     }
@@ -95,7 +106,8 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
     if (conditionModule?.name == 'RecipientToken') {
       const value = decodeAbiParameters(RecipientTokenDataParams, event.params.data as any) as any[]
       data = {
-        depositFee: value[0],
+        ...data,
+        depositFee: BigInt(value[0]),
         tokenAddress: value[1],
         recipient: value[2],
       }
@@ -104,17 +116,60 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
     if (conditionModule?.name == 'SplitEther') {
       const value = decodeAbiParameters(SplitEtherDataParams, event.params.data as any) as any[]
       data = {
-        depositFee: value[0],
+        ...data,
+        depositFee: BigInt(value[0]),
       }
     }
 
     if (conditionModule?.name == 'SplitToken') {
       const value = decodeAbiParameters(SplitTokenDataParams, event.params.data as any) as any[]
       data = {
-        depositFee: value[0],
+        ...data,
+        depositFee: BigInt(value[0]),
         tokenAddress: value[1],
       }
     }
+
+    // Process Token Info
+    if (data?.tokenAddress) {
+      try {
+        const client = GetClient(chainId)
+        const name = await client.readContract({
+          address: data.tokenAddress as any,
+          abi: Erc20ABI,
+          functionName: "name",
+          args: []
+        }) as string
+
+        const symbol = await client.readContract({
+          address: data.tokenAddress as any,
+          abi: Erc20ABI,
+          functionName: "symbol",
+          args: []
+        }) as string
+
+        const decimals = await client.readContract({
+          address: data.tokenAddress as any,
+          abi: Erc20ABI,
+          functionName: "decimals",
+          args: []
+        }) as number
+
+
+        context.log.info(`Add Token Info: ${name} | ${symbol} | ${decimals}`)
+        data = {
+          ...data,
+          tokenName: name,
+          tokenSymbol: symbol,
+          tokenDecimals: decimals,
+        }
+      } catch (error) {
+        context.log.error(`Unable to fetch token info ${data.tokenAddress} | Record ${eventId}`)
+      }
+    }
+
+    // Add Condition Module Data
+    context.ConditionModuleData.set(data)
 
     // Add Owner ENS Profile
     const user = await GetEnsProfile(event.params.sender)
@@ -139,9 +194,7 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
       metadata: metadataId ?? null,
 
       conditionModule: event.params.conditionModule,
-      depositFee: BigInt(data?.depositFee?.toString() ?? 0),
-      tokenAddress: data?.tokenAddress ?? null,
-      recipient: data?.recipient ?? null,
+      conditionModuleData: data.id,
 
       totalRegistrations: BigInt(0),
       totalAttendees: BigInt(0),

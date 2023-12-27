@@ -28,9 +28,7 @@ type Record {
   metadata: Event
 
   conditionModule: ConditionModule!
-  depositFee: BigInt!
-  tokenAddress: Bytes
-  recipient: Bytes
+  conditionModuleData: ConditionModuleData!
 
   totalRegistrations: BigInt!
   totalAttendees: BigInt!
@@ -70,4 +68,15 @@ type Event {
   website: String
   imageUrl: String
   visibility: Int!
+}
+
+type ConditionModuleData {
+  id: ID! # Address
+  depositFee: BigInt!
+  recipient: Bytes
+
+  tokenAddress: Bytes
+  tokenSymbol: String
+  tokenName: String
+  tokenDecimals: Int
 }

@@ -19,6 +19,7 @@ contracts:
         requiredEntities:
           - name: Record
           - name: ConditionModule
+          - name: ConditionModuleData
       - event: Funded(uint256 indexed id, bytes data, address sender, uint256 timestamp)
         requiredEntities:
           - name: Record
