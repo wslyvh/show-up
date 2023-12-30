@@ -1,5 +1,4 @@
-import { GetRecord } from '@/services/protocol'
-import { CONFIG } from '@/utils/config'
+import { GetEventById } from '@/services/showhub'
 import { useQuery } from '@tanstack/react-query'
 
 interface Props {
@@ -8,8 +7,8 @@ interface Props {
 
 export function useEvent(props: Props) {
   const { data, isError, isPending } = useQuery({
-    queryKey: ['events', props.id, CONFIG.DEFAULT_CHAIN_ID],
-    queryFn: () => GetRecord(props.id, CONFIG.DEFAULT_CHAIN_ID),
+    queryKey: ['events', props.id],
+    queryFn: () => GetEventById(props.id),
   })
 
   return {

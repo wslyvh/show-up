@@ -1,18 +1,13 @@
 'use client'
 
 import React, { ChangeEvent, useState } from 'react'
-import { InformationCircleIcon } from '@heroicons/react/24/outline'
-import { useEventManagement } from '@/context/EventManagement'
-import { ConditionModuleData, ConditionModuleType, EventMetadata } from '@/utils/types'
-import { AddressZero, DefaultDepositFee, GetTokenDecimals, WHITELISTED_TOKENS } from '@/utils/network'
-import { formatUnits } from 'viem/utils'
-import { basicEtherAddress, basicTokenAddress } from '@/abis'
+import { CreateEventData, EventMetadata, Visibility } from '@/utils/types'
+import { DefaultDepositFee, WHITELISTED_TOKENS } from '@/utils/network'
 import { SelectBox } from '@/components/SelectBox'
 import { ImageUpload } from './ImageUpload'
 import { CONFIG } from '@/utils/config'
 import { Confirm } from './Confirm'
 import { InfoDrawer } from './Info'
-import NP from 'number-precision'
 import dayjs from 'dayjs'
 
 const defaultStartDate = dayjs().hour(10).minute(0).second(0).format('YYYY-MM-DDTHH:mm:ss')
@@ -20,7 +15,6 @@ const defaultEndDate = dayjs().hour(13).minute(0).second(0).format('YYYY-MM-DDTH
 
 export function CreateForm() {
   const floatRegExp = new RegExp('^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$')
-  const eventManagement = useEventManagement()
   const [event, setEvent] = useState<EventMetadata>({
     appId: CONFIG.DEFAULT_APP_ID,
     title: '',
@@ -30,18 +24,16 @@ export function CreateForm() {
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     location: '',
     website: '',
-    visibility: 'Public',
     imageUrl: '',
+    visibility: Visibility.Public,
     links: [],
     tags: [],
   })
-  const [conditions, setConditions] = useState<ConditionModuleData>({
-    type: ConditionModuleType.BasicEther,
-    address: (basicEtherAddress as any)[CONFIG.DEFAULT_CHAIN_ID],
-    endDate: '', // uses event.endDate as default
+  const [eventConditions, setEventConditions] = useState<CreateEventData>({
+    chainId: CONFIG.DEFAULT_CHAINS[0].id,
+    endDate: defaultEndDate,
+    limit: 0,
     depositFee: DefaultDepositFee,
-    maxParticipants: 0,
-    tokenAddress: AddressZero,
   })
   const [image, setImage] = useState<File>()
 
@@ -57,6 +49,19 @@ export function CreateForm() {
         [e.target.id]: e.target.value,
         end: dayjs(e.target.value).add(2, 'hour').format('YYYY-MM-DDTHH:mm:ss'),
       }))
+      setEventConditions((state) => ({
+        ...state,
+        endDate: dayjs(e.target.value).add(2, 'hour').format('YYYY-MM-DDTHH:mm:ss'),
+      }))
+
+      return
+    }
+
+    if (e.target.id === 'end') {
+      setEventConditions((state) => ({
+        ...state,
+        endDate: e.target.value,
+      }))
 
       return
     }
@@ -64,7 +69,7 @@ export function CreateForm() {
     if (e.target.id === 'public' || e.target.id === 'unlisted') {
       setEvent((state) => ({
         ...state,
-        visibility: e.target.value as 'Public' | 'Unlisted',
+        visibility: e.target.value === 'Public' ? Visibility.Public : Visibility.Unlisted,
       }))
 
       return
@@ -80,34 +85,53 @@ export function CreateForm() {
     if (!e.target.id) return
 
     if (e.target.id === 'depositFee' && floatRegExp.test(e.target.value)) {
-      setConditions((state) => ({
+      setEventConditions((state) => ({
         ...state,
-        [e.target.id]: NP.times(e.target.value, 10 ** GetTokenDecimals(conditions.tokenAddress)),
+        depositFee: Number(e.target.value),
       }))
 
       return
     }
 
-    setConditions((state) => ({
+    if (e.target.id === 'recipient') {
+      setEventConditions((state) => ({
+        ...state,
+        recipient: e.target.value,
+      }))
+
+      return
+    }
+
+    if (e.target.id === 'limit') {
+      setEventConditions((state) => ({
+        ...state,
+        limit: Number(e.target.value),
+      }))
+
+      return
+    }
+  }
+
+  function handleNetworkChange(value: string) {
+    setEventConditions((state) => ({
       ...state,
-      [e.target.id]: e.target.value,
+      chainId: Number(value),
     }))
   }
 
   function handleModuleChange(value: string) {
     if (value === 'Ether') {
-      return setConditions((state) => ({
+      setEventConditions((state) => ({
         ...state,
-        type: ConditionModuleType.BasicEther,
-        address: (basicEtherAddress as any)[CONFIG.DEFAULT_CHAIN_ID],
+        tokenAddress: '',
       }))
+      return
     }
 
-    setConditions((state) => ({
+    const token = WHITELISTED_TOKENS.find((i) => i.address === value)!!
+    setEventConditions((state) => ({
       ...state,
-      type: ConditionModuleType.BasicToken,
-      address: (basicTokenAddress as any)[CONFIG.DEFAULT_CHAIN_ID],
-      tokenAddress: value,
+      tokenAddress: token.address,
     }))
   }
 
@@ -117,13 +141,6 @@ export function CreateForm() {
 
   return (
     <div>
-      {eventManagement.message && (
-        <div className='alert alert-error text-sm py-2 px-4 mt-8'>
-          <InformationCircleIcon className='h-6 w-6 text-error-400' />
-          <span>{eventManagement.message}</span>
-        </div>
-      )}
-
       <form className='relative my-4'>
         {/* Event Metadata */}
         <>
@@ -254,7 +271,7 @@ export function CreateForm() {
                   type='radio'
                   value='Public'
                   id='public'
-                  checked={event.visibility === 'Public'}
+                  checked={event.visibility === Visibility.Public}
                   onChange={handleEventChange}
                 />
 
@@ -269,7 +286,7 @@ export function CreateForm() {
                   type='radio'
                   value='Unlisted'
                   id='unlisted'
-                  checked={event.visibility === 'Unlisted'}
+                  checked={event.visibility === Visibility.Unlisted}
                   onChange={handleEventChange}
                 />
                 <label className='label' htmlFor='unlisted'>
@@ -280,10 +297,35 @@ export function CreateForm() {
           </div>
         </>
 
+        {/* Image Upload */}
+        <div className='divider divider-start mt-8'>Cover Image</div>
+        <>
+          <div className='form-control w-full'>
+            <ImageUpload onUpload={handleFileUpload} />
+          </div>
+        </>
+
         {/* Condition Modules */}
         <div className='divider divider-start mt-8'>Conditions</div>
-
         <>
+          <div className='form-control w-full'>
+            <label className='label' htmlFor='network'>
+              <span className='label-text'>Network</span>
+            </label>
+            <select
+              id='currency'
+              className='select select-bordered select-sm'
+              onChange={(e) => handleNetworkChange(e.target.value)}
+              value={eventConditions.chainId}
+              required>
+              {CONFIG.DEFAULT_CHAINS.map((chain) => (
+                <option key={chain.id} value={chain.id}>
+                  {chain.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className='form-control w-full'>
             <label className='label' htmlFor='title'>
               <span className='label-text'>
@@ -296,10 +338,10 @@ export function CreateForm() {
                 id='currency'
                 className='select select-bordered select-sm w-32'
                 onChange={(e) => handleModuleChange(e.target.value)}
-                value={conditions.tokenAddress ? conditions.tokenAddress : ''}
+                value={eventConditions.tokenAddress ?? ''}
                 required>
-                <option value=''>Ether</option>
-                {WHITELISTED_TOKENS.filter((i) => i.chainId === CONFIG.DEFAULT_CHAIN_ID).map((token) => (
+                <option value='Ether'>Ether</option>
+                {WHITELISTED_TOKENS.filter((i) => i.chainId === eventConditions.chainId).map((token) => (
                   <option key={token.address} value={token.address}>
                     {token.symbol}
                   </option>
@@ -312,42 +354,50 @@ export function CreateForm() {
                 max='1000.00'
                 required
                 className='input input-sm input-bordered w-full'
-                value={formatUnits(conditions.depositFee, 18) || 0}
+                value={eventConditions.depositFee}
                 onChange={handleConditionChange}
               />
             </div>
           </div>
 
           <div className='form-control w-full'>
-            <label className='label' htmlFor='maxParticipants'>
+            <label className='label' htmlFor='limit'>
               <span className='label-text'>Max. participants</span>
             </label>
             <input
-              id='maxParticipants'
+              id='limit'
               type='number'
               min='0'
               step='10'
               required
               className='input input-sm input-bordered w-full'
-              value={conditions.maxParticipants || 0}
+              value={eventConditions.limit || 0}
               onChange={handleConditionChange}
             />
           </div>
-        </>
 
-        {/* Image Upload */}
-        <>
           <div className='form-control w-full'>
-            <label className='label' htmlFor='timezone'>
-              <span className='label-text'>Cover Image</span>
+            <label className='label' htmlFor='recipient'>
+              <span className='label-text'>
+                Recipient of no-show fees
+                <span className='text-xs'> (Leave empty to split the pot between all participants)</span>
+              </span>
             </label>
-            <ImageUpload onUpload={handleFileUpload} />
+            <input
+              id='recipient'
+              type='text'
+              required
+              className='input input-sm input-bordered w-full'
+              placeholder='Address of the recipient'
+              value={eventConditions.recipient || ''}
+              onChange={handleConditionChange}
+            />
           </div>
         </>
       </form>
 
       <div className='flex justify-end mt-4'>
-        <Confirm event={event} conditions={conditions} image={image} />
+        <Confirm event={event} conditions={eventConditions} image={image} />
       </div>
     </div>
   )

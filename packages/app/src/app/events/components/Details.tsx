@@ -2,19 +2,18 @@
 
 import { DateCard } from '@/components/Date'
 import { BanknotesIcon, CalendarDaysIcon, CheckBadgeIcon, MapPinIcon, UserIcon } from '@heroicons/react/24/outline'
-import Image from 'next/image'
-import { ConditionModuleType } from '@/utils/types'
-import dayjs from 'dayjs'
 import { formatEther, formatUnits } from 'viem/utils'
 import { LinkComponent } from '@/components/LinkComponent'
 import { AdminActions } from './Admin/Actions'
 import { Register } from './Register'
 import { useEventData } from '@/context/EventData'
-import { GetTokenDecimals, GetTokenSymbol } from '@/utils/network'
 import { CONFIG } from '@/utils/config'
 import { useAccount } from 'wagmi'
 import { usePathname } from 'next/navigation'
 import { marked } from 'marked'
+import Image from 'next/image'
+import dayjs from 'dayjs'
+import makeBlockie from 'ethereum-blockies-base64'
 
 export function EventDetails() {
   const pathname = usePathname()
@@ -22,12 +21,13 @@ export function EventDetails() {
   const eventData = useEventData()
   const record = eventData.record
   const event = eventData.event
+  const chain = CONFIG.DEFAULT_CHAINS.find((i) => i.id === record.chainId)
 
   function registerButtonText() {
     if (eventData.isCancelled) return 'Event is cancelled'
     if (!eventData.isActive || eventData.hasEnded) return 'Event has ended'
     if (eventData.isParticipant) return 'Already registered'
-    if (!eventData.hasBalance) return `Insufficient ${record.condition.tokenSymbol ?? 'ETH'} balance`
+    if (!eventData.hasBalance) return `Insufficient ${record.conditionModuleData.tokenSymbol ?? 'ETH'} balance`
 
     return 'Register'
   }
@@ -60,8 +60,8 @@ export function EventDetails() {
               <CheckBadgeIcon className='h-5 w-5 text-info shrink-0' />
               <LinkComponent
                 className='underline truncate hover:text-white'
-                href={`${CONFIG.DEFAULT_CHAIN.blockExplorers?.default.url}/address/${record.createdBy}`}>
-                {record.creatorProfile.name}
+                href={`${chain?.blockExplorers?.default.url}/address/${record.createdBy}`}>
+                {record.owner.name}
               </LinkComponent>
             </p>
 
@@ -81,28 +81,24 @@ export function EventDetails() {
               {!event.location.startsWith('https://') && event.location}
             </p>
             <p className='flex flex-row items-center gap-2'>
-              <UserIcon className='h-5 w-5 text-info shrink-0' /> {record.participants.length} going
+              <UserIcon className='h-5 w-5 text-info shrink-0' /> {record.registrations.length} going
               <span> · </span>
               <span className='text-accent'>
-                {record.condition?.maxParticipants > 0 ? (
-                  <>{record.condition?.maxParticipants - record.participants.length} left</>
-                ) : (
-                  'unlimited'
-                )}
+                {record.limit > 0 ? <>{record.limit - record.registrations.length} left</> : 'unlimited'}
               </span>
             </p>
             <p className='flex flex-row items-center gap-2'>
               <BanknotesIcon className='h-5 w-5 text-info shrink-0' />
-              {record.condition.type == ConditionModuleType.BasicEther && (
-                <>{formatEther(record.condition.depositFee)} ETH</>
+              {!record.conditionModuleData.tokenAddress && (
+                <>{formatEther(BigInt(record.conditionModuleData.depositFee))} ETH</>
               )}
-              {record.condition.type == ConditionModuleType.BasicToken && (
+              {record.conditionModuleData.tokenAddress && (
                 <>
                   {formatUnits(
-                    record.condition.depositFee,
-                    record.condition.tokenDecimals ?? GetTokenDecimals(record.condition.tokenAddress)
+                    BigInt(record.conditionModuleData.depositFee),
+                    record.conditionModuleData.tokenDecimals ?? 18
                   )}{' '}
-                  {GetTokenSymbol(record.condition.tokenAddress)}
+                  {record.conditionModuleData.tokenSymbol}
                 </>
               )}
             </p>
@@ -147,24 +143,24 @@ export function EventDetails() {
         </div>
       </div>
 
-      {record.participants.length > 0 && (
+      {record.registrations.length > 0 && (
         <div>
           <h2 className='text-xl text-white font-bold mt-8'>Attendees</h2>
 
           <div className='flex flex-row flex-wrap gap-8 mt-8'>
-            {record.participants.map((participant) => {
+            {record.registrations.map((i) => {
               return (
-                <div key={participant.address} className='w-24 text-center grow'>
+                <div key={i.id} className='w-24 text-center grow'>
                   <div className='avatar shrink-0'>
                     <div
                       className={`w-20 rounded-full ${
-                        participant.checkedIn ? 'ring ring-success ring-offset-base-100 ring-offset-2' : ''
+                        i.participated ? 'ring ring-success ring-offset-base-100 ring-offset-2' : ''
                       }`}>
-                      <img src={participant.profile.avatar} alt={participant.address} />
+                      <img src={i.avatar ?? makeBlockie(i.id)} alt={i.id} />
                     </div>
                   </div>
 
-                  <p className='text-xs mt-2'>{participant.profile.name}</p>
+                  <p className='text-xs mt-2'>{i.name}</p>
                 </div>
               )
             })}

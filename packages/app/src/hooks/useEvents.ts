@@ -1,13 +1,12 @@
-import { GetRecords } from '@/services/protocol'
 import { useQuery } from '@tanstack/react-query'
 import { Status } from '@/utils/types'
-import { CONFIG } from '@/utils/config'
+import { GetEventsByOwner, GetPastEvents, GetUpcomingEvents } from '@/services/showhub'
 
 export function useEvents(past: boolean = false) {
   const params = past ? { past: true } : { status: Status.Active, past: false }
   const { data, isError, isPending } = useQuery({
-    queryKey: ['events', CONFIG.DEFAULT_CHAIN_ID, past ? 'past' : 'upcoming'],
-    queryFn: () => GetRecords(params, CONFIG.DEFAULT_CHAIN_ID),
+    queryKey: ['events', past ? 'past' : 'upcoming'],
+    queryFn: () => (past ? GetPastEvents() : GetUpcomingEvents()),
   })
 
   return {
@@ -19,8 +18,8 @@ export function useEvents(past: boolean = false) {
 
 export function useMyEvents(address: string) {
   const { data, isError, isPending } = useQuery({
-    queryKey: ['events', CONFIG.DEFAULT_CHAIN_ID, address],
-    queryFn: () => GetRecords({ createdBy: address }, CONFIG.DEFAULT_CHAIN_ID),
+    queryKey: ['events', address],
+    queryFn: () => GetEventsByOwner(address),
   })
 
   return {

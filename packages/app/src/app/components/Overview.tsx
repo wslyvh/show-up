@@ -10,9 +10,9 @@ export function Overview() {
   const router = useRouter()
   const pathname = usePathname()
   const pastEvents = pathname === '/past'
-  const events = useEvents(pastEvents)
+  let { data, isError } = useEvents(pastEvents)
 
-  if (events.isError || !events.data) return <Empty text={`No events found`} />
+  if (!data || isError) return <Empty text={`No events found`} />
 
   const onSelect = (option: string) => {
     if (option === 'Upcoming') router.push('/')
@@ -26,7 +26,7 @@ export function Overview() {
       </div>
 
       <div className='flex flex-col gap-2'>
-        {events.data.map((event) => (
+        {data.map((event) => (
           <Card key={event.id} event={event} />
         ))}
       </div>

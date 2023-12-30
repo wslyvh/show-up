@@ -7,8 +7,8 @@ export enum Status {
     Settled = 2,
 }
 
-export const defaultContentUri = 'ipfs://bafkreifaa2qgrp2vbiyoz3uido6bgblw4risehacnoujqhpkodeawhfo4e'
-export const defaultDepositFee = ethers.utils.parseUnits('0.02', 18) // 0.02 ether
+export const defaultContentUri = 'ipfs://bafkreiacvvoznsgbabpj6cz27iratlwp7kdsyu7buiaenzzaemxqbwolvm'
+export const defaultDepositFee = ethers.utils.parseUnits('0.01', 18) // 0.02 ether
 export const defaultTokenDepositFee = ethers.utils.parseUnits('10', 18) // 10 tokens
 export const defaultFundFee = ethers.utils.parseUnits('1', 18) // 1 ether
 export const defaultTokenFee = BigNumber.from('2000000000000000000') // 2 ether
@@ -25,7 +25,7 @@ export const eventMetadata = {
     timezone: "Europe/Amsterdam",
     location: "0xOnline",
     website: "https://www.showup.events/",
-    imageUrl: "ipfs://bafkreif2a4fjasfh63j65g3u5ami4ras4ce2vxzs3zncdusy43it4qxgba",
+    imageUrl: "ipfs://bafybeick4wvngyahuhaw5qbwzfs2m7opmptj2cgypvjpho2o225o5tzhxa",
     links: [],
     tags: []
 }

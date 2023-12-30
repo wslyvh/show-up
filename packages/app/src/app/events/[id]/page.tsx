@@ -1,8 +1,7 @@
-import { GetRecord } from '@/services/protocol'
+import { GetAllEvents, GetEventById } from '@/services/showhub'
 import { EventDetails } from '../components/Details'
 import EventDataProvider from '@/context/EventData'
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query'
-import { CONFIG } from '@/utils/config'
 import { SITE_NAME, SITE_URL } from '@/utils/site'
 
 interface Params {
@@ -10,8 +9,16 @@ interface Params {
   searchParams: { [key: string]: string | string[] | undefined }
 }
 
+export async function generateStaticParams() {
+  const events = await GetAllEvents()
+
+  return events.map((i) => ({
+    id: i.id,
+  }))
+}
+
 export async function generateMetadata({ params }: Params) {
-  const event = await GetRecord(params.id, CONFIG.DEFAULT_CHAIN_ID)
+  const event = await GetEventById(params.id)
   if (!event?.metadata) return {}
 
   const baseUri = new URL(`${SITE_URL}/events/${params.id}`)
@@ -36,8 +43,8 @@ export default async function EventsPage({ params }: Params) {
   const queryClient = new QueryClient()
 
   await queryClient.prefetchQuery({
-    queryKey: ['events', params.id, CONFIG.DEFAULT_CHAIN_ID],
-    queryFn: () => GetRecord(params.id, CONFIG.DEFAULT_CHAIN_ID),
+    queryKey: ['events', params.id],
+    queryFn: () => GetEventById(params.id),
   })
 
   return (

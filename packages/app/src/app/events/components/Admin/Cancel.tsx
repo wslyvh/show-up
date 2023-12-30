@@ -1,6 +1,5 @@
 import { ActionDrawer } from '@/components/ActionDrawer'
 import { useEventData } from '@/context/EventData'
-import { useEventManagement } from '@/context/EventManagement'
 import { useState } from 'react'
 
 interface Props {
@@ -8,7 +7,6 @@ interface Props {
 }
 
 export function Cancel(props: Props) {
-  const eventManagement = useEventManagement()
   const eventData = useEventData()
   const [reason, setReason] = useState('')
   const actionButton = (
@@ -41,7 +39,7 @@ export function Cancel(props: Props) {
         </div>
 
         <div className='flex flex-col justify-end gap-4 mt-4'>
-          <button
+          {/* <button
             type='button'
             disabled={eventManagement.loading || !eventData.canCancel}
             onClick={() => eventManagement.Cancel(props.id, reason)}
@@ -53,7 +51,7 @@ export function Cancel(props: Props) {
               </>
             )}
             {!eventManagement.loading && <>Cancel Event</>}
-          </button>
+          </button> */}
         </div>
       </div>
     </ActionDrawer>

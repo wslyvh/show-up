@@ -4,7 +4,7 @@ import { LinkComponent } from './LinkComponent'
 import { SITE_URL } from '@/utils/site'
 
 export function TestnetAlert() {
-  if (CONFIG.DEFAULT_CHAIN_ID === 11155111) {
+  if (CONFIG.NETWORK_ENV === 'test') {
     return (
       <div className='alert shadow-lg'>
         <svg

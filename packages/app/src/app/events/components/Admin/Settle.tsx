@@ -1,13 +1,11 @@
 import { ActionDrawer } from '@/components/ActionDrawer'
 import { useEventData } from '@/context/EventData'
-import { useEventManagement } from '@/context/EventManagement'
 
 interface Props {
   id: string
 }
 
 export function Settle(props: Props) {
-  const eventManagement = useEventManagement()
   const eventData = useEventData()
   const actionButton = (
     <button type='button' className='btn btn-accent btn-outline btn-sm w-full'>
@@ -25,7 +23,7 @@ export function Settle(props: Props) {
         </div>
 
         <div className='flex flex-col justify-end gap-4 mt-4'>
-          <button
+          {/* <button
             type='button'
             disabled={eventManagement.loading || !eventData.canSettle}
             onClick={() => eventManagement.Settle(props.id)}
@@ -37,7 +35,7 @@ export function Settle(props: Props) {
               </>
             )}
             {!eventManagement.loading && <>Settle Event</>}
-          </button>
+          </button> */}
         </div>
       </div>
     </ActionDrawer>

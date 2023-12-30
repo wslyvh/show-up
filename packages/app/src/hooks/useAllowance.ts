@@ -9,7 +9,6 @@ export function useAllowance(owner: string, spender: string, tokenAddress: strin
     isLoading,
     isError,
   } = useContractRead({
-    chainId: CONFIG.DEFAULT_CHAIN_ID,
     address: tokenAddress,
     abi: erc20ABI,
     functionName: 'allowance',

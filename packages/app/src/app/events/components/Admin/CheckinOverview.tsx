@@ -4,12 +4,11 @@ import { useState } from 'react'
 import { useEventData } from '@/context/EventData'
 import { useAccount } from 'wagmi'
 import dayjs from 'dayjs'
-import { Participant } from '@/utils/types'
 import { ActionDrawer } from '@/components/ActionDrawer'
-import { useEventManagement } from '@/context/EventManagement'
+import { Registration } from '@/utils/types'
+import makeBlockie from 'ethereum-blockies-base64'
 
 export function CheckinOverview() {
-  const eventManagement = useEventManagement()
   const eventData = useEventData()
   const record = eventData.record
   const event = eventData.event
@@ -17,26 +16,26 @@ export function CheckinOverview() {
 
   if (!eventData.isAdmin) return <>Not connected</>
 
-  function onParticipantChange(participant: Participant) {
-    if (participant.checkedIn) return
+  function onParticipantChange(registration: Registration) {
+    if (registration.participated) return
 
     const newCheckins = [...checkins]
-    if (newCheckins.includes(participant.address)) {
-      newCheckins.splice(newCheckins.indexOf(participant.address), 1)
+    if (newCheckins.includes(registration.id)) {
+      newCheckins.splice(newCheckins.indexOf(registration.id), 1)
     } else {
-      newCheckins.push(participant.address)
+      newCheckins.push(registration.id)
     }
     setCheckins(newCheckins)
   }
 
   function toggleAllParticipants() {
     const newCheckins = [...checkins]
-    if (newCheckins.length == record.participants.length) {
+    if (newCheckins.length == record.registrations.length) {
       newCheckins.length = 0
     } else {
       newCheckins.length = 0
-      record.participants.forEach((participant) => {
-        if (!participant.checkedIn) newCheckins.push(participant.address)
+      record.registrations.forEach((i) => {
+        if (!i.participated) newCheckins.push(i.id)
       })
     }
     setCheckins(newCheckins)
@@ -62,24 +61,24 @@ export function CheckinOverview() {
                   type='checkbox'
                   className='checkbox'
                   onClick={toggleAllParticipants}
-                  disabled={record.participants.filter((i) => i.checkedIn).length == record.participants.length}
+                  disabled={record.registrations.filter((i) => i.participated).length == record.registrations.length}
                 />
               </th>
               <th>Name</th>
-              <th className='min-w-[8rem]'>Registered</th>
+              {/* <th className='min-w-[8rem]'>Registered</th> */}
             </tr>
           </thead>
           <tbody>
-            {record.participants.map((participant) => {
+            {record.registrations.map((i) => {
               return (
-                <tr key={participant.address} className='hover' onClick={() => onParticipantChange(participant)}>
+                <tr key={i.id} className='hover' onClick={() => onParticipantChange(i)}>
                   <th>
                     <label>
                       <input
                         type='checkbox'
                         className='checkbox'
-                        disabled={participant.checkedIn}
-                        checked={participant.checkedIn || checkins.includes(participant.address)}
+                        disabled={i.participated}
+                        checked={i.participated || checkins.includes(i.id)}
                         readOnly
                       />
                     </label>
@@ -88,16 +87,16 @@ export function CheckinOverview() {
                     <div className='flex items-center gap-3'>
                       <div className='avatar'>
                         <div className='w-8 rounded-full'>
-                          <img src={participant.profile.avatar} alt={participant.address} />
+                          <img src={i.avatar ?? makeBlockie(i.id)} alt={i.id} />
                         </div>
                       </div>
                       <div>
-                        <div className='font-bold'>{participant.profile.name}</div>
-                        <div className='text-xs opacity-50'>{participant.profile.address}</div>
+                        <div className='font-bold'>{i.name}</div>
+                        <div className='text-xs opacity-50'>{i.id}</div>
                       </div>
                     </div>
                   </td>
-                  <td className='text-xs'>{dayjs(participant.createdAt).format('ddd MMM DD · HH:mm')}</td>
+                  {/* <td className='text-xs'>{dayjs(i.createdAt).format('ddd MMM DD · HH:mm')}</td> */}
                 </tr>
               )
             })}
@@ -132,7 +131,7 @@ export function CheckinOverview() {
             </div>
 
             <div>
-              <button
+              {/* <button
                 type='button'
                 disabled={eventManagement.loading || checkins.length == 0}
                 onClick={() => eventManagement.Checkin(record.id, checkins)}
@@ -144,7 +143,7 @@ export function CheckinOverview() {
                   </>
                 )}
                 {!eventManagement.loading && <>Check-in Attendees</>}
-              </button>
+              </button> */}
             </div>
           </div>
         </ActionDrawer>

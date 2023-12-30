@@ -3,12 +3,10 @@
 import { ActionDrawer } from '@/components/ActionDrawer'
 import { LinkComponent } from '@/components/LinkComponent'
 import { useEventData } from '@/context/EventData'
-import { useEventManagement } from '@/context/EventManagement'
 import { useAllowance } from '@/hooks/useAllowance'
 import { CONFIG } from '@/utils/config'
 import { TruncateMiddle } from '@/utils/format'
-import { GetTokenDecimals, GetTokenSymbol } from '@/utils/network'
-import { ConditionModuleType, Record } from '@/utils/types'
+import { Record } from '@/utils/types'
 import { formatUnits } from 'viem/utils'
 import { useAccount } from 'wagmi'
 
@@ -19,10 +17,14 @@ interface Props {
 }
 
 export function Register(props: Props) {
-  const eventManagement = useEventManagement()
   const eventData = useEventData()
   const { address } = useAccount()
-  const { allowance, refetch } = useAllowance(address, props.event.conditionModule, props.event.condition.tokenAddress)
+  const { allowance, refetch } = useAllowance(
+    address,
+    props.event.conditionModuleId,
+    props.event.conditionModuleData.tokenAddress
+  )
+  const chain = CONFIG.DEFAULT_CHAINS.find((i) => i.id === props.event.chainId)
   const actionButton = (
     <button type='button' disabled={props.disabled} className='btn btn-accent btn-outline btn-sm w-full'>
       {props.buttonText}
@@ -30,12 +32,12 @@ export function Register(props: Props) {
   )
 
   async function approve() {
-    eventManagement.ApproveToken(
-      props.event.conditionModule,
-      props.event.condition.tokenAddress!,
-      props.event.condition.depositFee
-    )
-    await refetch()
+    // eventManagement.ApproveToken(
+    //   props.event.conditionModuleId,
+    //   props.event.conditionModuleData.tokenAddress!,
+    //   BigInt(props.event.conditionModuleData.depositFee)
+    // )
+    // await refetch()
   }
 
   return (
@@ -52,7 +54,7 @@ export function Register(props: Props) {
               <span>
                 <LinkComponent
                   className='underline'
-                  href={`${CONFIG.DEFAULT_CHAIN.blockExplorers?.default.url}/address/${props.event.createdBy}`}>
+                  href={`${chain?.blockExplorers?.default.url}/address/${props.event.createdBy}`}>
                   {TruncateMiddle(props.event.createdBy)}
                 </LinkComponent>
               </span>
@@ -60,21 +62,24 @@ export function Register(props: Props) {
             <div className='flex items-center justify-between py-2'>
               <span>Available Spots</span>
               <span>
-                {props.event.participants.length}
+                {props.event.registrations.length}
                 {' / '}
-                {props.event.condition.maxParticipants > 0 ? props.event.condition.maxParticipants : 'unlimited'}
+                {props.event.limit > 0 ? props.event.limit : 'unlimited'}
               </span>
             </div>
             <div className='flex items-center justify-between py-2'>
               <span>Deposit Fee</span>
               <span>
-                {formatUnits(props.event.condition.depositFee, GetTokenDecimals(props.event.condition.tokenAddress))}{' '}
-                {GetTokenSymbol(props.event.condition.tokenAddress)}
+                {formatUnits(
+                  BigInt(props.event.conditionModuleData.depositFee),
+                  props.event.conditionModuleData.tokenDecimals ?? 18
+                )}{' '}
+                {props.event.conditionModuleData.tokenSymbol}
               </span>
             </div>
             <div className='flex items-center justify-between py-2'>
               <span>Current Allowance</span>
-              <span>{formatUnits(allowance ?? 0, GetTokenDecimals(props.event.condition.tokenAddress))}</span>
+              <span>{formatUnits(allowance ?? 0, props.event.conditionModuleData.tokenDecimals ?? 18)}</span>
             </div>
             <p className='pt-4'>* Your deposit will be returned if you check in or if the event is cancelled.</p>
           </div>
@@ -87,17 +92,21 @@ export function Register(props: Props) {
             </button>
           )}
 
-          {allowance < props.event.condition.depositFee &&
-            props.event.condition.type == ConditionModuleType.BasicToken &&
+          {allowance < BigInt(props.event.conditionModuleData.depositFee) &&
+            (props.event.conditionModule.name == 'RecipientToken' ||
+              props.event.conditionModule.name == 'SplitToken') &&
             !eventData.isParticipant && (
               <>
                 <p>
                   You need to approve the contract first to spend{' '}
-                  {formatUnits(props.event.condition.depositFee, props.event.condition.tokenDecimals ?? 18)}{' '}
-                  {GetTokenSymbol(props.event.condition.tokenAddress)}. You can register for the event after.
+                  {formatUnits(
+                    BigInt(props.event.conditionModuleData.depositFee),
+                    props.event.conditionModuleData.tokenDecimals ?? 18
+                  )}{' '}
+                  {props.event.conditionModuleData.tokenSymbol}. You can register for the event after.
                 </p>
 
-                <button
+                {/* <button
                   type='button'
                   disabled={eventManagement.loading}
                   onClick={approve}
@@ -109,26 +118,29 @@ export function Register(props: Props) {
                     </>
                   )}
                   {!eventManagement.loading && <>Approve</>}
-                </button>
+                </button> */}
               </>
             )}
 
-          {(allowance >= props.event.condition.depositFee ||
-            props.event.condition.type == ConditionModuleType.BasicEther) &&
+          {allowance >= BigInt(props.event.conditionModuleData.depositFee) &&
+            (props.event.conditionModule.name == 'RecipientEther' ||
+              props.event.conditionModule.name == 'SplitEther') &&
             !eventData.isParticipant && (
-              <button
-                type='button'
-                disabled={eventManagement.loading || eventData.isParticipant}
-                onClick={() => eventManagement.Register(props.event.id, props.event.condition, address)}
-                className='btn btn-accent btn-sm w-full'>
-                {eventManagement.loading && (
-                  <>
-                    Loading
-                    <span className='loading loading-spinner h-4 w-4' />
-                  </>
-                )}
-                {!eventManagement.loading && <>Register</>}
-              </button>
+              <>Register</>
+              // <button
+              //   type='button'
+              //   disabled={eventManagement.loading || eventData.isParticipant}
+              //   // onClick={() => eventManagement.Register(props.event.id, props.event.condition, address)}
+              //   onClick={() => console.log('Register for event')}
+              //   className='btn btn-accent btn-sm w-full'>
+              //   {eventManagement.loading && (
+              //     <>
+              //       Loading
+              //       <span className='loading loading-spinner h-4 w-4' />
+              //     </>
+              //   )}
+              //   {!eventManagement.loading && <>Register</>}
+              // </button>
             )}
         </div>
       </div>

@@ -13,534 +13,6 @@ import {
 } from 'wagmi/actions'
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// AbstractBasicModule
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const abstractBasicModuleABI = [
-  {
-    stateMutability: 'nonpayable',
-    type: 'constructor',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-  },
-  { type: 'error', inputs: [], name: 'AlreadyRegistered' },
-  { type: 'error', inputs: [], name: 'AlreadyStarted' },
-  { type: 'error', inputs: [], name: 'InvalidDate' },
-  { type: 'error', inputs: [], name: 'LimitReached' },
-  { type: 'error', inputs: [], name: 'NoAttendees' },
-  { type: 'error', inputs: [{ name: 'owner', internalType: 'address', type: 'address' }], name: 'OwnableInvalidOwner' },
-  {
-    type: 'error',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'OwnableUnauthorizedAccount',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'previousOwner', internalType: 'address', type: 'address', indexed: true },
-      { name: 'newOwner', internalType: 'address', type: 'address', indexed: true },
-    ],
-    name: 'OwnershipTransferred',
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'cancel',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
-      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'checkin',
-    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'recordId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getAttendees',
-    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'recordId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getConditions',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct AbstractBasicModule.Conditions',
-        type: 'tuple',
-        components: [
-          { name: 'owner', internalType: 'address', type: 'address' },
-          { name: 'endDate', internalType: 'uint256', type: 'uint256' },
-          { name: 'depositFee', internalType: 'uint256', type: 'uint256' },
-          { name: 'maxParticipants', internalType: 'uint256', type: 'uint256' },
-          { name: 'tokenAddress', internalType: 'address', type: 'address' },
-        ],
-      },
-    ],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'recordId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getRegistrationInfo',
-    outputs: [
-      { name: 'totalDepositAmount', internalType: 'uint256', type: 'uint256' },
-      { name: 'totalRegistrations', internalType: 'uint256', type: 'uint256' },
-      { name: 'totalAttendees', internalType: 'uint256', type: 'uint256' },
-    ],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'recordId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getRegistrations',
-    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'initialize',
-    outputs: [],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
-      { name: 'participant', internalType: 'address', type: 'address' },
-    ],
-    name: 'isRegistered',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'name',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'owner',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-  },
-  {
-    stateMutability: 'payable',
-    type: 'function',
-    inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
-      { name: 'participant', internalType: 'address', type: 'address' },
-      { name: 'sender', internalType: 'address', type: 'address' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'register',
-    outputs: [],
-  },
-  { stateMutability: 'nonpayable', type: 'function', inputs: [], name: 'renounceOwnership', outputs: [] },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'settle',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
-    name: 'transferOwnership',
-    outputs: [],
-  },
-] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// BasicEther
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x33FF944E8504B674835A5BEd88f10f11bEC92c2c)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x33FF944E8504B674835A5BEd88f10f11bEC92c2c)
- */
-export const basicEtherABI = [
-  {
-    stateMutability: 'nonpayable',
-    type: 'constructor',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-  },
-  { type: 'error', inputs: [], name: 'AlreadyRegistered' },
-  { type: 'error', inputs: [], name: 'AlreadyStarted' },
-  { type: 'error', inputs: [], name: 'IncorrectValue' },
-  { type: 'error', inputs: [], name: 'InvalidAddress' },
-  { type: 'error', inputs: [], name: 'InvalidDate' },
-  { type: 'error', inputs: [], name: 'LimitReached' },
-  { type: 'error', inputs: [], name: 'NoAttendees' },
-  { type: 'error', inputs: [{ name: 'owner', internalType: 'address', type: 'address' }], name: 'OwnableInvalidOwner' },
-  {
-    type: 'error',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'OwnableUnauthorizedAccount',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'previousOwner', internalType: 'address', type: 'address', indexed: true },
-      { name: 'newOwner', internalType: 'address', type: 'address', indexed: true },
-    ],
-    name: 'OwnershipTransferred',
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'cancel',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
-      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'checkin',
-    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'recordId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getAttendees',
-    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'recordId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getConditions',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct AbstractBasicModule.Conditions',
-        type: 'tuple',
-        components: [
-          { name: 'owner', internalType: 'address', type: 'address' },
-          { name: 'endDate', internalType: 'uint256', type: 'uint256' },
-          { name: 'depositFee', internalType: 'uint256', type: 'uint256' },
-          { name: 'maxParticipants', internalType: 'uint256', type: 'uint256' },
-          { name: 'tokenAddress', internalType: 'address', type: 'address' },
-        ],
-      },
-    ],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'recordId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getRegistrationInfo',
-    outputs: [
-      { name: 'totalDepositAmount', internalType: 'uint256', type: 'uint256' },
-      { name: 'totalRegistrations', internalType: 'uint256', type: 'uint256' },
-      { name: 'totalAttendees', internalType: 'uint256', type: 'uint256' },
-    ],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'recordId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getRegistrations',
-    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'initialize',
-    outputs: [],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
-      { name: 'participant', internalType: 'address', type: 'address' },
-    ],
-    name: 'isRegistered',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'name',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'owner',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-  },
-  {
-    stateMutability: 'payable',
-    type: 'function',
-    inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
-      { name: 'participant', internalType: 'address', type: 'address' },
-      { name: 'sender', internalType: 'address', type: 'address' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'register',
-    outputs: [],
-  },
-  { stateMutability: 'nonpayable', type: 'function', inputs: [], name: 'renounceOwnership', outputs: [] },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'settle',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
-    name: 'transferOwnership',
-    outputs: [],
-  },
-] as const
-
-/**
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x33FF944E8504B674835A5BEd88f10f11bEC92c2c)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x33FF944E8504B674835A5BEd88f10f11bEC92c2c)
- */
-export const basicEtherAddress = {
-  10: '0x33FF944E8504B674835A5BEd88f10f11bEC92c2c',
-  11155111: '0x33FF944E8504B674835A5BEd88f10f11bEC92c2c',
-} as const
-
-/**
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x33FF944E8504B674835A5BEd88f10f11bEC92c2c)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x33FF944E8504B674835A5BEd88f10f11bEC92c2c)
- */
-export const basicEtherConfig = { address: basicEtherAddress, abi: basicEtherABI } as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// BasicToken
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x33132fE88fe8316881474b551CA2DDD277A320a0)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x33132fE88fe8316881474b551CA2DDD277A320a0)
- */
-export const basicTokenABI = [
-  {
-    stateMutability: 'nonpayable',
-    type: 'constructor',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-  },
-  { type: 'error', inputs: [], name: 'AlreadyRegistered' },
-  { type: 'error', inputs: [], name: 'AlreadyStarted' },
-  { type: 'error', inputs: [], name: 'IncorrectValue' },
-  { type: 'error', inputs: [], name: 'InvalidAddress' },
-  { type: 'error', inputs: [], name: 'InvalidDate' },
-  { type: 'error', inputs: [], name: 'LimitReached' },
-  { type: 'error', inputs: [], name: 'NoAttendees' },
-  { type: 'error', inputs: [{ name: 'owner', internalType: 'address', type: 'address' }], name: 'OwnableInvalidOwner' },
-  {
-    type: 'error',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'OwnableUnauthorizedAccount',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'previousOwner', internalType: 'address', type: 'address', indexed: true },
-      { name: 'newOwner', internalType: 'address', type: 'address', indexed: true },
-    ],
-    name: 'OwnershipTransferred',
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'cancel',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
-      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'checkin',
-    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'recordId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getAttendees',
-    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'recordId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getConditions',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct AbstractBasicModule.Conditions',
-        type: 'tuple',
-        components: [
-          { name: 'owner', internalType: 'address', type: 'address' },
-          { name: 'endDate', internalType: 'uint256', type: 'uint256' },
-          { name: 'depositFee', internalType: 'uint256', type: 'uint256' },
-          { name: 'maxParticipants', internalType: 'uint256', type: 'uint256' },
-          { name: 'tokenAddress', internalType: 'address', type: 'address' },
-        ],
-      },
-    ],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'recordId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getRegistrationInfo',
-    outputs: [
-      { name: 'totalDepositAmount', internalType: 'uint256', type: 'uint256' },
-      { name: 'totalRegistrations', internalType: 'uint256', type: 'uint256' },
-      { name: 'totalAttendees', internalType: 'uint256', type: 'uint256' },
-    ],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'recordId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getRegistrations',
-    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'initialize',
-    outputs: [],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
-      { name: 'participant', internalType: 'address', type: 'address' },
-    ],
-    name: 'isRegistered',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'name',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'owner',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-  },
-  {
-    stateMutability: 'payable',
-    type: 'function',
-    inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
-      { name: 'participant', internalType: 'address', type: 'address' },
-      { name: 'sender', internalType: 'address', type: 'address' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'register',
-    outputs: [],
-  },
-  { stateMutability: 'nonpayable', type: 'function', inputs: [], name: 'renounceOwnership', outputs: [] },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'settle',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
-    name: 'transferOwnership',
-    outputs: [],
-  },
-] as const
-
-/**
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x33132fE88fe8316881474b551CA2DDD277A320a0)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x33132fE88fe8316881474b551CA2DDD277A320a0)
- */
-export const basicTokenAddress = {
-  10: '0x33132fE88fe8316881474b551CA2DDD277A320a0',
-  11155111: '0x33132fE88fe8316881474b551CA2DDD277A320a0',
-} as const
-
-/**
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x33132fE88fe8316881474b551CA2DDD277A320a0)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x33132fE88fe8316881474b551CA2DDD277A320a0)
- */
-export const basicTokenConfig = { address: basicTokenAddress, abi: basicTokenABI } as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ERC20
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -678,6 +150,351 @@ export const erc20ABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// FalseCreateMock
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const falseCreateMockABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
+  },
+  { type: 'error', inputs: [{ name: 'owner', internalType: 'address', type: 'address' }], name: 'OwnableInvalidOwner' },
+  {
+    type: 'error',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'OwnableUnauthorizedAccount',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'previousOwner', internalType: 'address', type: 'address', indexed: true },
+      { name: 'newOwner', internalType: 'address', type: 'address', indexed: true },
+    ],
+    name: 'OwnershipTransferred',
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'registrations', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'cancel',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'checkin',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'fund',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'initialize',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'name',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'participant', internalType: 'address', type: 'address' },
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'register',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  { stateMutability: 'nonpayable', type: 'function', inputs: [], name: 'renounceOwnership', outputs: [] },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'settle',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// FalseMock
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const falseMockABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
+  },
+  { type: 'error', inputs: [{ name: 'owner', internalType: 'address', type: 'address' }], name: 'OwnableInvalidOwner' },
+  {
+    type: 'error',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'OwnableUnauthorizedAccount',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'previousOwner', internalType: 'address', type: 'address', indexed: true },
+      { name: 'newOwner', internalType: 'address', type: 'address', indexed: true },
+    ],
+    name: 'OwnershipTransferred',
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'registrations', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'cancel',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'checkin',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'fund',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'initialize',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'name',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'participant', internalType: 'address', type: 'address' },
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'register',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  { stateMutability: 'nonpayable', type: 'function', inputs: [], name: 'renounceOwnership', outputs: [] },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'settle',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// FalseSettleMock
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const falseSettleMockABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
+  },
+  { type: 'error', inputs: [{ name: 'owner', internalType: 'address', type: 'address' }], name: 'OwnableInvalidOwner' },
+  {
+    type: 'error',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'OwnableUnauthorizedAccount',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'previousOwner', internalType: 'address', type: 'address', indexed: true },
+      { name: 'newOwner', internalType: 'address', type: 'address', indexed: true },
+    ],
+    name: 'OwnershipTransferred',
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'registrations', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'cancel',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'checkin',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'fund',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'initialize',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'name',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'participant', internalType: 'address', type: 'address' },
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'register',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  { stateMutability: 'nonpayable', type: 'function', inputs: [], name: 'renounceOwnership', outputs: [] },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'settle',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IConditionModule
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -686,32 +503,44 @@ export const iConditionModuleABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'registrations', internalType: 'address[]', type: 'address[]' },
       { name: 'data', internalType: 'bytes', type: 'bytes' },
     ],
     name: 'cancel',
-    outputs: [],
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
   },
   {
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
       { name: 'attendees', internalType: 'address[]', type: 'address[]' },
       { name: 'data', internalType: 'bytes', type: 'bytes' },
     ],
     name: 'checkin',
-    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'fund',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
   },
   {
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
       { name: 'data', internalType: 'bytes', type: 'bytes' },
     ],
     name: 'initialize',
-    outputs: [],
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
   },
   {
     stateMutability: 'view',
@@ -724,23 +553,24 @@ export const iConditionModuleABI = [
     stateMutability: 'payable',
     type: 'function',
     inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
       { name: 'participant', internalType: 'address', type: 'address' },
       { name: 'sender', internalType: 'address', type: 'address' },
       { name: 'data', internalType: 'bytes', type: 'bytes' },
     ],
     name: 'register',
-    outputs: [],
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
   },
   {
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
-      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
       { name: 'data', internalType: 'bytes', type: 'bytes' },
     ],
     name: 'settle',
-    outputs: [],
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
   },
 ] as const
 
@@ -1074,10 +904,10 @@ export const ierc721ErrorsABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IRegistry
+// IShowHub
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const iRegistryABI = [
+export const iShowHubABI = [
   {
     type: 'event',
     anonymous: false,
@@ -1107,6 +937,7 @@ export const iRegistryABI = [
     anonymous: false,
     inputs: [
       { name: 'conditionModule', internalType: 'address', type: 'address', indexed: true },
+      { name: 'name', internalType: 'string', type: 'string', indexed: false },
       { name: 'whitelisted', internalType: 'bool', type: 'bool', indexed: true },
       { name: 'sender', internalType: 'address', type: 'address', indexed: false },
       { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
@@ -1119,12 +950,25 @@ export const iRegistryABI = [
     inputs: [
       { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
       { name: 'contentUri', internalType: 'string', type: 'string', indexed: false },
+      { name: 'endDate', internalType: 'uint256', type: 'uint256', indexed: false },
+      { name: 'limit', internalType: 'uint256', type: 'uint256', indexed: false },
       { name: 'conditionModule', internalType: 'address', type: 'address', indexed: true },
       { name: 'data', internalType: 'bytes', type: 'bytes', indexed: false },
       { name: 'sender', internalType: 'address', type: 'address', indexed: false },
       { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
     ],
     name: 'Created',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
+      { name: 'data', internalType: 'bytes', type: 'bytes', indexed: false },
+      { name: 'sender', internalType: 'address', type: 'address', indexed: false },
+      { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'Funded',
   },
   {
     type: 'event',
@@ -1148,6 +992,19 @@ export const iRegistryABI = [
       { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
     ],
     name: 'Settled',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
+      { name: 'contentUri', internalType: 'string', type: 'string', indexed: false },
+      { name: 'limit', internalType: 'uint256', type: 'uint256', indexed: false },
+      { name: 'owner', internalType: 'address', type: 'address', indexed: false },
+      { name: 'sender', internalType: 'address', type: 'address', indexed: false },
+      { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'Updated',
   },
   {
     stateMutability: 'nonpayable',
@@ -1176,6 +1033,8 @@ export const iRegistryABI = [
     type: 'function',
     inputs: [
       { name: 'contentUri', internalType: 'string', type: 'string' },
+      { name: 'endDate', internalType: 'uint256', type: 'uint256' },
+      { name: 'limit', internalType: 'uint256', type: 'uint256' },
       { name: 'conditionModule', internalType: 'address', type: 'address' },
       { name: 'conditionModuleData', internalType: 'bytes', type: 'bytes' },
     ],
@@ -1183,24 +1042,14 @@ export const iRegistryABI = [
     outputs: [],
   },
   {
-    stateMutability: 'view',
+    stateMutability: 'payable',
     type: 'function',
-    inputs: [{ name: 'id', internalType: 'uint256', type: 'uint256' }],
-    name: 'getRecord',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct Record',
-        type: 'tuple',
-        components: [
-          { name: 'id', internalType: 'uint256', type: 'uint256' },
-          { name: 'owner', internalType: 'address', type: 'address' },
-          { name: 'status', internalType: 'enum Status', type: 'uint8' },
-          { name: 'contentUri', internalType: 'string', type: 'string' },
-          { name: 'conditionModule', internalType: 'address', type: 'address' },
-        ],
-      },
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'conditionModuleData', internalType: 'bytes', type: 'bytes' },
     ],
+    name: 'fund',
+    outputs: [],
   },
   {
     stateMutability: 'view',
@@ -1234,8 +1083,38 @@ export const iRegistryABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'contentUri', internalType: 'string', type: 'string' },
+    ],
+    name: 'updateContentUri',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'limit', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'updateLimit',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'owner', internalType: 'address', type: 'address' },
+    ],
+    name: 'updateOwner',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
       { name: 'conditionModule', internalType: 'address', type: 'address' },
-      { name: 'whitelist', internalType: 'bool', type: 'bool' },
+      { name: 'enable', internalType: 'bool', type: 'bool' },
     ],
     name: 'whitelistConditionModule',
     outputs: [],
@@ -1286,17 +1165,341 @@ export const ownableABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Registry
+// RecipientEther
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2)
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x0164c5C19e890D5D63c85B6D9585Aa38E1a2B015)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x73eB044D5Da49384c65b744a0E6CFF3f6B735C03)
  */
-export const registryABI = [
+export const recipientEtherABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
+  },
+  { type: 'error', inputs: [], name: 'IncorrectValue' },
+  { type: 'error', inputs: [{ name: 'owner', internalType: 'address', type: 'address' }], name: 'OwnableInvalidOwner' },
+  {
+    type: 'error',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'OwnableUnauthorizedAccount',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'previousOwner', internalType: 'address', type: 'address', indexed: true },
+      { name: 'newOwner', internalType: 'address', type: 'address', indexed: true },
+    ],
+    name: 'OwnershipTransferred',
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'registrations', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'cancel',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'checkin',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'fund',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'id', internalType: 'uint256', type: 'uint256' }],
+    name: 'getConditions',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct RecipientEther.Conditions',
+        type: 'tuple',
+        components: [
+          { name: 'depositFee', internalType: 'uint256', type: 'uint256' },
+          { name: 'recipient', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'id', internalType: 'uint256', type: 'uint256' }],
+    name: 'getTotalDeposits',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'initialize',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'name',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'participant', internalType: 'address', type: 'address' },
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'register',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  { stateMutability: 'nonpayable', type: 'function', inputs: [], name: 'renounceOwnership', outputs: [] },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'settle',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+  },
+] as const
+
+/**
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x0164c5C19e890D5D63c85B6D9585Aa38E1a2B015)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x73eB044D5Da49384c65b744a0E6CFF3f6B735C03)
+ */
+export const recipientEtherAddress = {
+  84532: '0x0164c5C19e890D5D63c85B6D9585Aa38E1a2B015',
+  11155111: '0x73eB044D5Da49384c65b744a0E6CFF3f6B735C03',
+} as const
+
+/**
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x0164c5C19e890D5D63c85B6D9585Aa38E1a2B015)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x73eB044D5Da49384c65b744a0E6CFF3f6B735C03)
+ */
+export const recipientEtherConfig = { address: recipientEtherAddress, abi: recipientEtherABI } as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// RecipientToken
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x495A11d9Dd1D348C0AeD41c1B289A34d52637E91)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x584269c84C40a142E6b9C5c9c7D31B9a24E9F6D0)
+ */
+export const recipientTokenABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
+  },
+  { type: 'error', inputs: [], name: 'IncorrectValue' },
+  { type: 'error', inputs: [{ name: 'owner', internalType: 'address', type: 'address' }], name: 'OwnableInvalidOwner' },
+  {
+    type: 'error',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'OwnableUnauthorizedAccount',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'previousOwner', internalType: 'address', type: 'address', indexed: true },
+      { name: 'newOwner', internalType: 'address', type: 'address', indexed: true },
+    ],
+    name: 'OwnershipTransferred',
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'registrations', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'cancel',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'checkin',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'fund',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'id', internalType: 'uint256', type: 'uint256' }],
+    name: 'getConditions',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct RecipientToken.Conditions',
+        type: 'tuple',
+        components: [
+          { name: 'depositFee', internalType: 'uint256', type: 'uint256' },
+          { name: 'tokenAddress', internalType: 'address', type: 'address' },
+          { name: 'recipient', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'id', internalType: 'uint256', type: 'uint256' }],
+    name: 'getTotalDeposits',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'initialize',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'name',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'participant', internalType: 'address', type: 'address' },
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'register',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  { stateMutability: 'nonpayable', type: 'function', inputs: [], name: 'renounceOwnership', outputs: [] },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'settle',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+  },
+] as const
+
+/**
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x495A11d9Dd1D348C0AeD41c1B289A34d52637E91)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x584269c84C40a142E6b9C5c9c7D31B9a24E9F6D0)
+ */
+export const recipientTokenAddress = {
+  84532: '0x495A11d9Dd1D348C0AeD41c1B289A34d52637E91',
+  11155111: '0x584269c84C40a142E6b9C5c9c7D31B9a24E9F6D0',
+} as const
+
+/**
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x495A11d9Dd1D348C0AeD41c1B289A34d52637E91)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x584269c84C40a142E6b9C5c9c7D31B9a24E9F6D0)
+ */
+export const recipientTokenConfig = { address: recipientTokenAddress, abi: recipientTokenABI } as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ShowHub
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x70cD0FB06F21aA528b311189A998d03C47CbC056)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x6abEaB74bc741ce8daf2e4614DB7485C19c8acc4)
+ */
+export const showHubABI = [
   { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
   { type: 'error', inputs: [], name: 'AccessDenied' },
+  { type: 'error', inputs: [], name: 'AlreadyRegistered' },
+  { type: 'error', inputs: [], name: 'AlreadyStarted' },
   { type: 'error', inputs: [], name: 'InactiveRecord' },
+  { type: 'error', inputs: [], name: 'InvalidDate' },
+  { type: 'error', inputs: [], name: 'LimitReached' },
+  { type: 'error', inputs: [], name: 'NoAttendees' },
   { type: 'error', inputs: [], name: 'NotFound' },
   { type: 'error', inputs: [], name: 'NotWhitelisted' },
   { type: 'error', inputs: [{ name: 'owner', internalType: 'address', type: 'address' }], name: 'OwnableInvalidOwner' },
@@ -1305,6 +1508,7 @@ export const registryABI = [
     inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
     name: 'OwnableUnauthorizedAccount',
   },
+  { type: 'error', inputs: [], name: 'UnexpectedConditionModuleError' },
   {
     type: 'event',
     anonymous: false,
@@ -1334,6 +1538,7 @@ export const registryABI = [
     anonymous: false,
     inputs: [
       { name: 'conditionModule', internalType: 'address', type: 'address', indexed: true },
+      { name: 'name', internalType: 'string', type: 'string', indexed: false },
       { name: 'whitelisted', internalType: 'bool', type: 'bool', indexed: true },
       { name: 'sender', internalType: 'address', type: 'address', indexed: false },
       { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
@@ -1346,12 +1551,25 @@ export const registryABI = [
     inputs: [
       { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
       { name: 'contentUri', internalType: 'string', type: 'string', indexed: false },
+      { name: 'endDate', internalType: 'uint256', type: 'uint256', indexed: false },
+      { name: 'limit', internalType: 'uint256', type: 'uint256', indexed: false },
       { name: 'conditionModule', internalType: 'address', type: 'address', indexed: true },
       { name: 'data', internalType: 'bytes', type: 'bytes', indexed: false },
       { name: 'sender', internalType: 'address', type: 'address', indexed: false },
       { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
     ],
     name: 'Created',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
+      { name: 'data', internalType: 'bytes', type: 'bytes', indexed: false },
+      { name: 'sender', internalType: 'address', type: 'address', indexed: false },
+      { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'Funded',
   },
   {
     type: 'event',
@@ -1386,6 +1604,19 @@ export const registryABI = [
     name: 'Settled',
   },
   {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
+      { name: 'contentUri', internalType: 'string', type: 'string', indexed: false },
+      { name: 'limit', internalType: 'uint256', type: 'uint256', indexed: false },
+      { name: 'owner', internalType: 'address', type: 'address', indexed: false },
+      { name: 'sender', internalType: 'address', type: 'address', indexed: false },
+      { name: 'timestamp', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'Updated',
+  },
+  {
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
@@ -1412,6 +1643,8 @@ export const registryABI = [
     type: 'function',
     inputs: [
       { name: 'contentUri', internalType: 'string', type: 'string' },
+      { name: 'endDate', internalType: 'uint256', type: 'uint256' },
+      { name: 'limit', internalType: 'uint256', type: 'uint256' },
       { name: 'conditionModule', internalType: 'address', type: 'address' },
       { name: 'conditionModuleData', internalType: 'bytes', type: 'bytes' },
     ],
@@ -1419,30 +1652,68 @@ export const registryABI = [
     outputs: [],
   },
   {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'conditionModuleData', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'fund',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'id', internalType: 'uint256', type: 'uint256' }],
+    name: 'getAttendees',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+  },
+  {
     stateMutability: 'view',
     type: 'function',
     inputs: [{ name: 'id', internalType: 'uint256', type: 'uint256' }],
     name: 'getRecord',
     outputs: [
-      {
-        name: '',
-        internalType: 'struct Record',
-        type: 'tuple',
-        components: [
-          { name: 'id', internalType: 'uint256', type: 'uint256' },
-          { name: 'owner', internalType: 'address', type: 'address' },
-          { name: 'status', internalType: 'enum Status', type: 'uint8' },
-          { name: 'contentUri', internalType: 'string', type: 'string' },
-          { name: 'conditionModule', internalType: 'address', type: 'address' },
-        ],
-      },
+      { name: 'endDate', internalType: 'uint256', type: 'uint256' },
+      { name: 'limit', internalType: 'uint256', type: 'uint256' },
+      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'status', internalType: 'enum Status', type: 'uint8' },
+      { name: 'contentUri', internalType: 'string', type: 'string' },
+      { name: 'conditionModule', internalType: 'address', type: 'address' },
     ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'id', internalType: 'uint256', type: 'uint256' }],
+    name: 'getRegistrations',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'participant', internalType: 'address', type: 'address' },
+    ],
+    name: 'isAttending',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
   },
   {
     stateMutability: 'view',
     type: 'function',
     inputs: [{ name: 'conditionModule', internalType: 'address', type: 'address' }],
     name: 'isConditionModuleWhitelisted',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'participant', internalType: 'address', type: 'address' },
+    ],
+    name: 'isRegistered',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
   },
   {
@@ -1485,6 +1756,36 @@ export const registryABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'contentUri', internalType: 'string', type: 'string' },
+    ],
+    name: 'updateContentUri',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'limit', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'updateLimit',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'owner', internalType: 'address', type: 'address' },
+    ],
+    name: 'updateOwner',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
       { name: 'conditionModule', internalType: 'address', type: 'address' },
       { name: 'enable', internalType: 'bool', type: 'bool' },
     ],
@@ -1494,19 +1795,334 @@ export const registryABI = [
 ] as const
 
 /**
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2)
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x70cD0FB06F21aA528b311189A998d03C47CbC056)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x6abEaB74bc741ce8daf2e4614DB7485C19c8acc4)
  */
-export const registryAddress = {
-  10: '0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2',
-  11155111: '0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2',
+export const showHubAddress = {
+  84532: '0x70cD0FB06F21aA528b311189A998d03C47CbC056',
+  11155111: '0x6abEaB74bc741ce8daf2e4614DB7485C19c8acc4',
 } as const
 
 /**
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2)
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x70cD0FB06F21aA528b311189A998d03C47CbC056)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x6abEaB74bc741ce8daf2e4614DB7485C19c8acc4)
  */
-export const registryConfig = { address: registryAddress, abi: registryABI } as const
+export const showHubConfig = { address: showHubAddress, abi: showHubABI } as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SplitEther
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0xF8481548A8C38B8c1B178Be802E6399397361617)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x08b2Bb2BA7b3437aD2EC5CC2F5AbB5223c342260)
+ */
+export const splitEtherABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
+  },
+  { type: 'error', inputs: [], name: 'IncorrectValue' },
+  { type: 'error', inputs: [{ name: 'owner', internalType: 'address', type: 'address' }], name: 'OwnableInvalidOwner' },
+  {
+    type: 'error',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'OwnableUnauthorizedAccount',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'previousOwner', internalType: 'address', type: 'address', indexed: true },
+      { name: 'newOwner', internalType: 'address', type: 'address', indexed: true },
+    ],
+    name: 'OwnershipTransferred',
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'registrations', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'cancel',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'checkin',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'fund',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'id', internalType: 'uint256', type: 'uint256' }],
+    name: 'getConditions',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct SplitEther.Conditions',
+        type: 'tuple',
+        components: [{ name: 'depositFee', internalType: 'uint256', type: 'uint256' }],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'id', internalType: 'uint256', type: 'uint256' }],
+    name: 'getTotalDeposits',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'initialize',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'name',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'participant', internalType: 'address', type: 'address' },
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'register',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  { stateMutability: 'nonpayable', type: 'function', inputs: [], name: 'renounceOwnership', outputs: [] },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'settle',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+  },
+] as const
+
+/**
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0xF8481548A8C38B8c1B178Be802E6399397361617)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x08b2Bb2BA7b3437aD2EC5CC2F5AbB5223c342260)
+ */
+export const splitEtherAddress = {
+  84532: '0xF8481548A8C38B8c1B178Be802E6399397361617',
+  11155111: '0x08b2Bb2BA7b3437aD2EC5CC2F5AbB5223c342260',
+} as const
+
+/**
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0xF8481548A8C38B8c1B178Be802E6399397361617)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x08b2Bb2BA7b3437aD2EC5CC2F5AbB5223c342260)
+ */
+export const splitEtherConfig = { address: splitEtherAddress, abi: splitEtherABI } as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SplitToken
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x66d1306A2DFc1f2446174BDE3d2eE203476da4eB)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xb1c9D6FFc183EeCf11722f28B3c42b45164e8Df1)
+ */
+export const splitTokenABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
+  },
+  { type: 'error', inputs: [], name: 'IncorrectValue' },
+  { type: 'error', inputs: [{ name: 'owner', internalType: 'address', type: 'address' }], name: 'OwnableInvalidOwner' },
+  {
+    type: 'error',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'OwnableUnauthorizedAccount',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'previousOwner', internalType: 'address', type: 'address', indexed: true },
+      { name: 'newOwner', internalType: 'address', type: 'address', indexed: true },
+    ],
+    name: 'OwnershipTransferred',
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'registrations', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'cancel',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'checkin',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'fund',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'id', internalType: 'uint256', type: 'uint256' }],
+    name: 'getConditions',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct SplitToken.Conditions',
+        type: 'tuple',
+        components: [
+          { name: 'depositFee', internalType: 'uint256', type: 'uint256' },
+          { name: 'tokenAddress', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'id', internalType: 'uint256', type: 'uint256' }],
+    name: 'getTotalDeposits',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'initialize',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'name',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'participant', internalType: 'address', type: 'address' },
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'register',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  { stateMutability: 'nonpayable', type: 'function', inputs: [], name: 'renounceOwnership', outputs: [] },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'settle',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+  },
+] as const
+
+/**
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x66d1306A2DFc1f2446174BDE3d2eE203476da4eB)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xb1c9D6FFc183EeCf11722f28B3c42b45164e8Df1)
+ */
+export const splitTokenAddress = {
+  84532: '0x66d1306A2DFc1f2446174BDE3d2eE203476da4eB',
+  11155111: '0xb1c9D6FFc183EeCf11722f28B3c42b45164e8Df1',
+} as const
+
+/**
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x66d1306A2DFc1f2446174BDE3d2eE203476da4eB)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xb1c9D6FFc183EeCf11722f28B3c42b45164e8Df1)
+ */
+export const splitTokenConfig = { address: splitTokenAddress, abi: splitTokenABI } as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Token
@@ -1687,224 +2303,123 @@ export const tokenABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Core
+// TrueMock
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Wraps __{@link getContract}__ with `abi` set to __{@link abstractBasicModuleABI}__.
- */
-export function getAbstractBasicModule(config: Omit<GetContractArgs, 'abi'>) {
-  return getContract({ abi: abstractBasicModuleABI, ...config })
-}
+export const trueMockABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
+  },
+  { type: 'error', inputs: [{ name: 'owner', internalType: 'address', type: 'address' }], name: 'OwnableInvalidOwner' },
+  {
+    type: 'error',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'OwnableUnauthorizedAccount',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'previousOwner', internalType: 'address', type: 'address', indexed: true },
+      { name: 'newOwner', internalType: 'address', type: 'address', indexed: true },
+    ],
+    name: 'OwnershipTransferred',
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'registrations', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'cancel',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'checkin',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'fund',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'initialize',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'name',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'participant', internalType: 'address', type: 'address' },
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'register',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  { stateMutability: 'nonpayable', type: 'function', inputs: [], name: 'renounceOwnership', outputs: [] },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'attendees', internalType: 'address[]', type: 'address[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'settle',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+  },
+] as const
 
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link abstractBasicModuleABI}__.
- */
-export function readAbstractBasicModule<
-  TAbi extends readonly unknown[] = typeof abstractBasicModuleABI,
-  TFunctionName extends string = string,
->(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
-  return readContract({ abi: abstractBasicModuleABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
-}
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link abstractBasicModuleABI}__.
- */
-export function writeAbstractBasicModule<TFunctionName extends string>(
-  config:
-    | Omit<WriteContractPreparedArgs<typeof abstractBasicModuleABI, TFunctionName>, 'abi'>
-    | Omit<WriteContractUnpreparedArgs<typeof abstractBasicModuleABI, TFunctionName>, 'abi'>
-) {
-  return writeContract({ abi: abstractBasicModuleABI, ...config } as unknown as WriteContractArgs<
-    typeof abstractBasicModuleABI,
-    TFunctionName
-  >)
-}
-
-/**
- * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link abstractBasicModuleABI}__.
- */
-export function prepareWriteAbstractBasicModule<
-  TAbi extends readonly unknown[] = typeof abstractBasicModuleABI,
-  TFunctionName extends string = string,
->(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
-  return prepareWriteContract({ abi: abstractBasicModuleABI, ...config } as unknown as PrepareWriteContractConfig<
-    TAbi,
-    TFunctionName
-  >)
-}
-
-/**
- * Wraps __{@link getContract}__ with `abi` set to __{@link basicEtherABI}__.
- *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x33FF944E8504B674835A5BEd88f10f11bEC92c2c)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x33FF944E8504B674835A5BEd88f10f11bEC92c2c)
- */
-export function getBasicEther(
-  config: Omit<GetContractArgs, 'abi' | 'address'> & { chainId?: keyof typeof basicEtherAddress }
-) {
-  return getContract({
-    abi: basicEtherABI,
-    address: basicEtherAddress[config.chainId as keyof typeof basicEtherAddress],
-    ...config,
-  })
-}
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link basicEtherABI}__.
- *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x33FF944E8504B674835A5BEd88f10f11bEC92c2c)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x33FF944E8504B674835A5BEd88f10f11bEC92c2c)
- */
-export function readBasicEther<
-  TAbi extends readonly unknown[] = typeof basicEtherABI,
-  TFunctionName extends string = string,
->(
-  config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
-    chainId?: keyof typeof basicEtherAddress
-  }
-) {
-  return readContract({
-    abi: basicEtherABI,
-    address: basicEtherAddress[config.chainId as keyof typeof basicEtherAddress],
-    ...config,
-  } as unknown as ReadContractConfig<TAbi, TFunctionName>)
-}
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link basicEtherABI}__.
- *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x33FF944E8504B674835A5BEd88f10f11bEC92c2c)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x33FF944E8504B674835A5BEd88f10f11bEC92c2c)
- */
-export function writeBasicEther<
-  TFunctionName extends string,
-  TMode extends WriteContractMode,
-  TChainId extends number = keyof typeof basicEtherAddress,
->(
-  config:
-    | (Omit<WriteContractPreparedArgs<typeof basicEtherABI, TFunctionName>, 'abi' | 'address'> & {
-        mode: TMode
-        chainId?: TMode extends 'prepared' ? TChainId : keyof typeof basicEtherAddress
-      })
-    | (Omit<WriteContractUnpreparedArgs<typeof basicEtherABI, TFunctionName>, 'abi' | 'address'> & {
-        mode: TMode
-        chainId?: TMode extends 'prepared' ? TChainId : keyof typeof basicEtherAddress
-      })
-) {
-  return writeContract({
-    abi: basicEtherABI,
-    address: basicEtherAddress[config.chainId as keyof typeof basicEtherAddress],
-    ...config,
-  } as unknown as WriteContractArgs<typeof basicEtherABI, TFunctionName>)
-}
-
-/**
- * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link basicEtherABI}__.
- *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x33FF944E8504B674835A5BEd88f10f11bEC92c2c)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x33FF944E8504B674835A5BEd88f10f11bEC92c2c)
- */
-export function prepareWriteBasicEther<
-  TAbi extends readonly unknown[] = typeof basicEtherABI,
-  TFunctionName extends string = string,
->(
-  config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
-    chainId?: keyof typeof basicEtherAddress
-  }
-) {
-  return prepareWriteContract({
-    abi: basicEtherABI,
-    address: basicEtherAddress[config.chainId as keyof typeof basicEtherAddress],
-    ...config,
-  } as unknown as PrepareWriteContractConfig<TAbi, TFunctionName>)
-}
-
-/**
- * Wraps __{@link getContract}__ with `abi` set to __{@link basicTokenABI}__.
- *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x33132fE88fe8316881474b551CA2DDD277A320a0)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x33132fE88fe8316881474b551CA2DDD277A320a0)
- */
-export function getBasicToken(
-  config: Omit<GetContractArgs, 'abi' | 'address'> & { chainId?: keyof typeof basicTokenAddress }
-) {
-  return getContract({
-    abi: basicTokenABI,
-    address: basicTokenAddress[config.chainId as keyof typeof basicTokenAddress],
-    ...config,
-  })
-}
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link basicTokenABI}__.
- *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x33132fE88fe8316881474b551CA2DDD277A320a0)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x33132fE88fe8316881474b551CA2DDD277A320a0)
- */
-export function readBasicToken<
-  TAbi extends readonly unknown[] = typeof basicTokenABI,
-  TFunctionName extends string = string,
->(
-  config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
-    chainId?: keyof typeof basicTokenAddress
-  }
-) {
-  return readContract({
-    abi: basicTokenABI,
-    address: basicTokenAddress[config.chainId as keyof typeof basicTokenAddress],
-    ...config,
-  } as unknown as ReadContractConfig<TAbi, TFunctionName>)
-}
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link basicTokenABI}__.
- *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x33132fE88fe8316881474b551CA2DDD277A320a0)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x33132fE88fe8316881474b551CA2DDD277A320a0)
- */
-export function writeBasicToken<
-  TFunctionName extends string,
-  TMode extends WriteContractMode,
-  TChainId extends number = keyof typeof basicTokenAddress,
->(
-  config:
-    | (Omit<WriteContractPreparedArgs<typeof basicTokenABI, TFunctionName>, 'abi' | 'address'> & {
-        mode: TMode
-        chainId?: TMode extends 'prepared' ? TChainId : keyof typeof basicTokenAddress
-      })
-    | (Omit<WriteContractUnpreparedArgs<typeof basicTokenABI, TFunctionName>, 'abi' | 'address'> & {
-        mode: TMode
-        chainId?: TMode extends 'prepared' ? TChainId : keyof typeof basicTokenAddress
-      })
-) {
-  return writeContract({
-    abi: basicTokenABI,
-    address: basicTokenAddress[config.chainId as keyof typeof basicTokenAddress],
-    ...config,
-  } as unknown as WriteContractArgs<typeof basicTokenABI, TFunctionName>)
-}
-
-/**
- * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link basicTokenABI}__.
- *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x33132fE88fe8316881474b551CA2DDD277A320a0)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x33132fE88fe8316881474b551CA2DDD277A320a0)
- */
-export function prepareWriteBasicToken<
-  TAbi extends readonly unknown[] = typeof basicTokenABI,
-  TFunctionName extends string = string,
->(
-  config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
-    chainId?: keyof typeof basicTokenAddress
-  }
-) {
-  return prepareWriteContract({
-    abi: basicTokenABI,
-    address: basicTokenAddress[config.chainId as keyof typeof basicTokenAddress],
-    ...config,
-  } as unknown as PrepareWriteContractConfig<TAbi, TFunctionName>)
-}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Core
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Wraps __{@link getContract}__ with `abi` set to __{@link erc20ABI}__.
@@ -1941,6 +2456,138 @@ export function prepareWriteErc20<
   TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: erc20ABI, ...config } as unknown as PrepareWriteContractConfig<
+    TAbi,
+    TFunctionName
+  >)
+}
+
+/**
+ * Wraps __{@link getContract}__ with `abi` set to __{@link falseCreateMockABI}__.
+ */
+export function getFalseCreateMock(config: Omit<GetContractArgs, 'abi'>) {
+  return getContract({ abi: falseCreateMockABI, ...config })
+}
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link falseCreateMockABI}__.
+ */
+export function readFalseCreateMock<
+  TAbi extends readonly unknown[] = typeof falseCreateMockABI,
+  TFunctionName extends string = string,
+>(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
+  return readContract({ abi: falseCreateMockABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link falseCreateMockABI}__.
+ */
+export function writeFalseCreateMock<TFunctionName extends string>(
+  config:
+    | Omit<WriteContractPreparedArgs<typeof falseCreateMockABI, TFunctionName>, 'abi'>
+    | Omit<WriteContractUnpreparedArgs<typeof falseCreateMockABI, TFunctionName>, 'abi'>
+) {
+  return writeContract({ abi: falseCreateMockABI, ...config } as unknown as WriteContractArgs<
+    typeof falseCreateMockABI,
+    TFunctionName
+  >)
+}
+
+/**
+ * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link falseCreateMockABI}__.
+ */
+export function prepareWriteFalseCreateMock<
+  TAbi extends readonly unknown[] = typeof falseCreateMockABI,
+  TFunctionName extends string = string,
+>(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
+  return prepareWriteContract({ abi: falseCreateMockABI, ...config } as unknown as PrepareWriteContractConfig<
+    TAbi,
+    TFunctionName
+  >)
+}
+
+/**
+ * Wraps __{@link getContract}__ with `abi` set to __{@link falseMockABI}__.
+ */
+export function getFalseMock(config: Omit<GetContractArgs, 'abi'>) {
+  return getContract({ abi: falseMockABI, ...config })
+}
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link falseMockABI}__.
+ */
+export function readFalseMock<
+  TAbi extends readonly unknown[] = typeof falseMockABI,
+  TFunctionName extends string = string,
+>(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
+  return readContract({ abi: falseMockABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link falseMockABI}__.
+ */
+export function writeFalseMock<TFunctionName extends string>(
+  config:
+    | Omit<WriteContractPreparedArgs<typeof falseMockABI, TFunctionName>, 'abi'>
+    | Omit<WriteContractUnpreparedArgs<typeof falseMockABI, TFunctionName>, 'abi'>
+) {
+  return writeContract({ abi: falseMockABI, ...config } as unknown as WriteContractArgs<
+    typeof falseMockABI,
+    TFunctionName
+  >)
+}
+
+/**
+ * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link falseMockABI}__.
+ */
+export function prepareWriteFalseMock<
+  TAbi extends readonly unknown[] = typeof falseMockABI,
+  TFunctionName extends string = string,
+>(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
+  return prepareWriteContract({ abi: falseMockABI, ...config } as unknown as PrepareWriteContractConfig<
+    TAbi,
+    TFunctionName
+  >)
+}
+
+/**
+ * Wraps __{@link getContract}__ with `abi` set to __{@link falseSettleMockABI}__.
+ */
+export function getFalseSettleMock(config: Omit<GetContractArgs, 'abi'>) {
+  return getContract({ abi: falseSettleMockABI, ...config })
+}
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link falseSettleMockABI}__.
+ */
+export function readFalseSettleMock<
+  TAbi extends readonly unknown[] = typeof falseSettleMockABI,
+  TFunctionName extends string = string,
+>(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
+  return readContract({ abi: falseSettleMockABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link falseSettleMockABI}__.
+ */
+export function writeFalseSettleMock<TFunctionName extends string>(
+  config:
+    | Omit<WriteContractPreparedArgs<typeof falseSettleMockABI, TFunctionName>, 'abi'>
+    | Omit<WriteContractUnpreparedArgs<typeof falseSettleMockABI, TFunctionName>, 'abi'>
+) {
+  return writeContract({ abi: falseSettleMockABI, ...config } as unknown as WriteContractArgs<
+    typeof falseSettleMockABI,
+    TFunctionName
+  >)
+}
+
+/**
+ * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link falseSettleMockABI}__.
+ */
+export function prepareWriteFalseSettleMock<
+  TAbi extends readonly unknown[] = typeof falseSettleMockABI,
+  TFunctionName extends string = string,
+>(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
+  return prepareWriteContract({ abi: falseSettleMockABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
     TFunctionName
   >)
@@ -2096,44 +2743,44 @@ export function getIerc721Errors(config: Omit<GetContractArgs, 'abi'>) {
 }
 
 /**
- * Wraps __{@link getContract}__ with `abi` set to __{@link iRegistryABI}__.
+ * Wraps __{@link getContract}__ with `abi` set to __{@link iShowHubABI}__.
  */
-export function getIRegistry(config: Omit<GetContractArgs, 'abi'>) {
-  return getContract({ abi: iRegistryABI, ...config })
+export function getIShowHub(config: Omit<GetContractArgs, 'abi'>) {
+  return getContract({ abi: iShowHubABI, ...config })
 }
 
 /**
- * Wraps __{@link readContract}__ with `abi` set to __{@link iRegistryABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link iShowHubABI}__.
  */
-export function readIRegistry<
-  TAbi extends readonly unknown[] = typeof iRegistryABI,
+export function readIShowHub<
+  TAbi extends readonly unknown[] = typeof iShowHubABI,
   TFunctionName extends string = string,
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
-  return readContract({ abi: iRegistryABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
+  return readContract({ abi: iShowHubABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
 
 /**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link iRegistryABI}__.
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link iShowHubABI}__.
  */
-export function writeIRegistry<TFunctionName extends string>(
+export function writeIShowHub<TFunctionName extends string>(
   config:
-    | Omit<WriteContractPreparedArgs<typeof iRegistryABI, TFunctionName>, 'abi'>
-    | Omit<WriteContractUnpreparedArgs<typeof iRegistryABI, TFunctionName>, 'abi'>
+    | Omit<WriteContractPreparedArgs<typeof iShowHubABI, TFunctionName>, 'abi'>
+    | Omit<WriteContractUnpreparedArgs<typeof iShowHubABI, TFunctionName>, 'abi'>
 ) {
-  return writeContract({ abi: iRegistryABI, ...config } as unknown as WriteContractArgs<
-    typeof iRegistryABI,
+  return writeContract({ abi: iShowHubABI, ...config } as unknown as WriteContractArgs<
+    typeof iShowHubABI,
     TFunctionName
   >)
 }
 
 /**
- * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link iRegistryABI}__.
+ * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link iShowHubABI}__.
  */
-export function prepareWriteIRegistry<
-  TAbi extends readonly unknown[] = typeof iRegistryABI,
+export function prepareWriteIShowHub<
+  TAbi extends readonly unknown[] = typeof iShowHubABI,
   TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
-  return prepareWriteContract({ abi: iRegistryABI, ...config } as unknown as PrepareWriteContractConfig<
+  return prepareWriteContract({ abi: iShowHubABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
     TFunctionName
   >)
@@ -2187,85 +2834,426 @@ export function prepareWriteOwnable<
 }
 
 /**
- * Wraps __{@link getContract}__ with `abi` set to __{@link registryABI}__.
+ * Wraps __{@link getContract}__ with `abi` set to __{@link recipientEtherABI}__.
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2)
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x0164c5C19e890D5D63c85B6D9585Aa38E1a2B015)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x73eB044D5Da49384c65b744a0E6CFF3f6B735C03)
  */
-export function getRegistry(
-  config: Omit<GetContractArgs, 'abi' | 'address'> & { chainId?: keyof typeof registryAddress }
+export function getRecipientEther(
+  config: Omit<GetContractArgs, 'abi' | 'address'> & { chainId?: keyof typeof recipientEtherAddress }
 ) {
   return getContract({
-    abi: registryABI,
-    address: registryAddress[config.chainId as keyof typeof registryAddress],
+    abi: recipientEtherABI,
+    address: recipientEtherAddress[config.chainId as keyof typeof recipientEtherAddress],
     ...config,
   })
 }
 
 /**
- * Wraps __{@link readContract}__ with `abi` set to __{@link registryABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link recipientEtherABI}__.
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2)
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x0164c5C19e890D5D63c85B6D9585Aa38E1a2B015)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x73eB044D5Da49384c65b744a0E6CFF3f6B735C03)
  */
-export function readRegistry<
-  TAbi extends readonly unknown[] = typeof registryABI,
+export function readRecipientEther<
+  TAbi extends readonly unknown[] = typeof recipientEtherABI,
   TFunctionName extends string = string,
 >(
-  config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & { chainId?: keyof typeof registryAddress }
+  config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
+    chainId?: keyof typeof recipientEtherAddress
+  }
 ) {
   return readContract({
-    abi: registryABI,
-    address: registryAddress[config.chainId as keyof typeof registryAddress],
+    abi: recipientEtherABI,
+    address: recipientEtherAddress[config.chainId as keyof typeof recipientEtherAddress],
     ...config,
   } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
 
 /**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link registryABI}__.
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link recipientEtherABI}__.
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2)
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x0164c5C19e890D5D63c85B6D9585Aa38E1a2B015)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x73eB044D5Da49384c65b744a0E6CFF3f6B735C03)
  */
-export function writeRegistry<
+export function writeRecipientEther<
   TFunctionName extends string,
   TMode extends WriteContractMode,
-  TChainId extends number = keyof typeof registryAddress,
+  TChainId extends number = keyof typeof recipientEtherAddress,
 >(
   config:
-    | (Omit<WriteContractPreparedArgs<typeof registryABI, TFunctionName>, 'abi' | 'address'> & {
+    | (Omit<WriteContractPreparedArgs<typeof recipientEtherABI, TFunctionName>, 'abi' | 'address'> & {
         mode: TMode
-        chainId?: TMode extends 'prepared' ? TChainId : keyof typeof registryAddress
+        chainId?: TMode extends 'prepared' ? TChainId : keyof typeof recipientEtherAddress
       })
-    | (Omit<WriteContractUnpreparedArgs<typeof registryABI, TFunctionName>, 'abi' | 'address'> & {
+    | (Omit<WriteContractUnpreparedArgs<typeof recipientEtherABI, TFunctionName>, 'abi' | 'address'> & {
         mode: TMode
-        chainId?: TMode extends 'prepared' ? TChainId : keyof typeof registryAddress
+        chainId?: TMode extends 'prepared' ? TChainId : keyof typeof recipientEtherAddress
       })
 ) {
   return writeContract({
-    abi: registryABI,
-    address: registryAddress[config.chainId as keyof typeof registryAddress],
+    abi: recipientEtherABI,
+    address: recipientEtherAddress[config.chainId as keyof typeof recipientEtherAddress],
     ...config,
-  } as unknown as WriteContractArgs<typeof registryABI, TFunctionName>)
+  } as unknown as WriteContractArgs<typeof recipientEtherABI, TFunctionName>)
 }
 
 /**
- * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link registryABI}__.
+ * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link recipientEtherABI}__.
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://explorer.optimism.io/address/0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2)
- * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2)
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x0164c5C19e890D5D63c85B6D9585Aa38E1a2B015)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x73eB044D5Da49384c65b744a0E6CFF3f6B735C03)
  */
-export function prepareWriteRegistry<
-  TAbi extends readonly unknown[] = typeof registryABI,
+export function prepareWriteRecipientEther<
+  TAbi extends readonly unknown[] = typeof recipientEtherABI,
   TFunctionName extends string = string,
 >(
   config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
-    chainId?: keyof typeof registryAddress
+    chainId?: keyof typeof recipientEtherAddress
   }
 ) {
   return prepareWriteContract({
-    abi: registryABI,
-    address: registryAddress[config.chainId as keyof typeof registryAddress],
+    abi: recipientEtherABI,
+    address: recipientEtherAddress[config.chainId as keyof typeof recipientEtherAddress],
+    ...config,
+  } as unknown as PrepareWriteContractConfig<TAbi, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link getContract}__ with `abi` set to __{@link recipientTokenABI}__.
+ *
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x495A11d9Dd1D348C0AeD41c1B289A34d52637E91)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x584269c84C40a142E6b9C5c9c7D31B9a24E9F6D0)
+ */
+export function getRecipientToken(
+  config: Omit<GetContractArgs, 'abi' | 'address'> & { chainId?: keyof typeof recipientTokenAddress }
+) {
+  return getContract({
+    abi: recipientTokenABI,
+    address: recipientTokenAddress[config.chainId as keyof typeof recipientTokenAddress],
+    ...config,
+  })
+}
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link recipientTokenABI}__.
+ *
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x495A11d9Dd1D348C0AeD41c1B289A34d52637E91)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x584269c84C40a142E6b9C5c9c7D31B9a24E9F6D0)
+ */
+export function readRecipientToken<
+  TAbi extends readonly unknown[] = typeof recipientTokenABI,
+  TFunctionName extends string = string,
+>(
+  config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
+    chainId?: keyof typeof recipientTokenAddress
+  }
+) {
+  return readContract({
+    abi: recipientTokenABI,
+    address: recipientTokenAddress[config.chainId as keyof typeof recipientTokenAddress],
+    ...config,
+  } as unknown as ReadContractConfig<TAbi, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link recipientTokenABI}__.
+ *
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x495A11d9Dd1D348C0AeD41c1B289A34d52637E91)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x584269c84C40a142E6b9C5c9c7D31B9a24E9F6D0)
+ */
+export function writeRecipientToken<
+  TFunctionName extends string,
+  TMode extends WriteContractMode,
+  TChainId extends number = keyof typeof recipientTokenAddress,
+>(
+  config:
+    | (Omit<WriteContractPreparedArgs<typeof recipientTokenABI, TFunctionName>, 'abi' | 'address'> & {
+        mode: TMode
+        chainId?: TMode extends 'prepared' ? TChainId : keyof typeof recipientTokenAddress
+      })
+    | (Omit<WriteContractUnpreparedArgs<typeof recipientTokenABI, TFunctionName>, 'abi' | 'address'> & {
+        mode: TMode
+        chainId?: TMode extends 'prepared' ? TChainId : keyof typeof recipientTokenAddress
+      })
+) {
+  return writeContract({
+    abi: recipientTokenABI,
+    address: recipientTokenAddress[config.chainId as keyof typeof recipientTokenAddress],
+    ...config,
+  } as unknown as WriteContractArgs<typeof recipientTokenABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link recipientTokenABI}__.
+ *
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x495A11d9Dd1D348C0AeD41c1B289A34d52637E91)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x584269c84C40a142E6b9C5c9c7D31B9a24E9F6D0)
+ */
+export function prepareWriteRecipientToken<
+  TAbi extends readonly unknown[] = typeof recipientTokenABI,
+  TFunctionName extends string = string,
+>(
+  config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
+    chainId?: keyof typeof recipientTokenAddress
+  }
+) {
+  return prepareWriteContract({
+    abi: recipientTokenABI,
+    address: recipientTokenAddress[config.chainId as keyof typeof recipientTokenAddress],
+    ...config,
+  } as unknown as PrepareWriteContractConfig<TAbi, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link getContract}__ with `abi` set to __{@link showHubABI}__.
+ *
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x70cD0FB06F21aA528b311189A998d03C47CbC056)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x6abEaB74bc741ce8daf2e4614DB7485C19c8acc4)
+ */
+export function getShowHub(
+  config: Omit<GetContractArgs, 'abi' | 'address'> & { chainId?: keyof typeof showHubAddress }
+) {
+  return getContract({
+    abi: showHubABI,
+    address: showHubAddress[config.chainId as keyof typeof showHubAddress],
+    ...config,
+  })
+}
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link showHubABI}__.
+ *
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x70cD0FB06F21aA528b311189A998d03C47CbC056)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x6abEaB74bc741ce8daf2e4614DB7485C19c8acc4)
+ */
+export function readShowHub<TAbi extends readonly unknown[] = typeof showHubABI, TFunctionName extends string = string>(
+  config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & { chainId?: keyof typeof showHubAddress }
+) {
+  return readContract({
+    abi: showHubABI,
+    address: showHubAddress[config.chainId as keyof typeof showHubAddress],
+    ...config,
+  } as unknown as ReadContractConfig<TAbi, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link showHubABI}__.
+ *
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x70cD0FB06F21aA528b311189A998d03C47CbC056)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x6abEaB74bc741ce8daf2e4614DB7485C19c8acc4)
+ */
+export function writeShowHub<
+  TFunctionName extends string,
+  TMode extends WriteContractMode,
+  TChainId extends number = keyof typeof showHubAddress,
+>(
+  config:
+    | (Omit<WriteContractPreparedArgs<typeof showHubABI, TFunctionName>, 'abi' | 'address'> & {
+        mode: TMode
+        chainId?: TMode extends 'prepared' ? TChainId : keyof typeof showHubAddress
+      })
+    | (Omit<WriteContractUnpreparedArgs<typeof showHubABI, TFunctionName>, 'abi' | 'address'> & {
+        mode: TMode
+        chainId?: TMode extends 'prepared' ? TChainId : keyof typeof showHubAddress
+      })
+) {
+  return writeContract({
+    abi: showHubABI,
+    address: showHubAddress[config.chainId as keyof typeof showHubAddress],
+    ...config,
+  } as unknown as WriteContractArgs<typeof showHubABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link showHubABI}__.
+ *
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x70cD0FB06F21aA528b311189A998d03C47CbC056)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x6abEaB74bc741ce8daf2e4614DB7485C19c8acc4)
+ */
+export function prepareWriteShowHub<
+  TAbi extends readonly unknown[] = typeof showHubABI,
+  TFunctionName extends string = string,
+>(
+  config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
+    chainId?: keyof typeof showHubAddress
+  }
+) {
+  return prepareWriteContract({
+    abi: showHubABI,
+    address: showHubAddress[config.chainId as keyof typeof showHubAddress],
+    ...config,
+  } as unknown as PrepareWriteContractConfig<TAbi, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link getContract}__ with `abi` set to __{@link splitEtherABI}__.
+ *
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0xF8481548A8C38B8c1B178Be802E6399397361617)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x08b2Bb2BA7b3437aD2EC5CC2F5AbB5223c342260)
+ */
+export function getSplitEther(
+  config: Omit<GetContractArgs, 'abi' | 'address'> & { chainId?: keyof typeof splitEtherAddress }
+) {
+  return getContract({
+    abi: splitEtherABI,
+    address: splitEtherAddress[config.chainId as keyof typeof splitEtherAddress],
+    ...config,
+  })
+}
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link splitEtherABI}__.
+ *
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0xF8481548A8C38B8c1B178Be802E6399397361617)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x08b2Bb2BA7b3437aD2EC5CC2F5AbB5223c342260)
+ */
+export function readSplitEther<
+  TAbi extends readonly unknown[] = typeof splitEtherABI,
+  TFunctionName extends string = string,
+>(
+  config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
+    chainId?: keyof typeof splitEtherAddress
+  }
+) {
+  return readContract({
+    abi: splitEtherABI,
+    address: splitEtherAddress[config.chainId as keyof typeof splitEtherAddress],
+    ...config,
+  } as unknown as ReadContractConfig<TAbi, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link splitEtherABI}__.
+ *
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0xF8481548A8C38B8c1B178Be802E6399397361617)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x08b2Bb2BA7b3437aD2EC5CC2F5AbB5223c342260)
+ */
+export function writeSplitEther<
+  TFunctionName extends string,
+  TMode extends WriteContractMode,
+  TChainId extends number = keyof typeof splitEtherAddress,
+>(
+  config:
+    | (Omit<WriteContractPreparedArgs<typeof splitEtherABI, TFunctionName>, 'abi' | 'address'> & {
+        mode: TMode
+        chainId?: TMode extends 'prepared' ? TChainId : keyof typeof splitEtherAddress
+      })
+    | (Omit<WriteContractUnpreparedArgs<typeof splitEtherABI, TFunctionName>, 'abi' | 'address'> & {
+        mode: TMode
+        chainId?: TMode extends 'prepared' ? TChainId : keyof typeof splitEtherAddress
+      })
+) {
+  return writeContract({
+    abi: splitEtherABI,
+    address: splitEtherAddress[config.chainId as keyof typeof splitEtherAddress],
+    ...config,
+  } as unknown as WriteContractArgs<typeof splitEtherABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link splitEtherABI}__.
+ *
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0xF8481548A8C38B8c1B178Be802E6399397361617)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x08b2Bb2BA7b3437aD2EC5CC2F5AbB5223c342260)
+ */
+export function prepareWriteSplitEther<
+  TAbi extends readonly unknown[] = typeof splitEtherABI,
+  TFunctionName extends string = string,
+>(
+  config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
+    chainId?: keyof typeof splitEtherAddress
+  }
+) {
+  return prepareWriteContract({
+    abi: splitEtherABI,
+    address: splitEtherAddress[config.chainId as keyof typeof splitEtherAddress],
+    ...config,
+  } as unknown as PrepareWriteContractConfig<TAbi, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link getContract}__ with `abi` set to __{@link splitTokenABI}__.
+ *
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x66d1306A2DFc1f2446174BDE3d2eE203476da4eB)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xb1c9D6FFc183EeCf11722f28B3c42b45164e8Df1)
+ */
+export function getSplitToken(
+  config: Omit<GetContractArgs, 'abi' | 'address'> & { chainId?: keyof typeof splitTokenAddress }
+) {
+  return getContract({
+    abi: splitTokenABI,
+    address: splitTokenAddress[config.chainId as keyof typeof splitTokenAddress],
+    ...config,
+  })
+}
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link splitTokenABI}__.
+ *
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x66d1306A2DFc1f2446174BDE3d2eE203476da4eB)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xb1c9D6FFc183EeCf11722f28B3c42b45164e8Df1)
+ */
+export function readSplitToken<
+  TAbi extends readonly unknown[] = typeof splitTokenABI,
+  TFunctionName extends string = string,
+>(
+  config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
+    chainId?: keyof typeof splitTokenAddress
+  }
+) {
+  return readContract({
+    abi: splitTokenABI,
+    address: splitTokenAddress[config.chainId as keyof typeof splitTokenAddress],
+    ...config,
+  } as unknown as ReadContractConfig<TAbi, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link splitTokenABI}__.
+ *
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x66d1306A2DFc1f2446174BDE3d2eE203476da4eB)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xb1c9D6FFc183EeCf11722f28B3c42b45164e8Df1)
+ */
+export function writeSplitToken<
+  TFunctionName extends string,
+  TMode extends WriteContractMode,
+  TChainId extends number = keyof typeof splitTokenAddress,
+>(
+  config:
+    | (Omit<WriteContractPreparedArgs<typeof splitTokenABI, TFunctionName>, 'abi' | 'address'> & {
+        mode: TMode
+        chainId?: TMode extends 'prepared' ? TChainId : keyof typeof splitTokenAddress
+      })
+    | (Omit<WriteContractUnpreparedArgs<typeof splitTokenABI, TFunctionName>, 'abi' | 'address'> & {
+        mode: TMode
+        chainId?: TMode extends 'prepared' ? TChainId : keyof typeof splitTokenAddress
+      })
+) {
+  return writeContract({
+    abi: splitTokenABI,
+    address: splitTokenAddress[config.chainId as keyof typeof splitTokenAddress],
+    ...config,
+  } as unknown as WriteContractArgs<typeof splitTokenABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link splitTokenABI}__.
+ *
+ * - [__View Contract on Base Sepolia Blockscout__](https://base-sepolia.blockscout.com/address/0x66d1306A2DFc1f2446174BDE3d2eE203476da4eB)
+ * - [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xb1c9D6FFc183EeCf11722f28B3c42b45164e8Df1)
+ */
+export function prepareWriteSplitToken<
+  TAbi extends readonly unknown[] = typeof splitTokenABI,
+  TFunctionName extends string = string,
+>(
+  config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
+    chainId?: keyof typeof splitTokenAddress
+  }
+) {
+  return prepareWriteContract({
+    abi: splitTokenABI,
+    address: splitTokenAddress[config.chainId as keyof typeof splitTokenAddress],
     ...config,
   } as unknown as PrepareWriteContractConfig<TAbi, TFunctionName>)
 }
@@ -2305,6 +3293,50 @@ export function prepareWriteToken<
   TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: tokenABI, ...config } as unknown as PrepareWriteContractConfig<
+    TAbi,
+    TFunctionName
+  >)
+}
+
+/**
+ * Wraps __{@link getContract}__ with `abi` set to __{@link trueMockABI}__.
+ */
+export function getTrueMock(config: Omit<GetContractArgs, 'abi'>) {
+  return getContract({ abi: trueMockABI, ...config })
+}
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link trueMockABI}__.
+ */
+export function readTrueMock<
+  TAbi extends readonly unknown[] = typeof trueMockABI,
+  TFunctionName extends string = string,
+>(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
+  return readContract({ abi: trueMockABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link trueMockABI}__.
+ */
+export function writeTrueMock<TFunctionName extends string>(
+  config:
+    | Omit<WriteContractPreparedArgs<typeof trueMockABI, TFunctionName>, 'abi'>
+    | Omit<WriteContractUnpreparedArgs<typeof trueMockABI, TFunctionName>, 'abi'>
+) {
+  return writeContract({ abi: trueMockABI, ...config } as unknown as WriteContractArgs<
+    typeof trueMockABI,
+    TFunctionName
+  >)
+}
+
+/**
+ * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link trueMockABI}__.
+ */
+export function prepareWriteTrueMock<
+  TAbi extends readonly unknown[] = typeof trueMockABI,
+  TFunctionName extends string = string,
+>(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
+  return prepareWriteContract({ abi: trueMockABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
     TFunctionName
   >)

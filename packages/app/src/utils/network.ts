@@ -1,10 +1,7 @@
-import { parseUnits } from 'viem/utils'
-import { CONFIG } from './config'
-
 export const AddressZero = '0x0000000000000000000000000000000000000000'
-export const DefaultDepositFee = parseUnits('0.01', 18)
+export const DefaultDepositFee = 0.01
 
-export function GetNetworkColor(chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
+export function GetNetworkColor(chainId: number) {
   if (chainId === 1) return 'green'
   if (chainId === 10) return 'red'
   if (chainId === 137) return 'purple'
@@ -14,21 +11,13 @@ export function GetNetworkColor(chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
   return 'grey'
 }
 
-export function GetNetworkName(chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
+export function GetNetworkName(chainId: number) {
   if (chainId === 1) return 'mainnet'
   if (chainId === 11155111) return 'sepolia'
   if (chainId === 42161) return 'arbitrum'
   if (chainId === 10) return 'optimism'
 
   return 'mainnet'
-}
-
-export function GetGraphBaseUri(chainId: number = CONFIG.DEFAULT_CHAIN_ID) {
-  if (CONFIG.DEFAULT_CHAINS.find((c) => c.id === chainId)) {
-    return `https://api.studio.thegraph.com/query/43964/show-up-${GetNetworkName(chainId)}/version/latest`
-  }
-
-  throw new Error(`chainId ${chainId} not supported`)
 }
 
 export const WHITELISTED_TOKENS = [

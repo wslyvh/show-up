@@ -1,5 +1,4 @@
 import { ActionDrawer } from '@/components/ActionDrawer'
-import { useEventManagement } from '@/context/EventManagement'
 import { useState } from 'react'
 
 interface Props {
@@ -7,7 +6,6 @@ interface Props {
 }
 
 export function Checkin(props: Props) {
-  const eventManagement = useEventManagement()
   const [attendees, setAttendees] = useState<string[]>([])
   const actionButton = (
     <button type='button' className='btn btn-accent btn-outline btn-sm w-full'>
@@ -46,7 +44,7 @@ export function Checkin(props: Props) {
         </div>
 
         <div>
-          <button
+          {/* <button
             type='button'
             disabled={eventManagement.loading}
             onClick={() => eventManagement.Checkin(props.id, attendees)}
@@ -58,7 +56,7 @@ export function Checkin(props: Props) {
               </>
             )}
             {!eventManagement.loading && <>Check-in Attendees</>}
-          </button>
+          </button> */}
         </div>
       </div>
     </ActionDrawer>

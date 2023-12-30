@@ -18,6 +18,7 @@ export enum Visibility {
 export interface Record {
   id: string
   chainId: number
+  createdAt: string | number
   createdBy: string
   endDate: string | number
   limit: number
@@ -29,6 +30,7 @@ export interface Record {
 
   conditionModuleId: string
   conditionModule: ConditionModule
+  conditionModuleData: ConditionModuleData
 
   contentUri: string
   metadata: EventMetadata
@@ -74,4 +76,13 @@ export interface ConditionModuleData extends ConditionModule {
   tokenSymbol?: string
   tokenName?: string
   tokenDecimals?: number
+}
+
+export interface CreateEventData {
+  chainId: number
+  endDate: string | number
+  limit: number
+  depositFee: number
+  recipient?: string
+  tokenAddress?: string
 }

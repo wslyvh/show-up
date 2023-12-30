@@ -1,6 +1,6 @@
-import { ConditionModuleType, Record, Status } from '@/utils/types'
+import { Record, Status } from '@/utils/types'
 import { QRCodeSVG } from 'qrcode.react'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { formatEther, formatUnits } from 'viem/utils'
 import dayjs from 'dayjs'
 
@@ -16,9 +16,9 @@ interface StatusProps {
 
 export function TicketBadge(props: StatusProps) {
   let className = 'badge badge-outline self-start mt-2 ml-2 shrink-0'
-  if (Status[props.status.valueOf()] == Status.Active.toString()) className += ' badge-info'
-  if (Status[props.status.valueOf()] == Status.Cancelled.toString()) className += ' badge-error'
-  if (Status[props.status.valueOf()] == Status.Settled.toString()) className += ' badge-success'
+  if (props.status == Status.Active) className += ' badge-info'
+  if (props.status == Status.Cancelled) className += ' badge-error'
+  if (props.status == Status.Settled) className += ' badge-success'
   if (props.size) className += ` badge-${props.size}`
   if (props.className) className += ` ${props.className}`
 
@@ -27,14 +27,14 @@ export function TicketBadge(props: StatusProps) {
 
 export function Ticket(props: Props) {
   const { address } = useAccount()
-  const ticket = props.record.participants.find((p) => p.address.toLowerCase() == address.toLowerCase())
+  const ticket = props.record.registrations.find((p) => p.id.toLowerCase() == address.toLowerCase())
 
   if (!ticket) return null
 
   return (
     <article className='flex w-full flex-col md:flex-row'>
       <div className='flex rounded-xl bg-white items-center justify-center p-4 md:p-12'>
-        <QRCodeSVG value={ticket.url} level='Q' />
+        <QRCodeSVG value={ticket.transactionHash} level='Q' />
       </div>
 
       <div className='flex items-center px-2 md:px-0 md:py-2'>
@@ -61,13 +61,16 @@ export function Ticket(props: Props) {
           <div className='flex flex-col shrink-0 w-24'>
             <span className='text-xs text-neutral-600'>Deposit</span>
             <span className='font-mono'>
-              {props.record.condition.type == ConditionModuleType.BasicEther && (
-                <>{formatEther(props.record.condition.depositFee)} ETH</>
+              {!props.record.conditionModuleData.tokenAddress && (
+                <>{formatEther(BigInt(props.record.conditionModuleData.depositFee))} ETH</>
               )}
-              {props.record.condition.type == ConditionModuleType.BasicToken && (
+              {props.record.conditionModuleData.tokenAddress && (
                 <>
-                  {formatUnits(props.record.condition.depositFee, props.record.condition.tokenDecimals ?? 18)}{' '}
-                  {props.record.condition.tokenSymbol}
+                  {formatUnits(
+                    BigInt(props.record.conditionModuleData.depositFee),
+                    props.record.conditionModuleData.tokenDecimals ?? 18
+                  )}{' '}
+                  {props.record.conditionModuleData.tokenSymbol}
                 </>
               )}
             </span>
