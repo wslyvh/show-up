@@ -282,6 +282,8 @@ function mapEventRecord(data: any) {
     contentUri: data.contentUri,
     metadata: {
       ...data.metadataObject,
+      start: dayjs.unix(data.metadataObject.start).toISOString(),
+      end: dayjs.unix(data.metadataObject.end).toISOString(),
       imageUrl: data.metadataObject?.imageUrl?.includes('ipfs://')
         ? `${CONFIG.DEFAULT_IPFS_GATEWAY}/${data.metadataObject.imageUrl.replace('ipfs://', '')}`
         : data.metadataObject?.imageUrl ?? `${SITE_URL}/events/${data.id}/opengraph-image`,
