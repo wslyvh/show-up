@@ -25,11 +25,17 @@ export function GetVisibilityName(number: number = 0) {
     return 'Public'
 }
 
-export function GetVisibilityId(visibility: 'Public' | 'Unlisted' = 'Public') {
+export function GetVisibilityId(visibility: string | number) {
+    if (typeof visibility === 'number') {
+        return visibility
+    }
+
     switch (visibility) {
         case 'Public': return 0
         case 'Unlisted': return 1
     }
+
+    return 0
 }
 
 export function TruncateMiddle(text: string, length: number = 5) {
