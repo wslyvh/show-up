@@ -3,6 +3,7 @@ import { EventDetails } from '../components/Details'
 import EventDataProvider from '@/context/EventData'
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query'
 import { SITE_NAME, SITE_URL } from '@/utils/site'
+import { CONFIG } from '@/utils/config'
 
 interface Params {
   params: { id: string }
@@ -10,6 +11,8 @@ interface Params {
 }
 
 export async function generateStaticParams() {
+  if (CONFIG.NETWORK_ENV !== 'main') return []
+
   const events = await GetAllEvents()
 
   return events.map((i) => ({

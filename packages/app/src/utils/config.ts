@@ -1,6 +1,6 @@
 import { sepolia, baseSepolia, optimism, base, Chain } from 'viem/chains'
 
-const networkEnv = process.env.NODE_ENV === 'development' || process.env.NETWORK_ENV === 'test' ? 'test' : 'main'
+const networkEnv = process.env.NETWORK_ENV ?? 'test'
 const chains: Chain[] = networkEnv === 'main' ? [optimism, base] : [sepolia, baseSepolia]
 const appId = process.env.NEXT_PUBLIC_DEFAULT_APP_ID ?? networkEnv === 'main' ? 'showup' : 'showup-test'
 
@@ -18,17 +18,17 @@ export const CONFIG = {
   DEFAULT_APP_ID: appId,
   DEFAULT_CHAINS: chains,
 }
-;(() => {
-  if (!process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID) {
-    console.error('You need to provide a NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID env variable')
-  }
-  if (!process.env.NEXT_PUBLIC_ALCHEMY_KEY) {
-    console.error('You need to provide a NEXT_PUBLIC_ALCHEMY_KEY env variable')
-  }
-  if (!process.env.NEXT_PUBLIC_INFURA_KEY) {
-    console.error('You need to provide a NEXT_PUBLIC_INFURA_KEY env variable')
-  }
-  if (!process.env.NEXT_PUBLIC_WEB3_STORAGE_API_KEY) {
-    console.error('NEXT_PUBLIC_WEB3_STORAGE_API_KEY is not defined')
-  }
-})()
+  ; (() => {
+    if (!process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID) {
+      console.error('You need to provide a NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID env variable')
+    }
+    if (!process.env.NEXT_PUBLIC_ALCHEMY_KEY) {
+      console.error('You need to provide a NEXT_PUBLIC_ALCHEMY_KEY env variable')
+    }
+    if (!process.env.NEXT_PUBLIC_INFURA_KEY) {
+      console.error('You need to provide a NEXT_PUBLIC_INFURA_KEY env variable')
+    }
+    if (!process.env.NEXT_PUBLIC_WEB3_STORAGE_API_KEY) {
+      console.error('NEXT_PUBLIC_WEB3_STORAGE_API_KEY is not defined')
+    }
+  })()
