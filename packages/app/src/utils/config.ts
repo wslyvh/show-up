@@ -18,17 +18,17 @@ export const CONFIG = {
   DEFAULT_APP_ID: appId,
   DEFAULT_CHAINS: chains,
 }
-  ; (() => {
-    if (!process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID) {
-      console.error('You need to provide a NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID env variable')
-    }
-    if (!process.env.NEXT_PUBLIC_ALCHEMY_KEY) {
-      console.error('You need to provide a NEXT_PUBLIC_ALCHEMY_KEY env variable')
-    }
-    if (!process.env.NEXT_PUBLIC_INFURA_KEY) {
-      console.error('You need to provide a NEXT_PUBLIC_INFURA_KEY env variable')
-    }
-    if (!process.env.NEXT_PUBLIC_WEB3_STORAGE_API_KEY) {
-      console.error('NEXT_PUBLIC_WEB3_STORAGE_API_KEY is not defined')
-    }
-  })()
+;(() => {
+  if (!process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID) {
+    console.error('You need to provide a NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID env variable')
+  }
+  if (!process.env.NEXT_PUBLIC_ALCHEMY_KEY) {
+    console.error('You need to provide a NEXT_PUBLIC_ALCHEMY_KEY env variable')
+  }
+  if (!process.env.NEXT_PUBLIC_INFURA_KEY) {
+    console.error('You need to provide a NEXT_PUBLIC_INFURA_KEY env variable')
+  }
+  if (!process.env.NEXT_PUBLIC_WEB3_STORAGE_API_KEY) {
+    console.error('NEXT_PUBLIC_WEB3_STORAGE_API_KEY is not defined')
+  }
+})()
