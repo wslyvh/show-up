@@ -1,7 +1,7 @@
 'use client'
 
 import { ActionDrawer } from '@/components/ActionDrawer'
-import { CreateEventData, EventMetadata } from '@/utils/types'
+import { CreateEventData, EventMetadata, LoadingState } from '@/utils/types'
 import { ValidateConditions, ValidateMetadata } from '@/services/showhub'
 import { LinkComponent } from '@/components/LinkComponent'
 import { Slugify, TruncateMiddle } from '@/utils/format'
@@ -32,12 +32,6 @@ interface Props {
   image?: File
 }
 
-interface FormState {
-  isLoading: boolean
-  message: string
-  type: 'error' | 'success' | 'info' | ''
-}
-
 export function Confirm(props: Props) {
   const { chain: currentChain } = useNetwork()
   const { modules } = useCreateEvent()
@@ -60,7 +54,7 @@ export function Confirm(props: Props) {
     }
   })
   const { address } = useAccount()
-  const [state, setState] = useState<FormState>({
+  const [state, setState] = useState<LoadingState>({
     isLoading: false,
     type: '',
     message: '',
@@ -137,7 +131,7 @@ export function Confirm(props: Props) {
     setState({ ...state, isLoading: true, type: 'info', message: 'Metadata uploaded. Sign transaction' })
 
     try {
-      const createConfig = await prepareWriteShowHub({
+      const txConfig = await prepareWriteShowHub({
         chainId: conditionModule.chainId as any,
         functionName: 'create',
         args: [
@@ -149,7 +143,7 @@ export function Confirm(props: Props) {
         ],
       })
 
-      const { hash } = await writeShowHub(createConfig)
+      const { hash } = await writeShowHub(txConfig)
 
       setState({ ...state, isLoading: true, type: 'info', message: 'Transaction sent. Awaiting confirmation' })
       await notifications.Add({

@@ -3,11 +3,12 @@ import { CONFIG } from '@/utils/config'
 import { SITE_URL } from '@/utils/site'
 import dayjs from 'dayjs'
 
-export const envioBaseUri = 'https://indexer.bigdevenergy.link/d913251/v1/graphql' // 'http://localhost:8080/v1/graphql' // 'https://indexer.bigdevenergy.link/0db47e0/v1/graphql'
+export const envioBaseUri = 'https://indexer.bigdevenergy.link/f77f4ea/v1/graphql' // 'http://localhost:8080/v1/graphql' // 'https://indexer.bigdevenergy.link/0db47e0/v1/graphql'
 
 const eventFields = `
   id
   chainId
+  recordId
   createdAt
   createdBy
   endDate
@@ -266,6 +267,7 @@ function mapEventRecord(data: any) {
   return {
     id: data.id,
     chainId: data.chainId,
+    recordId: data.recordId,
     createdAt: dayjs.unix(data.createdAt).toISOString(),
     createdBy: data.createdBy,
     endDate: dayjs.unix(data.endDate).toISOString(),

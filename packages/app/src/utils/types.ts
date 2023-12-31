@@ -4,6 +4,12 @@ export interface State<T> {
   error?: string
 }
 
+export interface LoadingState {
+  isLoading: boolean
+  message: string
+  type: 'error' | 'success' | 'info' | ''
+}
+
 export enum Status {
   Active,
   Cancelled,
@@ -18,6 +24,7 @@ export enum Visibility {
 export interface Record {
   id: string
   chainId: number
+  recordId: string
   createdAt: string | number
   createdBy: string
   endDate: string | number

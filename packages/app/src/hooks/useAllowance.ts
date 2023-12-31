@@ -18,7 +18,7 @@ export function useAllowance(owner: string, spender: string, tokenAddress: strin
   })
 
   return {
-    allowance: allowance as bigint,
+    allowance: (allowance as bigint) ?? 0,
     refetch,
     isLoading,
     isError,
