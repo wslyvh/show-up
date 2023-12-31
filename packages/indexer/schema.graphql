@@ -12,6 +12,7 @@ type ConditionModule {
 
 type Record {
   id: ID! # Chain + Record ID
+  recordId: String!
   chainId: Int!
   createdAt: BigInt!
   createdBy: Bytes!

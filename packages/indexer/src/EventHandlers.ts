@@ -182,6 +182,7 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
     entity = {
       id: eventId,
       chainId: chainId,
+      recordId: event.params.id.toString(),
       createdAt: BigInt(event.params.timestamp),
       createdBy: event.params.sender,
       blockNumber: BigInt(event.blockNumber),
