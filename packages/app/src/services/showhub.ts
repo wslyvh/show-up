@@ -133,7 +133,11 @@ export async function GetAllEvents() {
     },
     body: JSON.stringify({
       query: `{
-        Record(limit: 100, order_by: {metadataObject: {end: desc}}) {
+        Record(
+          limit: 100
+          order_by: {metadataObject: {end: desc}}
+          where: {metadataObject: {appId: {_eq: "${CONFIG.DEFAULT_APP_ID}"}}}
+        ) {
           ${eventFields}
         }
       }`,
@@ -157,7 +161,13 @@ export async function GetUpcomingEvents() {
     },
     body: JSON.stringify({
       query: `{
-        Record(limit: 100, order_by: {metadataObject: {end: desc}}, where: {metadataObject: {end: {_gte: ${dayjs().unix()}}}}) {
+        Record(
+          limit: 100
+          order_by: {metadataObject: {end: desc}}
+          where: {status: {_eq: 0}, metadataObject: {appId: {_eq: "${
+            CONFIG.DEFAULT_APP_ID
+          }"}, end: {_gte: ${dayjs().unix()}}}}
+        ) {
           ${eventFields}
         }
       }`,
@@ -181,7 +191,13 @@ export async function GetPastEvents() {
     },
     body: JSON.stringify({
       query: `{
-        Record(limit: 100, order_by: {metadataObject: {end: desc}}, where: {metadataObject: {end: {_lte: ${dayjs().unix()}}}}) {
+        Record(
+          limit: 100
+          order_by: {metadataObject: {end: desc}}
+          where: {status: {_eq: 0}, metadataObject: {appId: {_eq: "${
+            CONFIG.DEFAULT_APP_ID
+          }"}, end: {_lte: ${dayjs().unix()}}}}
+        ) {
           ${eventFields}
         }
       }`,
@@ -205,7 +221,11 @@ export async function GetEventsByOwner(owner: string) {
     },
     body: JSON.stringify({
       query: `{
-        Record(limit: 100, order_by: {metadataObject: {end: desc}}, where: {owner: {_eq: "${owner}"}}) {
+        Record(
+          limit: 100
+          order_by: {metadataObject: {end: desc}}
+          where: {owner: {_eq: "${owner}"}, metadataObject: {appId: {_eq: "${CONFIG.DEFAULT_APP_ID}"}}}
+        ) {
           ${eventFields}
         }
       }`,
@@ -229,7 +249,11 @@ export async function GetEventsByRegistration(address: string) {
     },
     body: JSON.stringify({
       query: `{
-        Record(limit: 100, order_by: {metadataObject: {end: desc}}, where: {registrations: {user: {_eq: "${address}"}}}) {    
+        Record(
+          limit: 100
+          order_by: {metadataObject: {end: desc}}
+          where: {metadataObject: {appId: {_eq: "${CONFIG.DEFAULT_APP_ID}"}, registrations: {user: {_eq: "${address}"}}}
+        ) {    
           ${eventFields}
         }
       }`,
