@@ -9,13 +9,13 @@ import { CONFIG } from '@/utils/config'
 import { TruncateMiddle } from '@/utils/format'
 import { useQueryClient } from '@tanstack/react-query'
 import { WHITELISTED_TOKENS } from '@/utils/network'
-import { LoadingState, Record } from '@/utils/types'
+import { LoadingStateData, Record } from '@/utils/types'
 import { formatUnits } from 'viem/utils'
 import { useAccount, useNetwork } from 'wagmi'
 import { useState } from 'react'
-import { prepareWriteShowHub, writeShowHub } from '@/abis'
+import { erc20ABI, prepareWriteShowHub, writeShowHub } from '@/abis'
 import { revalidateAll } from '@/app/actions/cache'
-import { waitForTransaction, switchNetwork } from '@wagmi/core'
+import { waitForTransaction, switchNetwork, prepareWriteContract, writeContract } from '@wagmi/core'
 import { Alert } from '@/components/Alert'
 
 interface Props {
@@ -29,14 +29,14 @@ export function Register(props: Props) {
   const eventData = useEventData()
   const queryClient = useQueryClient()
   const notifications = useNotifications()
-  const token = WHITELISTED_TOKENS.find((t) => t.address == props.event.conditionModuleData.tokenAddress)
   const chain = CONFIG.DEFAULT_CHAINS.find((i) => i.id === props.event.conditionModule.chainId)
   const { address: connectedAddress } = useAccount()
   const [address, setAddress] = useState(connectedAddress)
-  const [state, setState] = useState<LoadingState>({
+  const [state, setState] = useState<LoadingStateData>({
     isLoading: false,
     type: '',
     message: '',
+    data: false,
   })
   const { allowance, refetch } = useAllowance(
     address,
@@ -55,14 +55,37 @@ export function Register(props: Props) {
       return
     }
 
-    setState({ ...state, isLoading: true, type: 'info', message: `Registering ${address}` })
+    setState({ ...state, isLoading: true, type: 'info', message: `Approving token. Sign transaction` })
+    const approveConfig = await prepareWriteContract({
+      chainId: props.event.conditionModule.chainId as any,
+      address: props.event.conditionModuleData.tokenAddress,
+      abi: erc20ABI,
+      functionName: 'approve',
+      args: [props.event.conditionModuleId, props.event.conditionModuleData.depositFee],
+    })
 
-    // eventManagement.ApproveToken(
-    //   props.event.conditionModuleId,
-    //   props.event.conditionModuleData.tokenAddress!,
-    //   BigInt(props.event.conditionModuleData.depositFee)
-    // )
-    // await refetch()
+    const { hash } = await writeContract(approveConfig)
+    setState({ ...state, isLoading: true, type: 'info', message: 'Transaction sent. Awaiting confirmation' })
+
+    await waitForTransaction({
+      chainId: chain.id,
+      hash: hash,
+    })
+
+    await notifications.Add({
+      created: Date.now(),
+      type: 'info',
+      message: `Token Approved`,
+      from: address,
+      cta: {
+        label: 'View transaction',
+        href: `${chain?.blockExplorers?.default.url}/tx/${hash}`,
+      },
+      data: { hash },
+    })
+
+    await refetch()
+    setState({ ...state, isLoading: false, type: 'info', message: '', data: true })
   }
 
   async function Register() {
@@ -78,7 +101,6 @@ export function Register(props: Props) {
         // make sure token is approved before registration first
       }
 
-      console.log('PREPARE REGISTER TX', props.event.conditionModule.name, props.event.conditionModuleData)
       const txConfig = await prepareWriteShowHub({
         chainId: chain.id as any,
         functionName: 'register',
@@ -87,23 +109,10 @@ export function Register(props: Props) {
           ? BigInt(0)
           : BigInt(props.event.conditionModuleData.depositFee),
       })
-      console.log('PROPS', txConfig)
 
       const { hash } = await writeShowHub(txConfig)
 
       setState({ ...state, isLoading: true, type: 'info', message: 'Transaction sent. Awaiting confirmation' })
-
-      await notifications.Add({
-        created: Date.now(),
-        type: 'info',
-        message: `Registering for ${props.event.metadata.title}`,
-        from: address,
-        cta: {
-          label: 'View transaction',
-          href: `${chain?.blockExplorers?.default.url}/tx/${hash}`,
-        },
-        data: { hash },
-      })
 
       const data = await waitForTransaction({
         chainId: chain.id,
@@ -115,12 +124,12 @@ export function Register(props: Props) {
 
         await notifications.Add({
           created: Date.now(),
-          type: 'success',
-          message: `Succesfully registered`,
+          type: 'info',
+          message: `Registered for ${props.event.metadata.title}`,
           from: address,
           cta: {
-            label: 'View event',
-            href: `/events/${props.event.id}`,
+            label: 'View transaction',
+            href: `${chain?.blockExplorers?.default.url}/tx/${hash}`,
           },
           data: { hash },
         })
@@ -223,19 +232,19 @@ export function Register(props: Props) {
                   {props.event.conditionModuleData.tokenSymbol}. You can register for the event after.
                 </p>
 
-                {/* <button
+                <button
                   type='button'
-                  disabled={eventManagement.loading}
-                  onClick={approve}
+                  disabled={state.isLoading}
+                  onClick={Approve}
                   className='btn btn-accent btn-sm w-full'>
-                  {eventManagement.loading && (
+                  {state.isLoading && (
                     <>
                       Loading
                       <span className='loading loading-spinner h-4 w-4' />
                     </>
                   )}
-                  {!eventManagement.loading && <>Approve</>}
-                </button> */}
+                  {!state.isLoading && <>Approve</>}
+                </button>
               </>
             )}
 

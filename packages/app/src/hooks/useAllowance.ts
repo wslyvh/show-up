@@ -1,4 +1,3 @@
-import { CONFIG } from '@/utils/config'
 import { AddressZero } from '@/utils/network'
 import { erc20ABI, useContractRead } from 'wagmi'
 

@@ -4,6 +4,13 @@ export interface State<T> {
   error?: string
 }
 
+export interface LoadingStateData {
+  isLoading: boolean
+  message: string
+  type: 'error' | 'success' | 'info' | ''
+  data?: any
+}
+
 export interface LoadingState {
   isLoading: boolean
   message: string
