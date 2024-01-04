@@ -256,7 +256,7 @@ export function Register(props: Props) {
             !eventData.isParticipant && (
               <button
                 type='button'
-                disabled={eventData.isParticipant}
+                disabled={state.isLoading || eventData.isParticipant}
                 onClick={Register}
                 className='btn btn-accent btn-sm w-full'>
                 <>Register</>

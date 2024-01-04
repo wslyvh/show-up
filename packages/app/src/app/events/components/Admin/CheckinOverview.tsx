@@ -2,17 +2,34 @@
 
 import { useState } from 'react'
 import { useEventData } from '@/context/EventData'
-import { useAccount } from 'wagmi'
-import dayjs from 'dayjs'
+import { useAccount, useNetwork, useQueryClient } from 'wagmi'
+import { waitForTransaction, switchNetwork } from '@wagmi/core'
+import { prepareWriteShowHub, writeShowHub } from '@/abis'
+import { revalidateAll } from '@/app/actions/cache'
 import { ActionDrawer } from '@/components/ActionDrawer'
-import { Registration } from '@/utils/types'
+import { LoadingState, Registration } from '@/utils/types'
 import makeBlockie from 'ethereum-blockies-base64'
+import { useNotifications } from '@/context/Notification'
+import { CONFIG } from '@/utils/config'
+import { Alert } from '@/components/Alert'
+import { useRouter } from 'next/navigation'
 
 export function CheckinOverview() {
+  const router = useRouter()
+  const { chain: currentChain } = useNetwork()
   const eventData = useEventData()
   const record = eventData.record
   const event = eventData.event
+  const notifications = useNotifications()
+  const queryClient = useQueryClient()
+  const chain = CONFIG.DEFAULT_CHAINS.find((i) => i.id === eventData.record.conditionModule.chainId)
+  const { address } = useAccount()
   const [checkins, setCheckins] = useState<string[]>([])
+  const [state, setState] = useState<LoadingState>({
+    isLoading: false,
+    type: '',
+    message: '',
+  })
 
   if (!eventData.isAdmin) return <>Not connected</>
 
@@ -39,6 +56,59 @@ export function CheckinOverview() {
       })
     }
     setCheckins(newCheckins)
+  }
+
+  async function Checkin() {
+    if (!address || !chain) {
+      setState({ ...state, isLoading: false, type: 'error', message: 'Not connected' })
+      return
+    }
+
+    setState({ ...state, isLoading: true, type: 'info', message: `Check in attendees. Sign transaction` })
+
+    try {
+      const txConfig = await prepareWriteShowHub({
+        chainId: chain.id as any,
+        functionName: 'checkin',
+        args: [eventData.record.recordId, checkins, '0x'],
+      })
+
+      const { hash } = await writeShowHub(txConfig)
+
+      setState({ ...state, isLoading: true, type: 'info', message: 'Transaction sent. Awaiting confirmation' })
+
+      const data = await waitForTransaction({
+        chainId: chain.id,
+        hash: hash,
+      })
+
+      if (data.status == 'success') {
+        setState({ ...state, isLoading: false, type: 'success', message: 'Attendees checked in' })
+
+        await notifications.Add({
+          created: Date.now(),
+          type: 'success',
+          message: `Attendees checked-in`,
+          from: address,
+          cta: {
+            label: 'View transaction',
+            href: `${chain?.blockExplorers?.default.url}/tx/${hash}`,
+          },
+          data: { hash },
+        })
+
+        await revalidateAll()
+        queryClient.invalidateQueries({ queryKey: ['events'] })
+
+        router.push(`/events/${eventData.record.id}`)
+
+        return
+      }
+
+      setState({ ...state, isLoading: false, type: 'error', message: 'Unable to check in' })
+    } catch (e) {
+      setState({ ...state, isLoading: false, type: 'error', message: 'Unable to check in' })
+    }
   }
 
   const actionButton = (
@@ -130,20 +200,33 @@ export function CheckinOverview() {
               </div>
             </div>
 
-            <div>
-              {/* <button
-                type='button'
-                disabled={eventManagement.loading || checkins.length == 0}
-                onClick={() => eventManagement.Checkin(record.id, checkins)}
-                className='btn btn-accent btn-sm w-full'>
-                {eventManagement.loading && (
-                  <>
-                    Loading
-                    <span className='loading loading-spinner h-4 w-4' />
-                  </>
-                )}
-                {!eventManagement.loading && <>Check-in Attendees</>}
-              </button> */}
+            <div className='flex flex-col justify-end gap-4 mt-4'>
+              {state.message && <Alert type={state.type as any} message={state.message} />}
+
+              {currentChain && currentChain?.id !== chain?.id && (
+                <button
+                  className='btn btn-accent btn-sm w-full'
+                  disabled={state.isLoading || state.type == 'success'}
+                  onClick={() => switchNetwork({ chainId: eventData.record.conditionModule.chainId as any })}>
+                  Switch Network
+                </button>
+              )}
+
+              {currentChain && currentChain?.id === chain?.id && (
+                <button
+                  type='button'
+                  disabled={state.isLoading || checkins.length == 0}
+                  onClick={Checkin}
+                  className='btn btn-accent btn-sm w-full'>
+                  {state.isLoading && (
+                    <>
+                      Loading
+                      <span className='loading loading-spinner h-4 w-4' />
+                    </>
+                  )}
+                  {!state.isLoading && <>Check-in Attendees</>}
+                </button>
+              )}
             </div>
           </div>
         </ActionDrawer>
