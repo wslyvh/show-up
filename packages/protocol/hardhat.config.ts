@@ -39,6 +39,7 @@ const config: HardhatUserConfig = {
       mainnet: etherscanApiKey,
       sepolia: etherscanApiKey,
       optimisticEthereum: optimisticApiKey,
+      "base-sepolia": etherscanApiKey
     },
   },
   networks: {
@@ -58,6 +59,8 @@ const config: HardhatUserConfig = {
       chainId: 84532,
       url: "https://sepolia.base.org",
       accounts: [deployerKey as string],
+      // apiURL: "https://api-sepolia.basescan.org/api",
+      // browserURL: "https://sepolia.basescan.org"
     },
     optimism: {
       chainId: 10,

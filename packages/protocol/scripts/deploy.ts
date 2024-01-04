@@ -1,6 +1,12 @@
 import { ethers, network, run } from 'hardhat'
+import deployments from '../deployments.json'
+import fs from 'fs'
+
 export async function main() {
     console.log('NETWORK ID', network.config.chainId)
+    if (!network.config.chainId) {
+        throw new Error('INVALID_NETWORK_ID')
+    }
 
     console.log('Deploying Show Up Protocol..')
     const ShowHub = await ethers.getContractFactory('ShowHub')
@@ -33,6 +39,20 @@ export async function main() {
     console.log('- RecipientToken:', recipientToken.address)
     console.log('- SplitEther:', splitEther.address)
     console.log('- SplitToken:', splitToken.address)
+
+    console.log(`Write addresses to file..`)
+    const data = {
+        ...deployments,
+        [network.config.chainId]: {
+            ...(deployments as any)[network.config.chainId],
+            ShowHub: showhub.address,
+            RecipientEther: recipientEther.address,
+            RecipientToken: recipientToken.address,
+            SplitEther: splitEther.address,
+            SplitToken: splitToken.address,
+        }
+    }
+    fs.writeFileSync('./deployments.json', JSON.stringify(data, null, 2))
 
     if (network.config.chainId == 84532) {
         // no auto verification on Base Sepolia

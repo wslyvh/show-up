@@ -1,46 +1,38 @@
 import { ethers, network } from 'hardhat'
 import { defaultContentUri, defaultDepositFee, defaultMaxParticipants, defaultTokenFee } from '../test/utils/types'
 import { time } from '@nomicfoundation/hardhat-network-helpers'
-import dayjs from 'dayjs'
+import deployments from '../deployments.json'
 
 export async function main() {
     console.log('Create Test data @ Show Up Protocol..')
     const [owner] = await ethers.getSigners()
 
     console.log('NETWORK ID', network.config.chainId)
-    let showhub, recipientEther, recipientToken, splitEther, splitToken, token
-
-    // Sepolia
-    if (network.config.chainId == 11155111) {
-        showhub = await ethers.getContractAt('ShowHub', '0x6abEaB74bc741ce8daf2e4614DB7485C19c8acc4')
-        recipientEther = await ethers.getContractAt('RecipientEther', '0x73eB044D5Da49384c65b744a0E6CFF3f6B735C03')
-        recipientToken = await ethers.getContractAt('RecipientToken', '0x584269c84C40a142E6b9C5c9c7D31B9a24E9F6D0')
-        splitEther = await ethers.getContractAt('SplitEther', '0x08b2Bb2BA7b3437aD2EC5CC2F5AbB5223c342260')
-        splitToken = await ethers.getContractAt('SplitToken', '0xb1c9D6FFc183EeCf11722f28B3c42b45164e8Df1')
-        token = await ethers.getContractAt('Token', '0x796b9850Be63Ffa903eD2854164c21189DbB4B89')
+    if (!network.config.chainId) {
+        console.error('Invalid Network ID')
+        return
     }
 
-    // Base Sepolia
-    if (network.config.chainId == 84532) {
-        showhub = await ethers.getContractAt('ShowHub', '0x70cD0FB06F21aA528b311189A998d03C47CbC056')
-        recipientEther = await ethers.getContractAt('RecipientEther', '0x0164c5C19e890D5D63c85B6D9585Aa38E1a2B015')
-        recipientToken = await ethers.getContractAt('RecipientToken', '0x495A11d9Dd1D348C0AeD41c1B289A34d52637E91')
-        splitEther = await ethers.getContractAt('SplitEther', '0xF8481548A8C38B8c1B178Be802E6399397361617')
-        splitToken = await ethers.getContractAt('SplitToken', '0x66d1306A2DFc1f2446174BDE3d2eE203476da4eB')
-        token = await ethers.getContractAt('Token', '0x555B9c3B79EF437776F7E0833c234c802D741771')
-    }
+    const contracts = (deployments as any)[network.config.chainId]
+    const showhub = contracts.ShowHub
+    const recipientEther = contracts.RecipientEther
+    const recipientToken = contracts.RecipientToken
+    const splitEther = contracts.SplitEther
+    const splitToken = contracts.SplitToken
+    const token = contracts.Token
 
-    if (!showhub || !recipientEther || !recipientToken || !splitEther || !splitToken || !token) {
-        console.log('Contracts not found')
+    if (!showhub || !recipientEther || !recipientToken || !splitEther || !splitToken) {
+        console.error('Contracts not found')
         return
     }
 
     // Check contracts exist
-    const showHubExists = await ethers.provider.getCode(showhub.address)
-    const recipientEtherExists = await ethers.provider.getCode(recipientEther.address)
-    const recipientTokenExists = await ethers.provider.getCode(recipientToken.address)
-    const splitEtherExists = await ethers.provider.getCode(splitEther.address)
-    const splitTokenExists = await ethers.provider.getCode(splitToken.address)
+    const showHubExists = await ethers.provider.getCode(showhub)
+    const recipientEtherExists = await ethers.provider.getCode(recipientEther)
+    const recipientTokenExists = await ethers.provider.getCode(recipientToken)
+    const splitEtherExists = await ethers.provider.getCode(splitEther)
+    const splitTokenExists = await ethers.provider.getCode(splitToken)
+
     if (showHubExists == '0x') {
         console.log('ShowHub contract not found')
         return
@@ -63,10 +55,10 @@ export async function main() {
     }
 
     // Check modules are whitelisted 
-    const isRecipientEtherWhitelisted = await showhub.isConditionModuleWhitelisted(recipientEther.address)
-    const isRecipientTokenWhitelisted = await showhub.isConditionModuleWhitelisted(recipientToken.address)
-    const isSplitEtherWhitelisted = await showhub.isConditionModuleWhitelisted(splitEther.address)
-    const isSplitTokenWhitelisted = await showhub.isConditionModuleWhitelisted(splitToken.address)
+    const isRecipientEtherWhitelisted = await showhub.isConditionModuleWhitelisted(recipientEther)
+    const isRecipientTokenWhitelisted = await showhub.isConditionModuleWhitelisted(recipientToken)
+    const isSplitEtherWhitelisted = await showhub.isConditionModuleWhitelisted(splitEther)
+    const isSplitTokenWhitelisted = await showhub.isConditionModuleWhitelisted(splitToken)
     if (!isRecipientEtherWhitelisted) {
         console.log('RecipientEther not whitelisted')
         return
@@ -100,32 +92,32 @@ export async function main() {
     // Split Ether
     console.log('- SplitEther')
     const splitEtherParams = ethers.utils.defaultAbiCoder.encode(['uint256'], [defaultDepositFee])
-    await showhub.create(defaultContentUri, tomorrow, defaultMaxParticipants, splitEther.address, splitEtherParams, { gasLimit: 350000 })
+    await showhub.create(defaultContentUri, tomorrow, defaultMaxParticipants, splitEther, splitEtherParams, { gasLimit: 350000 })
 
     // Split Token
     console.log('- SplitToken')
-    const splitTokenParams = ethers.utils.defaultAbiCoder.encode(['uint256', 'address'], [defaultTokenFee, token.address])
-    await showhub.create(defaultContentUri, tomorrow, 0, splitToken.address, splitTokenParams, { gasLimit: 350000 })
+    const splitTokenParams = ethers.utils.defaultAbiCoder.encode(['uint256', 'address'], [defaultTokenFee, token])
+    await showhub.create(defaultContentUri, tomorrow, 0, splitToken, splitTokenParams, { gasLimit: 350000 })
 
     // Recipient Ether
     console.log('- RecipientEther')
-    const recipientEtherParams = ethers.utils.defaultAbiCoder.encode(['uint256', 'address'], [defaultDepositFee, owner.address])
-    await showhub.create(defaultContentUri, tomorrow, 0, recipientEther.address, recipientEtherParams, { gasLimit: 350000 })
+    const recipientEtherParams = ethers.utils.defaultAbiCoder.encode(['uint256', 'address'], [defaultDepositFee, owner])
+    await showhub.create(defaultContentUri, tomorrow, 0, recipientEther, recipientEtherParams, { gasLimit: 350000 })
 
     // Recipient Token
     console.log('- RecipientToken')
-    const recipientTokenParams = ethers.utils.defaultAbiCoder.encode(['uint256', 'address', 'address'], [defaultTokenFee, token.address, owner.address])
-    await showhub.create(defaultContentUri, tomorrow, defaultMaxParticipants, recipientToken.address, recipientTokenParams, { gasLimit: 350000 })
+    const recipientTokenParams = ethers.utils.defaultAbiCoder.encode(['uint256', 'address', 'address'], [defaultTokenFee, token, owner.address])
+    await showhub.create(defaultContentUri, tomorrow, defaultMaxParticipants, recipientToken, recipientTokenParams, { gasLimit: 350000 })
 
     // Other test events / scenarios
     console.log('Create other events..')
     console.log('- Event with attendees')
     const registerParams = ethers.utils.defaultAbiCoder.encode(['uint256'], [0])
-    const registerTx = await showhub.create(defaultContentUri, nextWeek, 0, splitEther.address, registerParams, { gasLimit: 350000 })
+    const registerTx = await showhub.create(defaultContentUri, nextWeek, 0, splitEther, registerParams, { gasLimit: 350000 })
 
     console.log('Waiting for tx..')
     const registerReceipt = await registerTx.wait()
-    const registerReceiptLogs = registerReceipt.events?.find((event) => event.event === 'Created')
+    const registerReceiptLogs = registerReceipt.events?.find((event: any) => event.event === 'Created')
     const registerEventId = registerReceiptLogs?.args?.id
     if (registerEventId) {
         console.log('Register #1')
@@ -139,10 +131,10 @@ export async function main() {
     console.log('- Cancellable Event')
     const cancelEventUri = 'ipfs://bafkreiaf5svesha5s4nlvgsugfrb27rnv2k4k7wk2eqws4dw6wpfefkqsy'
     const cancelParams = ethers.utils.defaultAbiCoder.encode(['uint256'], [0])
-    const cancelTx = await showhub.create(cancelEventUri, nextWeek, 0, splitEther.address, cancelParams, { gasLimit: 350000 })
+    const cancelTx = await showhub.create(cancelEventUri, nextWeek, 0, splitEther, cancelParams, { gasLimit: 350000 })
     console.log('Waiting for tx..')
     const cancelReceipt = await cancelTx.wait()
-    const cancelReceiptLogs = cancelReceipt.events?.find((event) => event.event === 'Created')
+    const cancelReceiptLogs = cancelReceipt.events?.find((event: any) => event.event === 'Created')
     const cancelEventId = cancelReceiptLogs?.args?.id
     if (cancelEventId) {
         console.log('Cancel Event..')
@@ -152,14 +144,14 @@ export async function main() {
     console.log('- Unlisted Event')
     const unlistedParams = ethers.utils.defaultAbiCoder.encode(['uint256'], [defaultDepositFee])
     const unlistedContentUri = 'ipfs://bafkreigoeobozhvn77676j3kuey3iidfzjbvkoewmnifyweshc2fjckwx4'
-    await showhub.create(unlistedContentUri, nextWeek, defaultMaxParticipants, splitEther.address, unlistedParams, { gasLimit: 350000 })
+    await showhub.create(unlistedContentUri, nextWeek, defaultMaxParticipants, splitEther, unlistedParams, { gasLimit: 350000 })
 
     console.log('- Fund Event')
     const fundEventParams = ethers.utils.defaultAbiCoder.encode(['uint256'], [0])
-    const fundEventTx = await showhub.create(defaultContentUri, nextWeek, defaultMaxParticipants, splitEther.address, fundEventParams, { gasLimit: 350000 })
+    const fundEventTx = await showhub.create(defaultContentUri, nextWeek, defaultMaxParticipants, splitEther, fundEventParams, { gasLimit: 350000 })
     console.log('Waiting for tx..')
     const fundEventReceipt = await fundEventTx.wait()
-    const fundEventReceiptLogs = fundEventReceipt.events?.find((event) => event.event === 'Created')
+    const fundEventReceiptLogs = fundEventReceipt.events?.find((event: any) => event.event === 'Created')
     const fundEventId = fundEventReceiptLogs?.args?.id
     if (fundEventId) {
         console.log('Fund Event..')
