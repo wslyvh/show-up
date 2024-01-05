@@ -100,7 +100,7 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
     }
 
     const conditionModule = await context.ConditionModule.get(moduleId)
-    context.log.info(`Process ConditionModule data ${event.params.conditionModule} | ${conditionModule?.name}`)
+    context.log.info(`Process ConditionModule data ${moduleId} | ${conditionModule?.name}`)
 
     if (conditionModule?.name == 'RecipientEther') {
       const value = decodeAbiParameters(RecipientEtherDataParams, event.params.data as any) as any[]
@@ -202,7 +202,7 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
       contentUri: event.params.contentUri,
       metadata: metadataId ?? null,
 
-      conditionModule: event.params.conditionModule,
+      conditionModule: moduleId,
       conditionModuleData: data.id,
 
       totalRegistrations: BigInt(0),
