@@ -15,6 +15,7 @@ contract SplitToken is Ownable {
   string internal _name;
   mapping(uint256 => Conditions) internal _conditions;
   mapping(uint256 => uint256) internal _totalDeposits;
+  mapping(uint256 => uint256) internal _totalFunded;
 
   constructor(address owner) Ownable(owner) {
     _name = 'SplitToken';
@@ -52,7 +53,7 @@ contract SplitToken is Ownable {
     IERC20 token = IERC20(_conditions[id].tokenAddress);
     require(token.transferFrom(sender, address(this), amount));
 
-    _totalDeposits[id] += amount;
+    _totalFunded[id] += amount;
 
     return true;
   }
@@ -86,7 +87,8 @@ contract SplitToken is Ownable {
     address[] calldata attendees,
     bytes calldata data
   ) external virtual onlyOwner returns (bool) {
-    (bool success, uint256 attendanceFee) = Math.tryDiv(_totalDeposits[id], attendees.length);
+    uint256 totalFunds = _totalDeposits[id] + _totalFunded[id];
+    (bool success, uint256 attendanceFee) = Math.tryDiv(totalFunds, attendees.length);
     if (!success) revert IncorrectValue();
 
     IERC20 token = IERC20(_conditions[id].tokenAddress);
@@ -95,6 +97,7 @@ contract SplitToken is Ownable {
     }
 
     _totalDeposits[id] = 0;
+    _totalFunded[id] = 0;
 
     return true;
   }
@@ -112,5 +115,9 @@ contract SplitToken is Ownable {
 
   function getTotalDeposits(uint256 id) external view returns (uint256) {
     return _totalDeposits[id];
+  }
+
+  function getTotalFunded(uint256 id) external view returns (uint256) {
+    return _totalFunded[id];
   }
 }

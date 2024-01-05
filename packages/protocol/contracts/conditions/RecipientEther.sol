@@ -110,6 +110,10 @@ contract RecipientEther is Ownable {
   }
 
   function getTotalDeposits(uint256 id) external view returns (uint256) {
-    return _totalDeposits[id] + _totalFunded[id];
+    return _totalDeposits[id];
+  }
+
+  function getTotalFunded(uint256 id) external view returns (uint256) {
+    return _totalFunded[id];
   }
 }

@@ -29,12 +29,14 @@ const SplitTokenDataParams = [{ name: "depositFee", type: "uint256" }, { name: "
 
 ShowHubContract_ConditionModuleWhitelisted_handler(async ({ event, context }) => {
   const chainId = GetChainId(event.srcAddress) // TODO: Get ChainId from context
+  const moduleId = `${chainId}-${event.params.conditionModule}`
   context.log.info(`Processing ShowHubContract_ConditionModuleWhitelisted @ chain ${chainId} | Block # ${event.blockNumber}`)
 
-  let module = await context.ConditionModule.get(event.params.conditionModule)
+  let module = await context.ConditionModule.get(moduleId)
   if (module == null) {
     module = {
-      id: event.params.conditionModule,
+      id: moduleId,
+      address: event.params.conditionModule,
       chainId: chainId,
       createdAt: BigInt(event.params.timestamp),
       createdBy: event.params.sender,
@@ -55,6 +57,8 @@ ShowHubContract_ConditionModuleWhitelisted_handler(async ({ event, context }) =>
 ShowHubContract_Created_handler(async ({ event, context }) => {
   const chainId = GetChainId(event.srcAddress) // TODO: Get ChainId from context
   const eventId = `${chainId}-${event.params.id}`
+  const moduleId = `${chainId}-${event.params.conditionModule}`
+  const dataId = `${chainId}-${event.params.id}-${event.params.conditionModule}`
   context.log.info(`Processing ShowHubContract_Created # ${eventId} @ Block # ${event.blockNumber}`)
 
   let entity = await context.Record.get(eventId)
@@ -84,7 +88,8 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
 
     // Process Condition Module data
     let data: conditionModuleDataEntity = {
-      id: event.params.conditionModule,
+      id: dataId,
+      conditionModule: moduleId,
       depositFee: BigInt(0),
 
       recipient: null,
@@ -94,7 +99,7 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
       tokenDecimals: null
     }
 
-    const conditionModule = await context.ConditionModule.get(event.params.conditionModule)
+    const conditionModule = await context.ConditionModule.get(moduleId)
     context.log.info(`Process ConditionModule data ${event.params.conditionModule} | ${conditionModule?.name}`)
 
     if (conditionModule?.name == 'RecipientEther') {
@@ -265,7 +270,7 @@ ShowHubContract_Funded_handler(async ({ event, context }) => {
     const funded = await client.readContract({
       address: entity.conditionModule as any,
       abi: TotalDepositsABI,
-      functionName: "getTotalDeposits",
+      functionName: "getTotalFunded",
       args: [event.params.id],
     }) as string
 

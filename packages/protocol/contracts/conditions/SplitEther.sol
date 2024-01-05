@@ -12,6 +12,7 @@ contract SplitEther is Ownable {
 
   mapping(uint256 => Conditions) internal _conditions;
   mapping(uint256 => uint256) internal _totalDeposits;
+  mapping(uint256 => uint256) internal _totalFunded;
 
   string internal _name;
 
@@ -44,7 +45,7 @@ contract SplitEther is Ownable {
   function fund(uint256 id, address sender, bytes calldata data) external payable virtual onlyOwner returns (bool) {
     if (msg.value == 0) revert IncorrectValue();
 
-    _totalDeposits[id] += msg.value;
+    _totalFunded[id] += msg.value;
 
     return true;
   }
@@ -75,7 +76,8 @@ contract SplitEther is Ownable {
     address[] calldata attendees,
     bytes calldata data
   ) external virtual onlyOwner returns (bool) {
-    (bool success, uint256 attendanceFee) = Math.tryDiv(_totalDeposits[id], attendees.length);
+    uint256 totalFunds = _totalDeposits[id] + _totalFunded[id];
+    (bool success, uint256 attendanceFee) = Math.tryDiv(totalFunds, attendees.length);
     if (!success) revert IncorrectValue();
 
     for (uint256 i = 0; i < attendees.length; i++) {
@@ -83,6 +85,7 @@ contract SplitEther is Ownable {
     }
 
     _totalDeposits[id] = 0;
+    _totalFunded[id] = 0;
 
     return true;
   }
@@ -100,5 +103,9 @@ contract SplitEther is Ownable {
 
   function getTotalDeposits(uint256 id) external view returns (uint256) {
     return _totalDeposits[id];
+  }
+
+  function getTotalFunded(uint256 id) external view returns (uint256) {
+    return _totalFunded[id];
   }
 }

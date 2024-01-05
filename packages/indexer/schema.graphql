@@ -1,5 +1,6 @@
 type ConditionModule {
   id: ID! # Address
+  address: String!
   chainId: Int!
   createdAt: BigInt!
   createdBy: Bytes! # address
@@ -72,7 +73,8 @@ type Event {
 }
 
 type ConditionModuleData {
-  id: ID! # Address
+  id: ID! # Chain + Record + ConditionModule
+  conditionModule: String! # Address
   depositFee: BigInt!
   recipient: Bytes
 
