@@ -99,7 +99,12 @@ contract ShowHub is Ownable, IShowHub {
       registrations[i] = _records[id].registrationIndex[i];
     }
 
-    bool result = IConditionModule(_records[id].conditionModule).cancel(id, registrations, conditionModuleData);
+    bool result = IConditionModule(_records[id].conditionModule).cancel(
+      id,
+      _records[id].owner,
+      registrations,
+      conditionModuleData
+    );
     if (!result) revert UnexpectedConditionModuleError();
 
     _records[id].status = Status.Cancelled;

@@ -30,14 +30,19 @@ contract SplitEther is Ownable {
 
   function cancel(
     uint256 id,
+    address owner,
     address[] calldata registrations,
     bytes calldata data
   ) external virtual onlyOwner returns (bool) {
     for (uint256 i = 0; i < registrations.length; i++) {
       payable(registrations[i]).transfer(_conditions[id].depositFee);
     }
-
     _totalDeposits[id] = 0;
+
+    if (_totalFunded[id] > 0) {
+      payable(owner).transfer(_totalFunded[id]);
+      _totalFunded[id] = 0;
+    }
 
     return true;
   }

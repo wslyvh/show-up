@@ -272,7 +272,7 @@ describe('RecipientToken', function () {
       expect(fundTx).to.emit(showhub, "Funded")
         .withArgs(0, [], owner.address, timestamp)
 
-      const totalFundAmount = await recipientTokenModule.getTotalDeposits(0)
+      const totalFundAmount = await recipientTokenModule.getTotalFunded(0)
       expect(totalFundAmount).to.be.equal(defaultFundFee)
     })
 

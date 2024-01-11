@@ -33,6 +33,7 @@ contract RecipientToken is Ownable {
 
   function cancel(
     uint256 id,
+    address owner,
     address[] calldata registrations,
     bytes calldata data
   ) external virtual onlyOwner returns (bool) {
@@ -41,8 +42,12 @@ contract RecipientToken is Ownable {
     for (uint256 i = 0; i < registrations.length; i++) {
       require(token.transfer(registrations[i], _conditions[id].depositFee));
     }
-
     _totalDeposits[id] = 0;
+
+    if (_totalFunded[id] > 0) {
+      require(token.transfer(owner, _totalFunded[id]));
+      _totalFunded[id] = 0;
+    }
 
     return true;
   }

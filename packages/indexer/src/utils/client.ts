@@ -3,8 +3,8 @@ import { normalize } from 'viem/ens'
 import { baseSepolia, sepolia, optimism, mainnet } from 'viem/chains'
 import { TruncateMiddle } from './mapping'
 
-const ADDRESS_SEPOLIA = '0x69E7456889a3B18c3B277013491031b7dA74C73c'
-const ADDRESS_BASE_SEPOLIA = '0x31154816A0d880915B5D4c38d476326b69FFf011'
+const ADDRESS_SEPOLIA = '0xd599039AcD9bd440D175E089A05752ed21e1b65f'
+const ADDRESS_BASE_SEPOLIA = '0x2015332B900685104889Ef6c0BE07146F342D888'
 const ADDRESS_OPTIMISM = ''
 
 export function GetChainId(source: string) {

@@ -259,7 +259,7 @@ describe('SplitToken', function () {
       expect(fundTx).to.emit(showhub, "Funded")
         .withArgs(0, [], owner.address, timestamp)
 
-      const totalFundAmount = await splitTokenModule.getTotalDeposits(0)
+      const totalFundAmount = await splitTokenModule.getTotalFunded(0)
       expect(totalFundAmount).to.be.equal(defaultFundFee)
     })
 
