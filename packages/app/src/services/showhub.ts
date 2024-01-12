@@ -3,7 +3,7 @@ import { CONFIG } from '@/utils/config'
 import { SITE_URL } from '@/utils/site'
 import dayjs from 'dayjs'
 
-export const envioBaseUri = 'https://indexer.bigdevenergy.link/f77f4ea/v1/graphql' // 'http://localhost:8080/v1/graphql' // 'https://indexer.bigdevenergy.link/0db47e0/v1/graphql'
+export const envioBaseUri = 'https://indexer.bigdevenergy.link/9d6ac1a/v1/graphql' // 'http://localhost:8080/v1/graphql'
 
 const eventFields = `
   id
@@ -79,6 +79,7 @@ export async function GetConditionModules() {
       query: `{
         ConditionModule(limit: 100) {
           id
+          address
           chainId
           name
           whitelisted
@@ -95,6 +96,7 @@ export async function GetConditionModules() {
   const { data } = await response.json()
   return data.ConditionModule.map((i: any) => ({
     id: i.id,
+    address: i.address,
     chainId: i.chainId,
     name: i.name,
     whitelisted: i.whitelisted,
@@ -314,6 +316,10 @@ function mapEventRecord(data: any) {
         ? `${CONFIG.DEFAULT_IPFS_GATEWAY}/${data.metadataObject.imageUrl.replace('ipfs://', '')}`
         : data.metadataObject?.imageUrl ?? `${SITE_URL}/events/${data.id}/opengraph-image`,
     },
+
+    totalRegistrations: data.totalRegistrations,
+    totalAttendees: data.totalAttendees,
+    totalFunded: data.totalFunded,
 
     registrations: data.registrations.map((i: any) => ({
       id: i.userObject.id,

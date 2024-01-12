@@ -50,7 +50,12 @@ export interface Record {
   metadata: EventMetadata
 
   registrations: Registration[]
+
+  totalRegistrations: number
+  totalAttendees: number
+  totalFunded: number
 }
+
 export interface EventMetadata {
   appId?: string
   title: string
@@ -79,6 +84,7 @@ export interface Registration extends UserProfile {
 
 export interface ConditionModule {
   id: string
+  address: string
   chainId: number
   name: 'RecipientEther' | 'RecipientToken' | 'SplitEther' | 'SplitToken'
   whitelisted: boolean

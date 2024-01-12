@@ -9,22 +9,23 @@ import { CONFIG } from '@/utils/config'
 import { TruncateMiddle } from '@/utils/format'
 import { useQueryClient } from '@tanstack/react-query'
 import { LoadingStateData } from '@/utils/types'
-import { formatUnits } from 'viem/utils'
+import { encodeAbiParameters, formatUnits } from 'viem/utils'
 import { useAccount, useNetwork } from 'wagmi'
 import { useState } from 'react'
 import { erc20ABI, prepareWriteShowHub, writeShowHub } from '@/abis'
 import { revalidateAll } from '@/app/actions/cache'
 import { waitForTransaction, switchNetwork, prepareWriteContract, writeContract } from '@wagmi/core'
 import { Alert } from '@/components/Alert'
+import NP from 'number-precision'
 
-export function Register() {
+export function Fund() {
   const { chain: currentChain } = useNetwork()
+  const { address } = useAccount()
   const eventData = useEventData()
   const queryClient = useQueryClient()
   const notifications = useNotifications()
   const chain = CONFIG.DEFAULT_CHAINS.find((i) => i.id === eventData.record.conditionModule.chainId)
-  const { address: connectedAddress } = useAccount()
-  const [address, setAddress] = useState(connectedAddress)
+  const [fundingAmount, setFundingAmount] = useState(eventData.record.conditionModuleData.tokenAddress ? 10 : 0.1)
   const [state, setState] = useState<LoadingStateData>({
     isLoading: false,
     type: '',
@@ -35,22 +36,6 @@ export function Register() {
     address,
     eventData.record.conditionModuleId,
     eventData.record.conditionModuleData.tokenAddress
-  )
-
-  function buttonText() {
-    if (eventData.isCancelled) return 'Event is cancelled'
-    if (!eventData.isActive || eventData.hasEnded) return 'Event has ended'
-    if (eventData.isParticipant) return 'Already registered'
-    if (!eventData.hasBalance)
-      return `Insufficient ${eventData.record.conditionModuleData.tokenSymbol ?? 'ETH'} balance`
-
-    return 'Register'
-  }
-
-  const actionButton = (
-    <button type='button' disabled={eventData.canRegister} className='btn btn-accent btn-outline btn-sm w-full'>
-      {buttonText()}
-    </button>
   )
 
   async function Approve() {
@@ -65,7 +50,10 @@ export function Register() {
       address: eventData.record.conditionModuleData.tokenAddress,
       abi: erc20ABI,
       functionName: 'approve',
-      args: [eventData.record.conditionModuleId, eventData.record.conditionModuleData.depositFee],
+      args: [
+        eventData.record.conditionModuleId,
+        BigInt(NP.times(fundingAmount, 10 ** (eventData.record.conditionModuleData.tokenDecimals ?? 18))),
+      ],
     })
 
     const { hash } = await writeContract(approveConfig)
@@ -92,26 +80,27 @@ export function Register() {
     setState({ ...state, isLoading: false, type: 'info', message: '', data: true })
   }
 
-  async function Register() {
+  async function Fund() {
     if (!address || !chain) {
       setState({ ...state, isLoading: false, type: 'error', message: 'Not connected' })
       return
     }
 
-    setState({ ...state, isLoading: true, type: 'info', message: `Registering for event. Sign transaction` })
+    setState({ ...state, isLoading: true, type: 'info', message: `Funding event. Sign transaction` })
 
     try {
-      if (eventData.record.conditionModuleData.tokenAddress) {
-        // make sure token is approved before registration first
-      }
+      const amount = BigInt(NP.times(fundingAmount, 10 ** (eventData.record.conditionModuleData.tokenDecimals ?? 18)))
+      const params = eventData.record.conditionModuleData.tokenAddress
+        ? encodeAbiParameters([{ type: 'uint256' }], [amount])
+        : '0x'
+
+      // make sure token is approved before registration first
 
       const txConfig = await prepareWriteShowHub({
         chainId: chain.id as any,
-        functionName: 'register',
-        args: [eventData.record.recordId, address, '0x'],
-        value: eventData.record.conditionModuleData.tokenAddress
-          ? BigInt(0)
-          : BigInt(eventData.record.conditionModuleData.depositFee),
+        functionName: 'fund',
+        args: [eventData.record.recordId, params],
+        value: eventData.record.conditionModuleData.tokenAddress ? BigInt(0) : amount,
       })
 
       const { hash } = await writeShowHub(txConfig)
@@ -124,12 +113,12 @@ export function Register() {
       })
 
       if (data.status == 'success') {
-        setState({ ...state, isLoading: false, type: 'success', message: 'Successfully registered' })
+        setState({ ...state, isLoading: false, type: 'success', message: 'Successfully funded' })
 
         await notifications.Add({
           created: Date.now(),
           type: 'info',
-          message: `Registered for ${eventData.record.metadata.title}`,
+          message: `Successfully funded event`,
           from: address,
           cta: {
             label: 'View transaction',
@@ -144,19 +133,27 @@ export function Register() {
         return
       }
 
-      setState({ ...state, isLoading: false, type: 'error', message: 'Unable to register for event' })
+      setState({ ...state, isLoading: false, type: 'error', message: 'Unable to fund event' })
     } catch (e) {
       console.error(e)
-      setState({ ...state, isLoading: false, type: 'error', message: 'Unable to register for event' })
+      setState({ ...state, isLoading: false, type: 'error', message: 'Unable to fund event' })
     }
   }
 
   return (
-    <ActionDrawer title='Register' actionComponent={actionButton}>
+    <ActionDrawer
+      title='Fund Event'
+      actionComponent={
+        <button type='button' className='btn btn-accent btn-outline btn-sm w-full'>
+          Fund Event
+        </button>
+      }>
       <div className='flex flex-col justify-between h-full'>
         <div className='flex flex-col'>
           <p>
-            You&apos;re registering for <strong>{eventData.record.metadata?.title}</strong>.
+            Funding an event can give an extra incentive for people to show up. Funding an event is permissionless.
+            Anyone can fund it. The funds are only distributed over checked in attendees and are added on top of any
+            other deposit fees. Funds must be in the same currency/token as the deposit fee.
           </p>
 
           <div className='w-full divide-y divide-gray-800 text-sm gap-4 mt-4'>
@@ -175,41 +172,38 @@ export function Register() {
               </span>
             </div>
             <div className='flex items-center justify-between py-2'>
-              <span>Available Spots</span>
-              <span>
-                {eventData.record.registrations.length}
-                {' / '}
-                {eventData.record.limit > 0 ? eventData.record.limit : 'unlimited'}
-              </span>
-            </div>
-            <div className='flex items-center justify-between py-2'>
-              <span>Deposit Fee</span>
+              <span>Total funded</span>
               <span>
                 {formatUnits(
-                  BigInt(eventData.record.conditionModuleData.depositFee),
+                  BigInt(eventData.record.totalFunded),
                   eventData.record.conditionModuleData.tokenDecimals ?? 18
-                )}{' '}
-                {eventData.record.conditionModuleData.tokenSymbol}
+                )}
               </span>
             </div>
-            {eventData.record.conditionModuleData.tokenAddress && (
-              <div className='flex items-center justify-between py-2'>
-                <span>Current Allowance</span>
-                <span>{formatUnits(allowance ?? 0, eventData.record.conditionModuleData.tokenDecimals ?? 18)}</span>
+            <div className='form-control w-full'>
+              <div className='mt-4'>
+                <label className='label' htmlFor='fundingAmount'>
+                  <span className='label-text'>
+                    {eventData.record.conditionModuleData.tokenSymbol ?? 'ETH'} <span className='text-accent'>*</span>
+                  </span>
+                </label>
+                <input
+                  id='fundingAmount'
+                  type='number'
+                  step={eventData.record.conditionModuleData.tokenAddress ? '1' : '0.01'}
+                  max='1000.00'
+                  required
+                  className='input input-sm input-bordered w-full'
+                  value={fundingAmount}
+                  onChange={(e) => setFundingAmount(Number(e.target.value))}
+                />
               </div>
-            )}
-            <p className='pt-4'>* Your deposit will be returned if you check in or if the event is cancelled.</p>
+            </div>
           </div>
         </div>
 
         <div className='flex flex-col justify-end gap-4 mt-4'>
           {state.message && <Alert type={state.type as any} message={state.message} />}
-
-          {eventData.isParticipant && (
-            <button type='button' className='btn btn-accent btn-sm w-full' disabled>
-              Already registered
-            </button>
-          )}
 
           {currentChain && currentChain?.id !== chain?.id && (
             <button
@@ -222,20 +216,11 @@ export function Register() {
 
           {currentChain &&
             currentChain?.id == chain?.id &&
-            allowance < BigInt(eventData.record.conditionModuleData.depositFee) &&
+            allowance <
+              BigInt(NP.times(fundingAmount, 10 ** (eventData.record.conditionModuleData.tokenDecimals ?? 18))) &&
             (eventData.record.conditionModule.name == 'RecipientToken' ||
-              eventData.record.conditionModule.name == 'SplitToken') &&
-            !eventData.isParticipant && (
+              eventData.record.conditionModule.name == 'SplitToken') && (
               <>
-                <p>
-                  You need to approve the contract first to spend{' '}
-                  {formatUnits(
-                    BigInt(eventData.record.conditionModuleData.depositFee),
-                    eventData.record.conditionModuleData.tokenDecimals ?? 18
-                  )}{' '}
-                  {eventData.record.conditionModuleData.tokenSymbol}. You can register for the event after.
-                </p>
-
                 <button
                   type='button'
                   disabled={state.isLoading}
@@ -254,16 +239,12 @@ export function Register() {
 
           {currentChain &&
             currentChain?.id == chain?.id &&
-            (allowance >= BigInt(eventData.record.conditionModuleData.depositFee) ||
+            (allowance >=
+              BigInt(NP.times(fundingAmount, 10 ** (eventData.record.conditionModuleData.tokenDecimals ?? 18))) ||
               eventData.record.conditionModule.name == 'RecipientEther' ||
-              eventData.record.conditionModule.name == 'SplitEther') &&
-            !eventData.isParticipant && (
-              <button
-                type='button'
-                disabled={state.isLoading || eventData.isParticipant}
-                onClick={Register}
-                className='btn btn-accent btn-sm w-full'>
-                <>Register</>
+              eventData.record.conditionModule.name == 'SplitEther') && (
+              <button type='button' disabled={state.isLoading} onClick={Fund} className='btn btn-accent btn-sm w-full'>
+                <>Fund</>
               </button>
             )}
         </div>

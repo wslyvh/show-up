@@ -10,18 +10,13 @@ import { useState } from 'react'
 import { revalidateAll } from '@/app/actions/cache'
 import { Alert } from '@/components/Alert'
 
-interface Props {
-  id: string
-}
-
-export function Settle(props: Props) {
+export function Settle() {
   const { chain: currentChain } = useNetwork()
   const eventData = useEventData()
   const notifications = useNotifications()
   const queryClient = useQueryClient()
   const chain = CONFIG.DEFAULT_CHAINS.find((i) => i.id === eventData.record.conditionModule.chainId)
   const { address } = useAccount()
-  const [reason, setReason] = useState('')
   const [state, setState] = useState<LoadingState>({
     isLoading: false,
     type: '',

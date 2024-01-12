@@ -6,6 +6,7 @@ import { formatEther, formatUnits } from 'viem/utils'
 import { LinkComponent } from '@/components/LinkComponent'
 import { AdminActions } from './Admin/Actions'
 import { Register } from './Register'
+import { Fund } from './Fund'
 import { useEventData } from '@/context/EventData'
 import { CONFIG } from '@/utils/config'
 import { useAccount } from 'wagmi'
@@ -22,15 +23,6 @@ export function EventDetails() {
   const record = eventData.record
   const event = eventData.event
   const chain = CONFIG.DEFAULT_CHAINS.find((i) => i.id === record.chainId)
-
-  function registerButtonText() {
-    if (eventData.isCancelled) return 'Event is cancelled'
-    if (!eventData.isActive || eventData.hasEnded) return 'Event has ended'
-    if (eventData.isParticipant) return 'Already registered'
-    if (!eventData.hasBalance) return `Insufficient ${record.conditionModuleData.tokenSymbol ?? 'ETH'} balance`
-
-    return 'Register'
-  }
 
   return (
     <>
@@ -115,9 +107,13 @@ export function EventDetails() {
               </LinkComponent>
             )}
 
-            {address && !eventData.isAdmin && (
-              <Register event={record} buttonText={registerButtonText()} disabled={eventData.canRegister} />
+            {address && (
+              <p className='my-4'>
+                <Fund />
+              </p>
             )}
+
+            {address && !eventData.isAdmin && <Register />}
 
             {event.website && (
               <p className='mt-4'>
