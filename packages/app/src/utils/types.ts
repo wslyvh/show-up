@@ -32,6 +32,7 @@ export interface Record {
   id: string
   chainId: number
   recordId: string
+  slug: string
   createdAt: string | number
   createdBy: string
   endDate: string | number

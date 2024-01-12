@@ -3,7 +3,7 @@ import { CONFIG } from '@/utils/config'
 import { SITE_URL } from '@/utils/site'
 import dayjs from 'dayjs'
 
-export const envioBaseUri = 'https://indexer.bigdevenergy.link/9d6ac1a/v1/graphql' // 'http://localhost:8080/v1/graphql'
+export const envioBaseUri = 'https://indexer.bigdevenergy.link/01ff037/v1/graphql' // 'http://localhost:8080/v1/graphql'
 
 const eventFields = `
   id
@@ -127,6 +127,33 @@ export async function GetEventById(id: string) {
   return mapEventRecord(data.Record_by_pk)
 }
 
+export async function GetEventBySlug(slug: string) {
+  const response = await fetch(envioBaseUri, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: `{
+        Record(
+          limit: 1
+          where: {slug: {_eq: "${slug}"}}
+        ) {
+          ${eventFields}
+        }
+      }`,
+    }),
+  })
+
+  if (!response.ok) {
+    console.error('Failed to fetch record', response)
+    throw new Error('Failed to fetch records')
+  }
+
+  const { data } = await response.json()
+  return data.Record.length > 0 ? (data.Record.map((i: any) => mapEventRecord(i))[0] as Record) : null
+}
+
 export async function GetAllEvents() {
   const response = await fetch(envioBaseUri, {
     method: 'POST',
@@ -166,9 +193,8 @@ export async function GetUpcomingEvents() {
         Record(
           limit: 100
           order_by: {metadataObject: {end: desc}}
-          where: {status: {_eq: 0}, metadataObject: {appId: {_eq: "${
-            CONFIG.DEFAULT_APP_ID
-          }"}, end: {_gte: ${dayjs().unix()}}}}
+          where: {status: {_eq: 0}, metadataObject: {appId: {_eq: "${CONFIG.DEFAULT_APP_ID
+        }"}, end: {_gte: ${dayjs().unix()}}}}
         ) {
           ${eventFields}
         }
@@ -196,9 +222,8 @@ export async function GetPastEvents() {
         Record(
           limit: 100
           order_by: {metadataObject: {end: desc}}
-          where: {status: {_eq: 0}, metadataObject: {appId: {_eq: "${
-            CONFIG.DEFAULT_APP_ID
-          }"}, end: {_lte: ${dayjs().unix()}}}}
+          where: {status: {_eq: 0}, metadataObject: {appId: {_eq: "${CONFIG.DEFAULT_APP_ID
+        }"}, end: {_lte: ${dayjs().unix()}}}}
         ) {
           ${eventFields}
         }
@@ -294,6 +319,7 @@ function mapEventRecord(data: any) {
     id: data.id,
     chainId: data.chainId,
     recordId: data.recordId,
+    slug: data.slug,
     createdAt: dayjs.unix(data.createdAt).toISOString(),
     createdBy: data.createdBy,
     endDate: dayjs.unix(data.endDate).toISOString(),

@@ -1,5 +1,5 @@
 import { defaultOpenGraphImage } from '@/components/OpenGraph'
-import { GetEventById } from '@/services/showhub'
+import { GetEventBySlug } from '@/services/showhub'
 import { SITE_EMOJI, SITE_NAME } from '@/utils/site'
 import { ImageResponse } from 'next/og'
 import dayjs from 'dayjs'
@@ -13,8 +13,8 @@ export const size = { width: 1200, height: 630 }
 
 export const contentType = 'image/png'
 
-export default async function Image({ params }: { params: { id: string } }) {
-  const record = await GetEventById(params.id)
+export default async function Image({ params }: { params: { slug: string } }) {
+  const record = await GetEventBySlug(params.slug)
   if (!record || !record.metadata) return defaultOpenGraphImage()
 
   const sameDay = dayjs(record.metadata.start).isSame(record.metadata.end, 'day')

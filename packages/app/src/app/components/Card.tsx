@@ -10,7 +10,7 @@ interface Props {
 
 export function Card({ event }: Props) {
   return (
-    <LinkComponent href={`/events/${event.id}`}>
+    <LinkComponent href={`/events/${event.slug}`}>
       <div className='flex rounded-lg bg-neutral text-neutral-content p-4 hover:ring hover:ring-1 flex-col-reverse sm:flex-row'>
         <div className='w-full'>
           <p className='uppercase text-secondary text-sm'>
