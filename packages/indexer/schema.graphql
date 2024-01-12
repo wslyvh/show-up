@@ -15,6 +15,7 @@ type Record {
   id: ID! # Chain + Record ID
   recordId: String!
   chainId: Int!
+  slug: String!
   createdAt: BigInt!
   createdBy: Bytes!
   blockNumber: BigInt!

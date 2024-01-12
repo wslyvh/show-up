@@ -1,3 +1,5 @@
+import slugify from "slugify"
+
 export function GetStatusName(number: number = 0) {
     switch (number) {
         case 0: return 'Active'
@@ -44,4 +46,8 @@ export function TruncateMiddle(text: string, length: number = 5) {
     }
 
     return text
+}
+
+export function Slugify(value: string) {
+    return slugify(value, { strict: true, lower: true })
 }

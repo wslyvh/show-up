@@ -12,7 +12,7 @@ import { conditionModuleDataEntity } from "./src/Types.gen"
 
 import { GetChainId, GetClient, GetEnsProfile } from "./utils/client"
 import { TryFetchIpfsFile } from "./utils/ipfs"
-import { GetStatusId, GetVisibilityId } from "./utils/mapping"
+import { GetStatusId, GetVisibilityId, Slugify } from "./utils/mapping"
 import { decodeAbiParameters } from 'viem'
 import dayjs from 'dayjs'
 
@@ -64,7 +64,8 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
   let entity = await context.Record.get(eventId)
   if (entity == null) {
     // Process Event metadata
-    let metadataId = null;
+    let metadataId = null
+    let slug = eventId
     const contentUri = event.params.contentUri
     context.log.info(`Process ContentUri ${contentUri}`)
 
@@ -76,6 +77,8 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
       if (metadata) {
         context.log.info(`Save Event metadata`)
         metadataId = ipfsHash
+        slug = `${Slugify(metadata.title)}_${event.params.id}`
+
         context.Event.set({
           ...metadata,
           id: ipfsHash,
@@ -188,6 +191,7 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
       id: eventId,
       chainId: chainId,
       recordId: event.params.id.toString(),
+      slug: slug,
       createdAt: BigInt(event.params.timestamp),
       createdBy: event.params.sender,
       blockNumber: BigInt(event.blockNumber),
