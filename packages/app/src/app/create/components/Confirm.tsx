@@ -19,7 +19,6 @@ import { useQueryClient } from '@tanstack/react-query'
 import { revalidateAll } from '@/app/actions/cache'
 import { useRouter } from 'next/navigation'
 import { CONFIG } from '@/utils/config'
-import NP from 'number-precision'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import tz from 'dayjs/plugin/timezone'
@@ -102,7 +101,7 @@ export function Confirm(props: Props) {
     // Encode Params
     let params: any = '0x'
     const token = WHITELISTED_TOKENS.find((t) => t.address == props.conditions.tokenAddress)
-    const depositFee = BigInt(NP.times(props.conditions.depositFee, 10 ** (token?.decimals ?? 18)))
+    const depositFee = BigInt(props.conditions.depositFee ** (10 * (token?.decimals ?? 18)))
     if (conditionModule.name == 'RecipientEther') {
       console.log('Encode RecipientEther params')
 

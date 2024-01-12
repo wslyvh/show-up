@@ -16,7 +16,6 @@ import { erc20ABI, prepareWriteShowHub, writeShowHub } from '@/abis'
 import { revalidateAll } from '@/app/actions/cache'
 import { waitForTransaction, switchNetwork, prepareWriteContract, writeContract } from '@wagmi/core'
 import { Alert } from '@/components/Alert'
-import NP from 'number-precision'
 
 export function Fund() {
   const { chain: currentChain } = useNetwork()
@@ -25,7 +24,7 @@ export function Fund() {
   const queryClient = useQueryClient()
   const notifications = useNotifications()
   const chain = CONFIG.DEFAULT_CHAINS.find((i) => i.id === eventData.record.conditionModule.chainId)
-  const [fundingAmount, setFundingAmount] = useState(eventData.record.conditionModuleData.tokenAddress ? 10 : 0.1)
+  const [fundingAmount, setFundingAmount] = useState(eventData.record.conditionModuleData.tokenAddress ? 10 : 0.01)
   const [state, setState] = useState<LoadingStateData>({
     isLoading: false,
     type: '',
@@ -52,7 +51,7 @@ export function Fund() {
       functionName: 'approve',
       args: [
         eventData.record.conditionModuleId,
-        BigInt(NP.times(fundingAmount, 10 ** (eventData.record.conditionModuleData.tokenDecimals ?? 18))),
+        BigInt(fundingAmount ** (10 * (eventData.record.conditionModuleData.tokenDecimals ?? 18))),
       ],
     })
 
@@ -89,7 +88,7 @@ export function Fund() {
     setState({ ...state, isLoading: true, type: 'info', message: `Funding event. Sign transaction` })
 
     try {
-      const amount = BigInt(NP.times(fundingAmount, 10 ** (eventData.record.conditionModuleData.tokenDecimals ?? 18)))
+      const amount = BigInt(fundingAmount ** (10 * (eventData.record.conditionModuleData.tokenDecimals ?? 18)))
       const params = eventData.record.conditionModuleData.tokenAddress
         ? encodeAbiParameters([{ type: 'uint256' }], [amount])
         : '0x'
@@ -216,8 +215,7 @@ export function Fund() {
 
           {currentChain &&
             currentChain?.id == chain?.id &&
-            allowance <
-              BigInt(NP.times(fundingAmount, 10 ** (eventData.record.conditionModuleData.tokenDecimals ?? 18))) &&
+            allowance < BigInt(fundingAmount ** (10 * (eventData.record.conditionModuleData.tokenDecimals ?? 18))) &&
             (eventData.record.conditionModule.name == 'RecipientToken' ||
               eventData.record.conditionModule.name == 'SplitToken') && (
               <>
@@ -239,8 +237,7 @@ export function Fund() {
 
           {currentChain &&
             currentChain?.id == chain?.id &&
-            (allowance >=
-              BigInt(NP.times(fundingAmount, 10 ** (eventData.record.conditionModuleData.tokenDecimals ?? 18))) ||
+            (allowance >= BigInt(fundingAmount ** (10 * (eventData.record.conditionModuleData.tokenDecimals ?? 18))) ||
               eventData.record.conditionModule.name == 'RecipientEther' ||
               eventData.record.conditionModule.name == 'SplitEther') && (
               <button type='button' disabled={state.isLoading} onClick={Fund} className='btn btn-accent btn-sm w-full'>
