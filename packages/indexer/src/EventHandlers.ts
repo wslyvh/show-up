@@ -67,7 +67,6 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
     let metadataId = null
     let slug = eventId
     const contentUri = event.params.contentUri
-    context.log.info(`Process ContentUri ${contentUri}`)
 
     if (contentUri.startsWith('ipfs://')) {
       const ipfsHash = event.params.contentUri.replace('ipfs://', '')
@@ -75,7 +74,6 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
 
       const metadata = await TryFetchIpfsFile(ipfsHash) as any
       if (metadata) {
-        context.log.info(`Save Event metadata`)
         metadataId = ipfsHash
         slug = `${Slugify(metadata.title)}_${event.params.id}`
 
