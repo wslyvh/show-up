@@ -21,7 +21,7 @@ const Erc20ABI = [
   { name: "symbol", type: "function", inputs: [], outputs: [{ name: "", type: "string" }] },
   { name: "name", type: "function", inputs: [], outputs: [{ name: "", type: "string" }] },
 ]
-const TotalDepositsABI = [{ name: "getTotalDeposits", type: "function", inputs: [{ name: "id", type: "uint256" }], outputs: [{ name: "", type: "uint256" }], }]
+const TotalFundedABI = [{ name: 'getTotalFunded', type: 'function', inputs: [{ name: 'id', type: 'uint256' }], outputs: [{ name: '', type: 'uint256' }] }]
 const RecipientEtherDataParams = [{ name: "depositFee", type: "uint256" }, { name: "recipient", type: "address" }]
 const RecipientTokenDataParams = [{ name: "depositFee", type: "uint256" }, { name: "tokenAddress", type: "address" }, { name: "recipient", type: "address" }]
 const SplitEtherDataParams = [{ name: "depositFee", type: "uint256" }]
@@ -265,11 +265,17 @@ ShowHubContract_Funded_handler(async ({ event, context }) => {
     return
   }
 
+  let conditionModule = await context.ConditionModule.get(entity.conditionModule)
+  if (conditionModule == null) {
+    context.log.error(`ConditionModule ${entity.conditionModule} not found`)
+    return
+  }
+
   try {
     const client = GetClient(chainId)
     const funded = await client.readContract({
-      address: entity.conditionModule as any,
-      abi: TotalDepositsABI,
+      address: conditionModule.address as any,
+      abi: TotalFundedABI,
       functionName: "getTotalFunded",
       args: [event.params.id],
     }) as string
