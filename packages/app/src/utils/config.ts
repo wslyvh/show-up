@@ -12,7 +12,10 @@ export const CONFIG = {
   NEXT_PUBLIC_ALCHEMY_KEY: process.env.NEXT_PUBLIC_ALCHEMY_KEY ?? '',
   NEXT_PUBLIC_ALCHEMY_MAIN: process.env.NEXT_PUBLIC_ALCHEMY_MAIN ?? '',
   NEXT_PUBLIC_INFURA_KEY: process.env.NEXT_PUBLIC_INFURA_KEY ?? '',
-  NEXT_PUBLIC_WEB3_STORAGE_API_KEY: process.env.NEXT_PUBLIC_WEB3_STORAGE_API_KEY ?? '',
+
+  NEXT_PUBLIC_PINATA_API_KEY: process.env.NEXT_PUBLIC_PINATA_API_KEY ?? '',
+  NEXT_PUBLIC_PINATA_API_SECRET: process.env.NEXT_PUBLIC_PINATA_API_SECRET ?? '',
+  NEXT_PUBLIC_PINATA_JWT: process.env.NEXT_PUBLIC_PINATA_JWT ?? '',
 
   DEFAULT_IPFS_GATEWAY: process.env.NEXT_PUBLIC_DEFAULT_IPFS_GATEWAY ?? 'https://cloudflare-ipfs.com/ipfs',
   DEFAULT_APP_ID: appId,
@@ -28,7 +31,10 @@ export const CONFIG = {
   if (!process.env.NEXT_PUBLIC_INFURA_KEY) {
     console.error('You need to provide a NEXT_PUBLIC_INFURA_KEY env variable')
   }
-  if (!process.env.NEXT_PUBLIC_WEB3_STORAGE_API_KEY) {
-    console.error('NEXT_PUBLIC_WEB3_STORAGE_API_KEY is not defined')
+  if (!process.env.NEXT_PUBLIC_PINATA_API_KEY) {
+    console.error('NEXT_PUBLIC_PINATA_API_KEY is not defined')
+  }
+  if (!process.env.NEXT_PUBLIC_PINATA_API_SECRET) {
+    console.error('NEXT_PUBLIC_PINATA_API_SECRET is not defined')
   }
 })()

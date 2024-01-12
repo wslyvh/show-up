@@ -84,7 +84,7 @@ export function Confirm(props: Props) {
 
     // Upload Cover image
     if (props.image) {
-      const cid = await Upload(props.image, true)
+      const cid = await Upload(props.image)
       props.event.imageUrl = `ipfs://${cid}`
     }
 
@@ -94,7 +94,7 @@ export function Confirm(props: Props) {
       startUnix: dayjs(props.event.start, props.event.timezone).unix(),
       endUnix: dayjs(props.event.end, props.event.timezone).unix(),
     }
-    const cid = await Store(Slugify(props.event.title), JSON.stringify(metadataWithUnix), true)
+    const cid = await Store(Slugify(props.event.title), metadataWithUnix)
     const contentUrl = `ipfs://${cid}`
 
     // Encode Params
@@ -138,7 +138,7 @@ export function Confirm(props: Props) {
           contentUrl,
           BigInt(dayjs(props.conditions.endDate, props.event.timezone).unix()),
           BigInt(props.conditions.limit),
-          conditionModule.id,
+          conditionModule.address,
           params,
         ],
       })
