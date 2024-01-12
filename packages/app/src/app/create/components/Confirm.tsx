@@ -2,21 +2,22 @@
 
 import { ActionDrawer } from '@/components/ActionDrawer'
 import { CreateEventData, EventMetadata, LoadingState } from '@/utils/types'
-import { ValidateConditions, ValidateMetadata } from '@/services/showhub'
+import { GetEventBySlug, ValidateConditions, ValidateMetadata } from '@/services/showhub'
 import { LinkComponent } from '@/components/LinkComponent'
 import { Slugify, TruncateMiddle } from '@/utils/format'
 import { useAccount, useNetwork } from 'wagmi'
 import { Alert } from '@/components/Alert'
-import { encodeAbiParameters } from 'viem/utils'
+import { decodeEventLog, encodeAbiParameters } from 'viem/utils'
 import { useState } from 'react'
 import { Store, Upload } from '@/services/storage'
 import { useNotifications } from '@/context/Notification'
 import { switchNetwork, waitForTransaction } from '@wagmi/core'
-import { prepareWriteShowHub, writeShowHub } from '@/abis'
+import { prepareWriteShowHub, showHubABI, writeShowHub } from '@/abis'
 import { WHITELISTED_TOKENS } from '@/utils/network'
 import { useCreateEvent } from './CreateEventContext'
 import { useQueryClient } from '@tanstack/react-query'
 import { revalidateAll } from '@/app/actions/cache'
+import { useRouter } from 'next/navigation'
 import { CONFIG } from '@/utils/config'
 import NP from 'number-precision'
 import dayjs from 'dayjs'
@@ -33,6 +34,7 @@ interface Props {
 }
 
 export function Confirm(props: Props) {
+  const router = useRouter()
   const { chain: currentChain } = useNetwork()
   const { modules } = useCreateEvent()
   const queryClient = useQueryClient()
@@ -164,22 +166,42 @@ export function Confirm(props: Props) {
       })
 
       if (data.status == 'success') {
-        setState({ ...state, isLoading: false, type: 'success', message: 'Event Created' })
+        setState({ ...state, isLoading: false, type: 'success', message: 'Event Created. Indexing' })
 
-        await notifications.Add({
-          created: Date.now(),
-          type: 'success',
-          message: `${props.event.title} created`,
-          from: address,
-          // cta: {
-          //   label: 'View event',
-          //   href: `/events/${conditionModule.chainId}-${data.logs.find((i) => i.name == 'Created')?.values[0]}`,
-          // },
-          data: { hash },
-        })
+        const created = data.logs.length > 0 ? data.logs[0] : null
+        if (created) {
+          const topics = decodeEventLog({
+            abi: showHubABI,
+            data: created.data,
+            topics: created.topics,
+          })
 
-        await revalidateAll()
-        queryClient.invalidateQueries({ queryKey: ['events'] })
+          const slug = `${Slugify(props.event.title)}_${(topics.args as any).id}`
+          let event = await GetEventBySlug(slug)
+          while (!event) {
+            console.log('Event not found. Retry in 1 second')
+            await new Promise((r) => setTimeout(r, 1000))
+
+            event = await GetEventBySlug(slug)
+          }
+
+          await revalidateAll()
+          queryClient.invalidateQueries({ queryKey: ['events'] })
+
+          await notifications.Add({
+            created: Date.now(),
+            type: 'success',
+            message: `${props.event.title} created`,
+            from: address,
+            cta: {
+              label: 'View event',
+              href: `/events/${slug}`,
+            },
+            data: { hash },
+          })
+
+          router.push(`/events/${slug}`)
+        }
 
         return
       }
