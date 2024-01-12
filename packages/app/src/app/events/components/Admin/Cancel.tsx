@@ -11,11 +11,7 @@ import { CONFIG } from '@/utils/config'
 import { revalidateAll } from '@/app/actions/cache'
 import { Alert } from '@/components/Alert'
 
-interface Props {
-  id: string
-}
-
-export function Cancel(props: Props) {
+export function Cancel() {
   const { chain: currentChain } = useNetwork()
   const eventData = useEventData()
   const notifications = useNotifications()

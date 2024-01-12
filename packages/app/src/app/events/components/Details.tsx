@@ -1,7 +1,14 @@
 'use client'
 
 import { DateCard } from '@/components/Date'
-import { BanknotesIcon, CalendarDaysIcon, CheckBadgeIcon, MapPinIcon, UserIcon } from '@heroicons/react/24/outline'
+import {
+  BanknotesIcon,
+  CalendarDaysIcon,
+  CheckBadgeIcon,
+  InboxArrowDownIcon,
+  MapPinIcon,
+  UserIcon,
+} from '@heroicons/react/24/outline'
 import { formatEther, formatUnits } from 'viem/utils'
 import { LinkComponent } from '@/components/LinkComponent'
 import { AdminActions } from './Admin/Actions'
@@ -80,7 +87,7 @@ export function EventDetails() {
               </span>
             </p>
             <p className='flex flex-row items-center gap-2'>
-              <BanknotesIcon className='h-5 w-5 text-info shrink-0' />
+              <InboxArrowDownIcon className='h-5 w-5 text-info shrink-0' />
               {!record.conditionModuleData.tokenAddress && (
                 <>{formatEther(BigInt(record.conditionModuleData.depositFee))} ETH</>
               )}
@@ -92,12 +99,29 @@ export function EventDetails() {
                   )}{' '}
                   {record.conditionModuleData.tokenSymbol}
                 </>
-              )}
+              )} deposit fee
             </p>
+            {record.totalFunded > 0 && (
+              <p className='flex flex-row items-center gap-2'>
+                <BanknotesIcon className='h-5 w-5 text-info shrink-0' />
+                {!record.conditionModuleData.tokenAddress && <>{formatEther(BigInt(record.totalFunded))} ETH</>}
+                {record.conditionModuleData.tokenAddress && (
+                  <>
+                    {formatUnits(BigInt(record.totalFunded), record.conditionModuleData.tokenDecimals ?? 18)}{' '}
+                    {record.conditionModuleData.tokenSymbol}
+                  </>
+                )}{' '}
+                <span
+                  className='badge badge-sm badge-accent shrink-0 tooltip tooltip-info'
+                  data-tip='Funds are split over attendees'>
+                  funded
+                </span>
+              </p>
+            )}
           </div>
 
           <div className='mt-8'>
-            {eventData.isAdmin && <AdminActions id={record.id} />}
+            {eventData.isAdmin && <AdminActions record={record} />}
 
             {!address && (
               <LinkComponent href={`/profile?redirect=${pathname}`}>
@@ -149,9 +173,8 @@ export function EventDetails() {
                 <div key={i.id} className='w-24 text-center grow'>
                   <div className='avatar shrink-0'>
                     <div
-                      className={`w-20 rounded-full ${
-                        i.participated ? 'ring ring-success ring-offset-base-100 ring-offset-2' : ''
-                      }`}>
+                      className={`w-20 rounded-full ${i.participated ? 'ring ring-success ring-offset-base-100 ring-offset-2' : ''
+                        }`}>
                       <img src={i.avatar ?? makeBlockie(i.id)} alt={i.id} />
                     </div>
                   </div>

@@ -16,7 +16,10 @@ export function Card({ event }: Props) {
           <p className='uppercase text-secondary text-sm'>
             {dayjs(event.metadata?.start).format('ddd MMM DD · HH:mm')}
           </p>
-          <h2 className='text-xl font-bold mt-2'>{event.metadata?.title}</h2>
+          <div className='flex items-center mt-2 gap-2'>
+            <h2 className='text-xl font-bold'>{event.metadata?.title}</h2>
+            {event.totalFunded > 0 && <span className='badge badge-sm badge-accent shrink-0'>funded</span>}
+          </div>
           <div className='flex flex-row items-center gap-1 text-sm mt-4 truncate'>
             <MapPinIcon className='h-5 w-5' /> {event.metadata?.location}
           </div>
