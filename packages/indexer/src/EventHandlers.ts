@@ -30,7 +30,7 @@ const SplitTokenDataParams = [{ name: "depositFee", type: "uint256" }, { name: "
 ShowHubContract_ConditionModuleWhitelisted_handler(({ event, context }) => {
   const chainId = event.chainId
   const moduleId = `${chainId}-${event.params.conditionModule}`
-  context.log.info(`Processing ShowHubContract_ConditionModuleWhitelisted @ chain ${chainId} | Block # ${event.blockNumber}`)
+  context.log.debug(`Processing ShowHubContract_ConditionModuleWhitelisted @ chain ${chainId} | Block # ${event.blockNumber}`)
 
   let module = context.ConditionModule.get(moduleId)
   if (module == null) {
@@ -59,7 +59,7 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
   const eventId = `${chainId}-${event.params.id}`
   const moduleId = `${chainId}-${event.params.conditionModule}`
   const dataId = `${chainId}-${event.params.id}-${event.params.conditionModule}`
-  context.log.info(`Processing ShowHubContract_Created # ${eventId} @ Block # ${event.blockNumber}`)
+  context.log.debug(`Processing ShowHubContract_Created # ${eventId} @ Block # ${event.blockNumber}`)
 
   let entity = await context.Record.get(eventId)
   if (entity == null) {
@@ -70,7 +70,7 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
 
     if (contentUri.startsWith('ipfs://')) {
       const ipfsHash = event.params.contentUri.replace('ipfs://', '')
-      context.log.info(`Fetch metadata from IPFS ${ipfsHash}`)
+      context.log.debug(`Fetch metadata from IPFS ${ipfsHash}`)
 
       const metadata = await TryFetchIpfsFile(ipfsHash) as any
       if (metadata) {
@@ -101,7 +101,7 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
     }
 
     const conditionModule = await context.ConditionModule.get(moduleId)
-    context.log.info(`Process ConditionModule data ${moduleId} | ${conditionModule?.name}`)
+    context.log.debug(`Process ConditionModule data ${moduleId} | ${conditionModule?.name}`)
 
     if (conditionModule?.name == 'RecipientEther') {
       const value = decodeAbiParameters(RecipientEtherDataParams, event.params.data as any) as any[]
@@ -165,7 +165,7 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
         }) as number
 
 
-        context.log.info(`Add Token Info: ${name} | ${symbol} | ${decimals}`)
+        context.log.debug(`Add Token Info: ${name} | ${symbol} | ${decimals}`)
         data = {
           ...data,
           tokenName: name,
@@ -219,7 +219,7 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
 ShowHubContract_Updated_handlerAsync(async ({ event, context }) => {
   const chainId = event.chainId
   const eventId = `${chainId}-${event.params.id}`
-  context.log.info(`Processing ShowHubContract_Updated # ${eventId} @ Block # ${event.blockNumber}`)
+  context.log.debug(`Processing ShowHubContract_Updated # ${eventId} @ Block # ${event.blockNumber}`)
 
   let entity = await context.Record.get(eventId)
   if (entity == null) {
@@ -241,7 +241,7 @@ ShowHubContract_Updated_handlerAsync(async ({ event, context }) => {
 ShowHubContract_Canceled_handlerAsync(async ({ event, context }) => {
   const chainId = event.chainId
   const eventId = `${chainId}-${event.params.id}`
-  context.log.info(`Processing ShowHubContract_Canceled # ${eventId} @ Block # ${event.blockNumber}`)
+  context.log.debug(`Processing ShowHubContract_Canceled # ${eventId} @ Block # ${event.blockNumber}`)
 
   let entity = await context.Record.get(eventId)
   if (entity == null) {
@@ -259,7 +259,7 @@ ShowHubContract_Canceled_handlerAsync(async ({ event, context }) => {
 ShowHubContract_Funded_handler(async ({ event, context }) => {
   const chainId = event.chainId
   const eventId = `${chainId}-${event.params.id}`
-  context.log.info(`Processing ShowHubContract_Funded # ${eventId} @ Block # ${event.blockNumber}`)
+  context.log.debug(`Processing ShowHubContract_Funded # ${eventId} @ Block # ${event.blockNumber}`)
 
   let entity = await context.Record.get(eventId)
   if (entity == null) {
@@ -294,7 +294,7 @@ ShowHubContract_Funded_handler(async ({ event, context }) => {
 ShowHubContract_Registered_handler(async ({ event, context }) => {
   const chainId = event.chainId
   const eventId = `${chainId}-${event.params.id}`
-  context.log.info(`Processing ShowHubContract_Registered # ${eventId} @ Block # ${event.blockNumber}`)
+  context.log.debug(`Processing ShowHubContract_Registered # ${eventId} @ Block # ${event.blockNumber}`)
 
   let entity = await context.Record.get(eventId)
   if (entity == null) {
@@ -317,10 +317,10 @@ ShowHubContract_Registered_handler(async ({ event, context }) => {
     user: user.id,
   }
 
-  context.log.info(`Create Event Registration ${registration.id}`)
+  context.log.debug(`Create Event Registration ${registration.id}`)
   context.Registration.set(registration)
 
-  context.log.info(`Update Total Registrations ${entity.id}`)
+  context.log.debug(`Update Total Registrations ${entity.id}`)
   context.Record.set({
     ...entity,
     totalRegistrations: entity.totalRegistrations + BigInt(1),
@@ -330,7 +330,7 @@ ShowHubContract_Registered_handler(async ({ event, context }) => {
 ShowHubContract_CheckedIn_handler(({ event, context }) => {
   const chainId = event.chainId
   const eventId = `${chainId}-${event.params.id}`
-  context.log.info(`Processing ShowHubContract_CheckedIn # ${eventId} @ Block # ${event.blockNumber}`)
+  context.log.debug(`Processing ShowHubContract_CheckedIn # ${eventId} @ Block # ${event.blockNumber}`)
 
   const entity = context.Record.get(eventId)
   if (entity == null) {
@@ -343,7 +343,7 @@ ShowHubContract_CheckedIn_handler(({ event, context }) => {
     const registration = context.Registration.get(`${eventId}-${attendee}`)
 
     if (registration) {
-      context.log.info(`Checkin attendee ${attendee}`)
+      context.log.debug(`Checkin attendee ${attendee}`)
       context.Registration.set({
         ...registration,
         participated: true,
@@ -360,7 +360,7 @@ ShowHubContract_CheckedIn_handler(({ event, context }) => {
 ShowHubContract_Settled_handler(({ event, context }) => {
   const chainId = event.chainId
   const eventId = `${chainId}-${event.params.id}`
-  context.log.info(`Processing ShowHubContract_Settled # ${eventId} @ Block # ${event.blockNumber}`)
+  context.log.debug(`Processing ShowHubContract_Settled # ${eventId} @ Block # ${event.blockNumber}`)
 
   let entity = context.Record.get(eventId)
   if (entity == null) {
