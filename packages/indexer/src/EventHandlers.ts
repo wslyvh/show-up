@@ -80,8 +80,8 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
         context.Event.set({
           ...metadata,
           id: ipfsHash,
-          start: dayjs(metadata.start).unix(), // TODO: Fix on client input 
-          end: dayjs(metadata.end).unix(), // TODO: Fix on client input 
+          start: BigInt(typeof metadata.start === 'string' ? dayjs(metadata.start).unix() : metadata.start),
+          end: BigInt(typeof metadata.end === 'string' ? dayjs(metadata.end).unix() : metadata.end),
           visibility: GetVisibilityId(metadata.visibility),
         })
       }
