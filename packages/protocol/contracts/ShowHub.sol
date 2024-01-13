@@ -114,7 +114,6 @@ contract ShowHub is Ownable, IShowHub {
 
   function fund(uint id, bytes calldata conditionModuleData) external payable {
     verifyValidRecord(id);
-    verifyDateNotPassed(id);
 
     bool result = IConditionModule(_records[id].conditionModule).fund{value: msg.value}(
       id,
@@ -150,7 +149,6 @@ contract ShowHub is Ownable, IShowHub {
   function checkin(uint256 id, address[] calldata attendees, bytes calldata conditionModuleData) external {
     verifyValidRecord(id);
     verifyValidOwner(id);
-    verifyDateNotPassed(id);
 
     uint checkinCount = 0;
     address[] memory validAttendees = new address[](attendees.length);
