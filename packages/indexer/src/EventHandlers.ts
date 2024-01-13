@@ -10,7 +10,7 @@ import {
 } from "../generated/src/Handlers.gen"
 import { conditionModuleDataEntity } from "./src/Types.gen"
 
-import { GetChainId, GetClient, GetEnsProfile } from "./utils/client"
+import { GetClient, GetEnsProfile } from "./utils/client"
 import { TryFetchIpfsFile } from "./utils/ipfs"
 import { GetStatusId, GetVisibilityId, Slugify } from "./utils/mapping"
 import { decodeAbiParameters } from 'viem'
@@ -27,12 +27,12 @@ const RecipientTokenDataParams = [{ name: "depositFee", type: "uint256" }, { nam
 const SplitEtherDataParams = [{ name: "depositFee", type: "uint256" }]
 const SplitTokenDataParams = [{ name: "depositFee", type: "uint256" }, { name: "tokenAddress", type: "address" }]
 
-ShowHubContract_ConditionModuleWhitelisted_handler(async ({ event, context }) => {
-  const chainId = GetChainId(event.srcAddress) // TODO: Get ChainId from context
+ShowHubContract_ConditionModuleWhitelisted_handler(({ event, context }) => {
+  const chainId = event.chainId
   const moduleId = `${chainId}-${event.params.conditionModule}`
   context.log.info(`Processing ShowHubContract_ConditionModuleWhitelisted @ chain ${chainId} | Block # ${event.blockNumber}`)
 
-  let module = await context.ConditionModule.get(moduleId)
+  let module = context.ConditionModule.get(moduleId)
   if (module == null) {
     module = {
       id: moduleId,
@@ -55,7 +55,7 @@ ShowHubContract_ConditionModuleWhitelisted_handler(async ({ event, context }) =>
 })
 
 ShowHubContract_Created_handler(async ({ event, context }) => {
-  const chainId = GetChainId(event.srcAddress) // TODO: Get ChainId from context
+  const chainId = event.chainId
   const eventId = `${chainId}-${event.params.id}`
   const moduleId = `${chainId}-${event.params.conditionModule}`
   const dataId = `${chainId}-${event.params.id}-${event.params.conditionModule}`
@@ -217,7 +217,7 @@ ShowHubContract_Created_handler(async ({ event, context }) => {
 })
 
 ShowHubContract_Updated_handlerAsync(async ({ event, context }) => {
-  const chainId = GetChainId(event.srcAddress) // TODO: Get ChainId from context
+  const chainId = event.chainId
   const eventId = `${chainId}-${event.params.id}`
   context.log.info(`Processing ShowHubContract_Updated # ${eventId} @ Block # ${event.blockNumber}`)
 
@@ -239,7 +239,7 @@ ShowHubContract_Updated_handlerAsync(async ({ event, context }) => {
 })
 
 ShowHubContract_Canceled_handlerAsync(async ({ event, context }) => {
-  const chainId = GetChainId(event.srcAddress) // TODO: Get ChainId from context
+  const chainId = event.chainId
   const eventId = `${chainId}-${event.params.id}`
   context.log.info(`Processing ShowHubContract_Canceled # ${eventId} @ Block # ${event.blockNumber}`)
 
@@ -257,7 +257,7 @@ ShowHubContract_Canceled_handlerAsync(async ({ event, context }) => {
 })
 
 ShowHubContract_Funded_handler(async ({ event, context }) => {
-  const chainId = GetChainId(event.srcAddress) // TODO: Get ChainId from context
+  const chainId = event.chainId
   const eventId = `${chainId}-${event.params.id}`
   context.log.info(`Processing ShowHubContract_Funded # ${eventId} @ Block # ${event.blockNumber}`)
 
@@ -292,7 +292,7 @@ ShowHubContract_Funded_handler(async ({ event, context }) => {
 })
 
 ShowHubContract_Registered_handler(async ({ event, context }) => {
-  const chainId = GetChainId(event.srcAddress) // TODO: Get ChainId from context
+  const chainId = event.chainId
   const eventId = `${chainId}-${event.params.id}`
   context.log.info(`Processing ShowHubContract_Registered # ${eventId} @ Block # ${event.blockNumber}`)
 
@@ -327,12 +327,12 @@ ShowHubContract_Registered_handler(async ({ event, context }) => {
   })
 })
 
-ShowHubContract_CheckedIn_handler(async ({ event, context }) => {
-  const chainId = GetChainId(event.srcAddress) // TODO: Get ChainId from context
+ShowHubContract_CheckedIn_handler(({ event, context }) => {
+  const chainId = event.chainId
   const eventId = `${chainId}-${event.params.id}`
   context.log.info(`Processing ShowHubContract_CheckedIn # ${eventId} @ Block # ${event.blockNumber}`)
 
-  const entity = await context.Record.get(eventId)
+  const entity = context.Record.get(eventId)
   if (entity == null) {
     context.log.error(`Record ${eventId} not found`)
     return
@@ -340,7 +340,7 @@ ShowHubContract_CheckedIn_handler(async ({ event, context }) => {
 
   for (let i = 0; i < event.params.attendees.length; i++) {
     const attendee = event.params.attendees[i];
-    const registration = await context.Registration.get(`${eventId}-${attendee}`)
+    const registration = context.Registration.get(`${eventId}-${attendee}`)
 
     if (registration) {
       context.log.info(`Checkin attendee ${attendee}`)
@@ -357,12 +357,12 @@ ShowHubContract_CheckedIn_handler(async ({ event, context }) => {
   })
 })
 
-ShowHubContract_Settled_handler(async ({ event, context }) => {
-  const chainId = GetChainId(event.srcAddress) // TODO: Get ChainId from context
+ShowHubContract_Settled_handler(({ event, context }) => {
+  const chainId = event.chainId
   const eventId = `${chainId}-${event.params.id}`
   context.log.info(`Processing ShowHubContract_Settled # ${eventId} @ Block # ${event.blockNumber}`)
 
-  let entity = await context.Record.get(eventId)
+  let entity = context.Record.get(eventId)
   if (entity == null) {
     context.log.error(`Record ${eventId} not found`)
     return
