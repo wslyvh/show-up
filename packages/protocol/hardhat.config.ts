@@ -67,6 +67,11 @@ const config: HardhatUserConfig = {
       url: 'https://mainnet.optimism.io/',
       accounts: [deployerKey as string],
     },
+    base: {
+      chainId: 8453,
+      url: 'https://mainnet.base.org',
+      accounts: [deployerKey as string],
+    },
   },
 }
 

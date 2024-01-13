@@ -15,8 +15,10 @@ export default defineConfig({
       project: '../protocol',
       deployments: {
         ShowHub: {
-          11155111: '0x896Ae5df06B9f8e14CB0d5d607Fc40b1E57E27a3',
-          84532: '0x2B52D9d2c1854dEaB06D16283Bfa710AAb9fE568',
+          10: '0x27d81f79D12327370cdB18DdEa03080621AEAadC',
+          8453: '0x27d81f79D12327370cdB18DdEa03080621AEAadC',
+          84532: '0x27d81f79D12327370cdB18DdEa03080621AEAadC',
+          11155111: '0x27d81f79D12327370cdB18DdEa03080621AEAadC',
         },
       },
     }),
