@@ -3,7 +3,7 @@ import { CONFIG } from '@/utils/config'
 import { SITE_URL } from '@/utils/site'
 import dayjs from 'dayjs'
 
-export const envioBaseUri = 'https://indexer.bigdevenergy.link/73d3518/v1/graphql' // 'http://localhost:8080/v1/graphql'
+export const envioBaseUri = 'https://indexer.bigdevenergy.link/8ecd2fa/v1/graphql' // 'http://localhost:8080/v1/graphql'
 
 const eventFields = `
   id
@@ -194,8 +194,9 @@ export async function GetUpcomingEvents() {
         Record(
           limit: 100
           order_by: {metadataObject: {end: desc}}
-          where: {status: {_eq: 0}, metadataObject: {appId: {_eq: "${CONFIG.DEFAULT_APP_ID
-        }"}, end: {_gte: ${dayjs().unix()}}}}
+          where: {status: {_eq: 0}, metadataObject: {appId: {_eq: "${
+            CONFIG.DEFAULT_APP_ID
+          }"}, end: {_gte: ${dayjs().unix()}}}}
         ) {
           ${eventFields}
         }
@@ -223,8 +224,9 @@ export async function GetPastEvents() {
         Record(
           limit: 100
           order_by: {metadataObject: {end: desc}}
-          where: {status: {_eq: 0}, metadataObject: {appId: {_eq: "${CONFIG.DEFAULT_APP_ID
-        }"}, end: {_lte: ${dayjs().unix()}}}}
+          where: {status: {_eq: 0}, metadataObject: {appId: {_eq: "${
+            CONFIG.DEFAULT_APP_ID
+          }"}, end: {_lte: ${dayjs().unix()}}}}
         ) {
           ${eventFields}
         }

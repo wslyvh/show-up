@@ -2422,7 +2422,7 @@ export function writeErc20<TFunctionName extends string>(
  */
 export function prepareWriteErc20<
   TAbi extends readonly unknown[] = typeof erc20ABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: erc20ABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2442,7 +2442,7 @@ export function getFalseCreateMock(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readFalseCreateMock<
   TAbi extends readonly unknown[] = typeof falseCreateMockABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: falseCreateMockABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -2466,7 +2466,7 @@ export function writeFalseCreateMock<TFunctionName extends string>(
  */
 export function prepareWriteFalseCreateMock<
   TAbi extends readonly unknown[] = typeof falseCreateMockABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: falseCreateMockABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2486,7 +2486,7 @@ export function getFalseMock(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readFalseMock<
   TAbi extends readonly unknown[] = typeof falseMockABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: falseMockABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -2510,7 +2510,7 @@ export function writeFalseMock<TFunctionName extends string>(
  */
 export function prepareWriteFalseMock<
   TAbi extends readonly unknown[] = typeof falseMockABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: falseMockABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2530,7 +2530,7 @@ export function getFalseSettleMock(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readFalseSettleMock<
   TAbi extends readonly unknown[] = typeof falseSettleMockABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: falseSettleMockABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -2554,7 +2554,7 @@ export function writeFalseSettleMock<TFunctionName extends string>(
  */
 export function prepareWriteFalseSettleMock<
   TAbi extends readonly unknown[] = typeof falseSettleMockABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: falseSettleMockABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2574,7 +2574,7 @@ export function getIConditionModule(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readIConditionModule<
   TAbi extends readonly unknown[] = typeof iConditionModuleABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: iConditionModuleABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -2598,7 +2598,7 @@ export function writeIConditionModule<TFunctionName extends string>(
  */
 export function prepareWriteIConditionModule<
   TAbi extends readonly unknown[] = typeof iConditionModuleABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: iConditionModuleABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2645,7 +2645,7 @@ export function writeIerc20<TFunctionName extends string>(
  */
 export function prepareWriteIerc20<
   TAbi extends readonly unknown[] = typeof ierc20ABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: ierc20ABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2672,7 +2672,7 @@ export function getIerc20Metadata(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readIerc20Metadata<
   TAbi extends readonly unknown[] = typeof ierc20MetadataABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: ierc20MetadataABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -2696,7 +2696,7 @@ export function writeIerc20Metadata<TFunctionName extends string>(
  */
 export function prepareWriteIerc20Metadata<
   TAbi extends readonly unknown[] = typeof ierc20MetadataABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: ierc20MetadataABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2723,7 +2723,7 @@ export function getIShowHub(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readIShowHub<
   TAbi extends readonly unknown[] = typeof iShowHubABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: iShowHubABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -2747,7 +2747,7 @@ export function writeIShowHub<TFunctionName extends string>(
  */
 export function prepareWriteIShowHub<
   TAbi extends readonly unknown[] = typeof iShowHubABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: iShowHubABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2794,7 +2794,7 @@ export function writeOwnable<TFunctionName extends string>(
  */
 export function prepareWriteOwnable<
   TAbi extends readonly unknown[] = typeof ownableABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: ownableABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2814,7 +2814,7 @@ export function getRecipientEther(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readRecipientEther<
   TAbi extends readonly unknown[] = typeof recipientEtherABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: recipientEtherABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -2838,7 +2838,7 @@ export function writeRecipientEther<TFunctionName extends string>(
  */
 export function prepareWriteRecipientEther<
   TAbi extends readonly unknown[] = typeof recipientEtherABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: recipientEtherABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2858,7 +2858,7 @@ export function getRecipientToken(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readRecipientToken<
   TAbi extends readonly unknown[] = typeof recipientTokenABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: recipientTokenABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -2882,7 +2882,7 @@ export function writeRecipientToken<TFunctionName extends string>(
  */
 export function prepareWriteRecipientToken<
   TAbi extends readonly unknown[] = typeof recipientTokenABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: recipientTokenABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -2937,7 +2937,7 @@ export function readShowHub<TAbi extends readonly unknown[] = typeof showHubABI,
 export function writeShowHub<
   TFunctionName extends string,
   TMode extends WriteContractMode,
-  TChainId extends number = keyof typeof showHubAddress
+  TChainId extends number = keyof typeof showHubAddress,
 >(
   config:
     | (Omit<WriteContractPreparedArgs<typeof showHubABI, TFunctionName>, 'abi' | 'address'> & {
@@ -2966,7 +2966,7 @@ export function writeShowHub<
  */
 export function prepareWriteShowHub<
   TAbi extends readonly unknown[] = typeof showHubABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(
   config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi' | 'address'> & {
     chainId?: keyof typeof showHubAddress
@@ -2991,7 +2991,7 @@ export function getSplitEther(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readSplitEther<
   TAbi extends readonly unknown[] = typeof splitEtherABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: splitEtherABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -3015,7 +3015,7 @@ export function writeSplitEther<TFunctionName extends string>(
  */
 export function prepareWriteSplitEther<
   TAbi extends readonly unknown[] = typeof splitEtherABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: splitEtherABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -3035,7 +3035,7 @@ export function getSplitToken(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readSplitToken<
   TAbi extends readonly unknown[] = typeof splitTokenABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: splitTokenABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -3059,7 +3059,7 @@ export function writeSplitToken<TFunctionName extends string>(
  */
 export function prepareWriteSplitToken<
   TAbi extends readonly unknown[] = typeof splitTokenABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: splitTokenABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -3099,7 +3099,7 @@ export function writeToken<TFunctionName extends string>(
  */
 export function prepareWriteToken<
   TAbi extends readonly unknown[] = typeof tokenABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: tokenABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
@@ -3119,7 +3119,7 @@ export function getTrueMock(config: Omit<GetContractArgs, 'abi'>) {
  */
 export function readTrueMock<
   TAbi extends readonly unknown[] = typeof trueMockABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<ReadContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return readContract({ abi: trueMockABI, ...config } as unknown as ReadContractConfig<TAbi, TFunctionName>)
 }
@@ -3143,7 +3143,7 @@ export function writeTrueMock<TFunctionName extends string>(
  */
 export function prepareWriteTrueMock<
   TAbi extends readonly unknown[] = typeof trueMockABI,
-  TFunctionName extends string = string
+  TFunctionName extends string = string,
 >(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, 'abi'>) {
   return prepareWriteContract({ abi: trueMockABI, ...config } as unknown as PrepareWriteContractConfig<
     TAbi,
