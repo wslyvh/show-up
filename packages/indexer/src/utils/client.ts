@@ -1,24 +1,14 @@
 import { Chain, createPublicClient, http } from 'viem'
 import { normalize } from 'viem/ens'
-import { baseSepolia, sepolia, optimism, mainnet } from 'viem/chains'
+import { baseSepolia, sepolia, optimism, mainnet, base } from 'viem/chains'
 import { TruncateMiddle } from './mapping'
-
-const ADDRESS_SEPOLIA = '0x896Ae5df06B9f8e14CB0d5d607Fc40b1E57E27a3'
-const ADDRESS_BASE_SEPOLIA = '0x2B52D9d2c1854dEaB06D16283Bfa710AAb9fE568'
-const ADDRESS_OPTIMISM = ''
-
-export function GetChainId(source: string) {
-    if (source == ADDRESS_BASE_SEPOLIA) return 84532
-    if (source == ADDRESS_SEPOLIA) return 11155111
-    if (source == ADDRESS_OPTIMISM) return 10
-
-    return 10
-}
 
 export function GetClient(chainId: number) {
     let chain: Chain = optimism
-    if (chainId == 84532) chain = baseSepolia
+    if (chainId == 10) chain = optimism
+    if (chainId == 8453) chain = base
     if (chainId == 11155111) chain = sepolia
+    if (chainId == 84532) chain = baseSepolia
 
     return createPublicClient({
         chain: chain,
