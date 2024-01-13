@@ -120,6 +120,7 @@ export function Register() {
 
       const data = await waitForTransaction({
         chainId: chain.id,
+        confirmations: 2,
         hash: hash,
       })
 
@@ -140,6 +141,7 @@ export function Register() {
 
         await revalidateAll()
         queryClient.invalidateQueries({ queryKey: ['events'] })
+        eventData.refetch()
 
         return
       }

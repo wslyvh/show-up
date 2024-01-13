@@ -25,7 +25,7 @@ export function Cancel() {
     message: '',
   })
   const actionButton = (
-    <button type='button' className='btn btn-accent btn-outline btn-sm w-full'>
+    <button type='button' className='btn btn-secondary btn-outline btn-sm w-full' disabled={!eventData.canCancel}>
       Cancel Event
     </button>
   )
@@ -63,6 +63,7 @@ export function Cancel() {
 
       const data = await waitForTransaction({
         chainId: chain.id,
+        confirmations: 2,
         hash: hash,
       })
 
@@ -79,6 +80,7 @@ export function Cancel() {
 
         await revalidateAll()
         queryClient.invalidateQueries({ queryKey: ['events'] })
+        eventData.refetch()
 
         return
       }

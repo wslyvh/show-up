@@ -2,11 +2,12 @@
 
 import { DateCard } from '@/components/Date'
 import {
+  ArrowDownTrayIcon,
   BanknotesIcon,
   CalendarDaysIcon,
   CheckBadgeIcon,
-  InboxArrowDownIcon,
   MapPinIcon,
+  PencilSquareIcon,
   UserIcon,
 } from '@heroicons/react/24/outline'
 import { formatEther, formatUnits } from 'viem/utils'
@@ -70,6 +71,12 @@ export function EventDetails() {
               {' → '}
               {dayjs(event.end).format(eventData.sameDay ? 'HH:mm' : 'MMM DD · HH:mm')}
             </p>
+            {event.end !== record.endDate && (
+              <p className='flex flex-row items-center gap-2'>
+                <PencilSquareIcon className='h-5 w-5 text-info shrink-0' />
+                Registration → {dayjs(record.endDate).format('MMM DD · HH:mm')}
+              </p>
+            )}
             <p className='flex flex-row items-center gap-2'>
               <MapPinIcon className='h-5 w-5 text-info shrink-0' />
               {event.location.startsWith('https://') && (
@@ -87,7 +94,7 @@ export function EventDetails() {
               </span>
             </p>
             <p className='flex flex-row items-center gap-2'>
-              <InboxArrowDownIcon className='h-5 w-5 text-info shrink-0' />
+              <ArrowDownTrayIcon className='h-5 w-5 text-info shrink-0' />
               {!record.conditionModuleData.tokenAddress && (
                 <>{formatEther(BigInt(record.conditionModuleData.depositFee))} ETH</>
               )}
@@ -99,7 +106,8 @@ export function EventDetails() {
                   )}{' '}
                   {record.conditionModuleData.tokenSymbol}
                 </>
-              )} deposit fee
+              )}{' '}
+              deposit fee
             </p>
             {record.totalFunded > 0 && (
               <p className='flex flex-row items-center gap-2'>
@@ -131,22 +139,24 @@ export function EventDetails() {
               </LinkComponent>
             )}
 
+            {address && <Register />}
+
             {address && (
-              <p className='my-4'>
+              <div className='my-2'>
                 <Fund />
-              </p>
+              </div>
             )}
+          </div>
 
-            {address && !eventData.isAdmin && <Register />}
-
+          <div className='mt-2'>
             {event.website && (
-              <p className='mt-4'>
+              <div>
                 <LinkComponent href={event.website}>
                   <button type='button' className='btn btn-accent btn-sm w-full'>
                     Website
                   </button>
                 </LinkComponent>
-              </p>
+              </div>
             )}
           </div>
 
@@ -173,8 +183,9 @@ export function EventDetails() {
                 <div key={i.id} className='w-24 text-center grow'>
                   <div className='avatar shrink-0'>
                     <div
-                      className={`w-20 rounded-full ${i.participated ? 'ring ring-success ring-offset-base-100 ring-offset-2' : ''
-                        }`}>
+                      className={`w-20 rounded-full ${
+                        i.participated ? 'ring ring-success ring-offset-base-100 ring-offset-2' : ''
+                      }`}>
                       <img src={i.avatar ?? makeBlockie(i.id)} alt={i.id} />
                     </div>
                   </div>

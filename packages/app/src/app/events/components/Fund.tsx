@@ -51,7 +51,7 @@ export function Fund() {
       functionName: 'approve',
       args: [
         eventData.record.conditionModuleId,
-        BigInt(fundingAmount ** (10 * (eventData.record.conditionModuleData.tokenDecimals ?? 18))),
+        BigInt(fundingAmount * 10 ** (eventData.record.conditionModuleData.tokenDecimals ?? 18)),
       ],
     })
 
@@ -88,7 +88,7 @@ export function Fund() {
     setState({ ...state, isLoading: true, type: 'info', message: `Funding event. Sign transaction` })
 
     try {
-      const amount = BigInt(fundingAmount ** (10 * (eventData.record.conditionModuleData.tokenDecimals ?? 18)))
+      const amount = BigInt(fundingAmount * 10 ** (eventData.record.conditionModuleData.tokenDecimals ?? 18))
       const params = eventData.record.conditionModuleData.tokenAddress
         ? encodeAbiParameters([{ type: 'uint256' }], [amount])
         : '0x'
@@ -108,6 +108,7 @@ export function Fund() {
 
       const data = await waitForTransaction({
         chainId: chain.id,
+        confirmations: 2,
         hash: hash,
       })
 
@@ -128,6 +129,7 @@ export function Fund() {
 
         await revalidateAll()
         queryClient.invalidateQueries({ queryKey: ['events'] })
+        eventData.refetch()
 
         return
       }
@@ -143,8 +145,8 @@ export function Fund() {
     <ActionDrawer
       title='Fund Event'
       actionComponent={
-        <button type='button' className='btn btn-accent btn-outline btn-sm w-full'>
-          Fund Event
+        <button type='button' className='btn btn-accent btn-outline btn-sm w-full' disabled={!eventData.isActive}>
+          Fund
         </button>
       }>
       <div className='flex flex-col justify-between h-full'>
@@ -215,7 +217,7 @@ export function Fund() {
 
           {currentChain &&
             currentChain?.id == chain?.id &&
-            allowance < BigInt(fundingAmount ** (10 * (eventData.record.conditionModuleData.tokenDecimals ?? 18))) &&
+            allowance < BigInt(fundingAmount * 10 ** (eventData.record.conditionModuleData.tokenDecimals ?? 18)) &&
             (eventData.record.conditionModule.name == 'RecipientToken' ||
               eventData.record.conditionModule.name == 'SplitToken') && (
               <>
@@ -237,7 +239,7 @@ export function Fund() {
 
           {currentChain &&
             currentChain?.id == chain?.id &&
-            (allowance >= BigInt(fundingAmount ** (10 * (eventData.record.conditionModuleData.tokenDecimals ?? 18))) ||
+            (allowance >= BigInt(fundingAmount * 10 ** (eventData.record.conditionModuleData.tokenDecimals ?? 18)) ||
               eventData.record.conditionModule.name == 'RecipientEther' ||
               eventData.record.conditionModule.name == 'SplitEther') && (
               <button type='button' disabled={state.isLoading} onClick={Fund} className='btn btn-accent btn-sm w-full'>

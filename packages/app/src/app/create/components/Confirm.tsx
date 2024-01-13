@@ -92,8 +92,8 @@ export function Confirm(props: Props) {
     // Upload Metadata
     const metadataWithUnix = {
       ...props.event,
-      startUnix: dayjs(props.event.start, props.event.timezone).unix(),
-      endUnix: dayjs(props.event.end, props.event.timezone).unix(),
+      start: dayjs(props.event.start, props.event.timezone).unix(),
+      end: dayjs(props.event.end, props.event.timezone).unix(),
     }
     const cid = await Store(Slugify(props.event.title), metadataWithUnix)
     const contentUrl = `ipfs://${cid}`
@@ -101,7 +101,7 @@ export function Confirm(props: Props) {
     // Encode Params
     let params: any = '0x'
     const token = WHITELISTED_TOKENS.find((t) => t.address == props.conditions.tokenAddress)
-    const depositFee = BigInt(props.conditions.depositFee ** (10 * (token?.decimals ?? 18)))
+    const depositFee = BigInt(props.conditions.depositFee * 10 ** (token?.decimals ?? 18))
     if (conditionModule.name == 'RecipientEther') {
       console.log('Encode RecipientEther params')
 
@@ -161,6 +161,7 @@ export function Confirm(props: Props) {
 
       const data = await waitForTransaction({
         chainId: conditionModule.chainId,
+        confirmations: 2,
         hash: hash,
       })
 
@@ -178,14 +179,11 @@ export function Confirm(props: Props) {
           const slug = `${Slugify(props.event.title)}_${(topics.args as any).id}`
           let event = await GetEventBySlug(slug)
           while (!event) {
-            console.log('Event not found. Retry in 1 second')
-            await new Promise((r) => setTimeout(r, 1000))
+            console.log('Event is being indexed. Retrying..')
+            await new Promise((r) => setTimeout(r, 3000))
 
             event = await GetEventBySlug(slug)
           }
-
-          await revalidateAll()
-          queryClient.invalidateQueries({ queryKey: ['events'] })
 
           await notifications.Add({
             created: Date.now(),
@@ -199,6 +197,8 @@ export function Confirm(props: Props) {
             data: { hash },
           })
 
+          await revalidateAll()
+          queryClient.invalidateQueries({ queryKey: ['events'] })
           router.push(`/events/${slug}`)
         }
 
@@ -294,7 +294,13 @@ export function Confirm(props: Props) {
               className='btn btn-accent btn-sm w-full'
               disabled={!isValid || state.isLoading || state.type == 'success'}
               onClick={() => Create()}>
-              Create Event
+              {state.isLoading && (
+                <>
+                  Loading
+                  <span className='loading loading-spinner h-4 w-4' />
+                </>
+              )}
+              {!state.isLoading && <>Create Event</>}
             </button>
           )}
         </div>

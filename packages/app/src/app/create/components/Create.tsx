@@ -32,6 +32,7 @@ export function CreateForm() {
   const [eventConditions, setEventConditions] = useState<CreateEventData>({
     chainId: CONFIG.DEFAULT_CHAINS[0].id,
     endDate: defaultEndDate,
+    customEndDate: false,
     limit: 0,
     depositFee: DefaultDepositFee,
   })
@@ -41,27 +42,37 @@ export function CreateForm() {
     if (!e.target.id) return
 
     if (
-      (e.target.id === 'start' && dayjs(event.end).isSame(defaultEndDate)) ||
-      dayjs(event.end).isBefore(dayjs(e.target.value))
+      e.target.id === 'start' &&
+      (dayjs(event.end).isSame(defaultEndDate) || dayjs(event.end).isBefore(dayjs(e.target.value)))
     ) {
       setEvent((state) => ({
         ...state,
         [e.target.id]: e.target.value,
         end: dayjs(e.target.value).add(2, 'hour').format('YYYY-MM-DDTHH:mm:ss'),
       }))
-      setEventConditions((state) => ({
-        ...state,
-        endDate: dayjs(e.target.value).add(2, 'hour').format('YYYY-MM-DDTHH:mm:ss'),
-      }))
+
+      if (!eventConditions.customEndDate) {
+        setEventConditions((state) => ({
+          ...state,
+          endDate: dayjs(e.target.value).add(2, 'hour').format('YYYY-MM-DDTHH:mm:ss'),
+        }))
+      }
 
       return
     }
 
     if (e.target.id === 'end') {
-      setEventConditions((state) => ({
+      setEvent((state) => ({
         ...state,
-        endDate: e.target.value,
+        end: e.target.value,
       }))
+
+      if (!eventConditions.customEndDate) {
+        setEventConditions((state) => ({
+          ...state,
+          endDate: e.target.value,
+        }))
+      }
 
       return
     }
@@ -106,6 +117,16 @@ export function CreateForm() {
       setEventConditions((state) => ({
         ...state,
         limit: Number(e.target.value),
+      }))
+
+      return
+    }
+
+    if (e.target.id === 'endDate') {
+      setEventConditions((state) => ({
+        ...state,
+        endDate: e.target.value,
+        customEndDate: true,
       }))
 
       return
@@ -324,6 +345,22 @@ export function CreateForm() {
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className='form-control w-full'>
+            <label className='label' htmlFor='endDate'>
+              <span className='label-text'>
+                Registration Date <span className='text-xs'>(defaults to event end date)</span>
+              </span>
+            </label>
+            <input
+              id='endDate'
+              type='datetime-local'
+              required
+              className='input input-sm input-bordered w-full'
+              value={eventConditions.endDate}
+              onChange={handleConditionChange}
+            />
           </div>
 
           <div className='form-control w-full'>

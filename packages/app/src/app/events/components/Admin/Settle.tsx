@@ -23,7 +23,7 @@ export function Settle() {
     message: '',
   })
   const actionButton = (
-    <button type='button' className='btn btn-accent btn-outline btn-sm w-full'>
+    <button type='button' className='btn btn-secondary btn-outline btn-sm w-full' disabled={!eventData.canSettle}>
       Settle Event
     </button>
   )
@@ -49,6 +49,7 @@ export function Settle() {
 
       const data = await waitForTransaction({
         chainId: chain.id,
+        confirmations: 2,
         hash: hash,
       })
 
@@ -69,6 +70,7 @@ export function Settle() {
 
         await revalidateAll()
         queryClient.invalidateQueries({ queryKey: ['events'] })
+        eventData.refetch()
 
         return
       }
@@ -112,7 +114,7 @@ export function Settle() {
                   <span className='loading loading-spinner h-4 w-4' />
                 </>
               )}
-              {!state.isLoading && <>Settle Event</>}1
+              {!state.isLoading && <>Settle Event</>}
             </button>
           )}
         </div>

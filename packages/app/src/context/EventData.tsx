@@ -23,6 +23,7 @@ interface EventDataContext {
   canRegister: boolean
   canCancel: boolean
   canSettle: boolean
+  refetch: () => void
 }
 
 const defaultState: EventDataContext = {
@@ -41,6 +42,7 @@ const defaultState: EventDataContext = {
   canRegister: false,
   canCancel: false,
   canSettle: false,
+  refetch: () => console.log('defaultState refetch()'),
 }
 
 interface Props extends PropsWithChildren {
@@ -52,7 +54,7 @@ export const useEventData = () => useContext(EventDataContext)
 const EventDataContext = createContext(defaultState)
 
 export default function EventDataProvider(props: Props) {
-  const { data: record } = useEvent(props)
+  const { data: record, refetch } = useEvent(props)
   const { address } = useAccount()
   const balanceRequest: any = { address: address, watch: true }
   if (record?.conditionModuleData.tokenAddress) {
@@ -94,6 +96,7 @@ export default function EventDataProvider(props: Props) {
         canRegister,
         canCancel,
         canSettle,
+        refetch,
       }}>
       <>
         {isCancelled && (

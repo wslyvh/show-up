@@ -102,6 +102,7 @@ export interface ConditionModuleData extends ConditionModule {
 export interface CreateEventData {
   chainId: number
   endDate: string | number
+  customEndDate: boolean
   limit: number
   depositFee: number
   recipient?: string

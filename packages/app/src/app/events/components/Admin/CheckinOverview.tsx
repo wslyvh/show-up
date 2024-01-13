@@ -79,6 +79,7 @@ export function CheckinOverview() {
 
       const data = await waitForTransaction({
         chainId: chain.id,
+        confirmations: 2,
         hash: hash,
       })
 
@@ -99,14 +100,16 @@ export function CheckinOverview() {
 
         await revalidateAll()
         queryClient.invalidateQueries({ queryKey: ['events'] })
+        eventData.refetch()
 
-        router.push(`/events/${eventData.record.id}`)
+        router.push(`/events/${eventData.record.slug}`)
 
         return
       }
 
       setState({ ...state, isLoading: false, type: 'error', message: 'Unable to check in' })
     } catch (e) {
+      console.error(e)
       setState({ ...state, isLoading: false, type: 'error', message: 'Unable to check in' })
     }
   }

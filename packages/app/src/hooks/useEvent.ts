@@ -6,7 +6,7 @@ interface Props {
 }
 
 export function useEvent(props: Props) {
-  const { data, isError, isPending } = useQuery({
+  const { data, isError, isPending, refetch } = useQuery({
     queryKey: ['events', props.id],
     queryFn: () => GetEventBySlug(props.id),
   })
@@ -15,5 +15,6 @@ export function useEvent(props: Props) {
     data,
     isPending,
     isError,
+    refetch,
   }
 }
