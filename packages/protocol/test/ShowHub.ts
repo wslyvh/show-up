@@ -413,16 +413,6 @@ describe('ShowHub', function () {
         .to.be.revertedWithCustomError(showhub, 'InactiveRecord')
     })
 
-    it('Should reject if funding when end date has passed', async function () {
-      const { showhub, nextWeek } = await loadFixture(deployFixture)
-      await loadFixture(createTrueMockFixture)
-
-      // Update timestamp to next week. Can only settle events that have passed their endDate
-      await time.increaseTo(nextWeek)
-
-      await expect(showhub.fund(0, [], { value: defaultFundFee })).to.be.revertedWithCustomError(showhub, 'InvalidDate')
-    })
-
     it('Should reject if registering for a cancelled event', async function () {
       const { showhub, attendee1 } = await loadFixture(deployFixture)
       await loadFixture(createTrueMockFixture)

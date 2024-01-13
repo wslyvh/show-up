@@ -43,11 +43,11 @@ networks:
     start_block: 0
     contracts:
       - name: ShowHub
-        address: 0xd599039AcD9bd440D175E089A05752ed21e1b65f
+        address: 0x896Ae5df06B9f8e14CB0d5d607Fc40b1E57E27a3
   - id: 84532 # Base Sepolia
     start_block: 0
     contracts:
       - name: ShowHub
-        address: 0x2015332B900685104889Ef6c0BE07146F342D888
+        address: 0x2B52D9d2c1854dEaB06D16283Bfa710AAb9fE568
     hypersync_config:
       url: https://base-sepolia.hypersync.xyz
