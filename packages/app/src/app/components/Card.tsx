@@ -10,22 +10,25 @@ interface Props {
 
 export function Card({ event }: Props) {
   return (
-    <LinkComponent href={`/events/${event.id}`}>
+    <LinkComponent href={`/events/${event.slug}`}>
       <div className='flex rounded-lg bg-neutral text-neutral-content p-4 hover:ring hover:ring-1 flex-col-reverse sm:flex-row'>
         <div className='w-full'>
           <p className='uppercase text-secondary text-sm'>
             {dayjs(event.metadata?.start).format('ddd MMM DD · HH:mm')}
           </p>
-          <h2 className='text-xl font-bold mt-2'>{event.metadata?.title}</h2>
+          <div className='flex items-center mt-2 gap-2'>
+            <h2 className='text-xl font-bold'>{event.metadata?.title}</h2>
+            {event.totalFunded > 0 && <span className='badge badge-sm badge-accent shrink-0'>funded</span>}
+          </div>
           <div className='flex flex-row items-center gap-1 text-sm mt-4 truncate'>
             <MapPinIcon className='h-5 w-5' /> {event.metadata?.location}
           </div>
           <div className='flex flex-row items-center gap-1 text-sm mt-2'>
-            <UserIcon className='h-5 w-5' /> {event.participants.length} going
-            {event.condition?.maxParticipants > 0 && (
+            <UserIcon className='h-5 w-5' /> {event.registrations.length} going
+            {event.limit > 0 && (
               <>
                 <span> · </span>
-                <span className='text-accent'>{event.condition?.maxParticipants - event.participants.length} left</span>
+                <span className='text-accent'>{event.limit - event.registrations.length} left</span>
               </>
             )}
           </div>

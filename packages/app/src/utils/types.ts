@@ -4,39 +4,57 @@ export interface State<T> {
   error?: string
 }
 
+export interface LoadingStateData {
+  isLoading: boolean
+  message: string
+  type: 'error' | 'success' | 'info' | ''
+  data?: any
+}
+
+export interface LoadingState {
+  isLoading: boolean
+  message: string
+  type: 'error' | 'success' | 'info' | ''
+}
+
 export enum Status {
   Active,
   Cancelled,
   Settled,
 }
 
+export enum Visibility {
+  Public,
+  Unlisted,
+}
+
 export interface Record {
   id: string
+  chainId: number
+  recordId: string
+  slug: string
   createdAt: string | number
   createdBy: string
-  creatorProfile: EnsProfile
-  updatedAt?: string | number
+  endDate: string | number
+  limit: number
   status: Status
   message?: string
 
-  conditionModule: string
-  condition: ConditionModuleData
+  ownerId: string
+  owner: UserProfile
+
+  conditionModuleId: string
+  conditionModule: ConditionModule
+  conditionModuleData: ConditionModuleData
 
   contentUri: string
-  metadata?: EventMetadata
+  metadata: EventMetadata
 
-  participants: Participant[]
-}
+  registrations: Registration[]
 
-export interface Participant {
-  id: string
-  createdAt: string | number
-  createdBy: string
-  address: string
-  checkedIn: boolean
-  transactionHash: string
-  url: string
-  profile: EnsProfile
+  totalRegistrations: number
+  totalAttendees: number
+  totalFunded: number
 }
 
 export interface EventMetadata {
@@ -48,40 +66,45 @@ export interface EventMetadata {
   timezone: string
   location: string
   website: string
-  visibility: 'Public' | 'Unlisted'
   imageUrl: string
+  visibility: Visibility
   links: string[]
   tags: string[]
 }
 
-export enum Visibility {
-  Public = 'Public',
-  Unlisted = 'Unlisted',
-}
-
-export interface EnsProfile {
-  address: string
+export interface UserProfile {
+  id: string
   name: string
   avatar: string
 }
 
-export enum ConditionModuleType {
-  BasicEther = 'BasicEther',
-  BasicToken = 'BasicToken',
+export interface Registration extends UserProfile {
+  participated: boolean
+  transactionHash: string
 }
 
 export interface ConditionModule {
-  type: ConditionModuleType
-  address: String
-  whitelisted?: boolean
+  id: string
+  address: string
+  chainId: number
+  name: 'RecipientEther' | 'RecipientToken' | 'SplitEther' | 'SplitToken'
+  whitelisted: boolean
 }
 
 export interface ConditionModuleData extends ConditionModule {
-  endDate: string | number
   depositFee: bigint
-  maxParticipants: number
-  tokenAddress?: string // Only used for BasicToken module
+  tokenAddress?: string
   tokenSymbol?: string
   tokenName?: string
   tokenDecimals?: number
+}
+
+export interface CreateEventData {
+  chainId: number
+  endDate: string | number
+  customEndDate: boolean
+  limit: number
+  depositFee: number
+  recipient?: string
+  tokenAddress?: string
 }

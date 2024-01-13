@@ -1,4 +1,3 @@
-import { CONFIG } from '@/utils/config'
 import { AddressZero } from '@/utils/network'
 import { erc20ABI, useContractRead } from 'wagmi'
 
@@ -9,7 +8,6 @@ export function useAllowance(owner: string, spender: string, tokenAddress: strin
     isLoading,
     isError,
   } = useContractRead({
-    chainId: CONFIG.DEFAULT_CHAIN_ID,
     address: tokenAddress,
     abi: erc20ABI,
     functionName: 'allowance',
@@ -19,7 +17,7 @@ export function useAllowance(owner: string, spender: string, tokenAddress: strin
   })
 
   return {
-    allowance: allowance as bigint,
+    allowance: BigInt((allowance as string) ?? 0),
     refetch,
     isLoading,
     isError,

@@ -39,6 +39,7 @@ const config: HardhatUserConfig = {
       mainnet: etherscanApiKey,
       sepolia: etherscanApiKey,
       optimisticEthereum: optimisticApiKey,
+      "base-sepolia": etherscanApiKey
     },
   },
   networks: {
@@ -51,12 +52,24 @@ const config: HardhatUserConfig = {
     },
     sepolia: {
       chainId: 11155111,
-      url: infuraApiKey ? `https://sepolia.infura.io/v3/${infuraApiKey}` : 'https://rpc.sepolia.org/', // https://rpc-sepolia.rockx.com/ || https://rpc.sepolia.org/
+      url: 'https://rpc.sepolia.org/', // https://rpc-sepolia.rockx.com/ || https://rpc.sepolia.org/ || infuraApiKey ? `https://sepolia.infura.io/v3/${infuraApiKey}`
       accounts: [deployerKey as string],
+    },
+    "base-sepolia": {
+      chainId: 84532,
+      url: "https://sepolia.base.org",
+      accounts: [deployerKey as string],
+      // apiURL: "https://api-sepolia.basescan.org/api",
+      // browserURL: "https://sepolia.basescan.org"
     },
     optimism: {
       chainId: 10,
       url: 'https://mainnet.optimism.io/',
+      accounts: [deployerKey as string],
+    },
+    base: {
+      chainId: 8453,
+      url: 'https://mainnet.base.org',
       accounts: [deployerKey as string],
     },
   },

@@ -10,7 +10,6 @@ import {
 } from '@/utils/site'
 import { MobileLayout } from '@/components/MobileLayout'
 import { Web3Provider } from '@/context/Web3'
-import { EventManagementProvider } from '@/context/EventManagement'
 import { NotificationProvider } from '@/context/Notification'
 import PlausibleProvider from 'next-plausible'
 import DataProvider from '@/context/Data'
@@ -70,9 +69,7 @@ export default function RootLayout(props: PropsWithChildren) {
         <Web3Provider>
           <NotificationProvider>
             <DataProvider>
-              <EventManagementProvider>
-                <MobileLayout>{props.children}</MobileLayout>
-              </EventManagementProvider>
+              <MobileLayout>{props.children}</MobileLayout>
             </DataProvider>
           </NotificationProvider>
         </Web3Provider>

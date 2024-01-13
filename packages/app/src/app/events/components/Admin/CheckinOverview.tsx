@@ -2,44 +2,116 @@
 
 import { useState } from 'react'
 import { useEventData } from '@/context/EventData'
-import { useAccount } from 'wagmi'
-import dayjs from 'dayjs'
-import { Participant } from '@/utils/types'
+import { useAccount, useNetwork, useQueryClient } from 'wagmi'
+import { waitForTransaction, switchNetwork } from '@wagmi/core'
+import { prepareWriteShowHub, writeShowHub } from '@/abis'
+import { revalidateAll } from '@/app/actions/cache'
 import { ActionDrawer } from '@/components/ActionDrawer'
-import { useEventManagement } from '@/context/EventManagement'
+import { LoadingState, Registration } from '@/utils/types'
+import makeBlockie from 'ethereum-blockies-base64'
+import { useNotifications } from '@/context/Notification'
+import { CONFIG } from '@/utils/config'
+import { Alert } from '@/components/Alert'
+import { useRouter } from 'next/navigation'
 
 export function CheckinOverview() {
-  const eventManagement = useEventManagement()
+  const router = useRouter()
+  const { chain: currentChain } = useNetwork()
   const eventData = useEventData()
   const record = eventData.record
   const event = eventData.event
+  const notifications = useNotifications()
+  const queryClient = useQueryClient()
+  const chain = CONFIG.DEFAULT_CHAINS.find((i) => i.id === eventData.record.conditionModule.chainId)
+  const { address } = useAccount()
   const [checkins, setCheckins] = useState<string[]>([])
+  const [state, setState] = useState<LoadingState>({
+    isLoading: false,
+    type: '',
+    message: '',
+  })
 
   if (!eventData.isAdmin) return <>Not connected</>
 
-  function onParticipantChange(participant: Participant) {
-    if (participant.checkedIn) return
+  function onParticipantChange(registration: Registration) {
+    if (registration.participated) return
 
     const newCheckins = [...checkins]
-    if (newCheckins.includes(participant.address)) {
-      newCheckins.splice(newCheckins.indexOf(participant.address), 1)
+    if (newCheckins.includes(registration.id)) {
+      newCheckins.splice(newCheckins.indexOf(registration.id), 1)
     } else {
-      newCheckins.push(participant.address)
+      newCheckins.push(registration.id)
     }
     setCheckins(newCheckins)
   }
 
   function toggleAllParticipants() {
     const newCheckins = [...checkins]
-    if (newCheckins.length == record.participants.length) {
+    if (newCheckins.length == record.registrations.length) {
       newCheckins.length = 0
     } else {
       newCheckins.length = 0
-      record.participants.forEach((participant) => {
-        if (!participant.checkedIn) newCheckins.push(participant.address)
+      record.registrations.forEach((i) => {
+        if (!i.participated) newCheckins.push(i.id)
       })
     }
     setCheckins(newCheckins)
+  }
+
+  async function Checkin() {
+    if (!address || !chain) {
+      setState({ ...state, isLoading: false, type: 'error', message: 'Not connected' })
+      return
+    }
+
+    setState({ ...state, isLoading: true, type: 'info', message: `Check in attendees. Sign transaction` })
+
+    try {
+      const txConfig = await prepareWriteShowHub({
+        chainId: chain.id as any,
+        functionName: 'checkin',
+        args: [eventData.record.recordId, checkins, '0x'],
+      })
+
+      const { hash } = await writeShowHub(txConfig)
+
+      setState({ ...state, isLoading: true, type: 'info', message: 'Transaction sent. Awaiting confirmation' })
+
+      const data = await waitForTransaction({
+        chainId: chain.id,
+        confirmations: 2,
+        hash: hash,
+      })
+
+      if (data.status == 'success') {
+        setState({ ...state, isLoading: false, type: 'success', message: 'Attendees checked in' })
+
+        await notifications.Add({
+          created: Date.now(),
+          type: 'success',
+          message: `Attendees checked-in`,
+          from: address,
+          cta: {
+            label: 'View transaction',
+            href: `${chain?.blockExplorers?.default.url}/tx/${hash}`,
+          },
+          data: { hash },
+        })
+
+        await revalidateAll()
+        queryClient.invalidateQueries({ queryKey: ['events'] })
+        eventData.refetch()
+
+        router.push(`/events/${eventData.record.slug}`)
+
+        return
+      }
+
+      setState({ ...state, isLoading: false, type: 'error', message: 'Unable to check in' })
+    } catch (e) {
+      console.error(e)
+      setState({ ...state, isLoading: false, type: 'error', message: 'Unable to check in' })
+    }
   }
 
   const actionButton = (
@@ -62,24 +134,24 @@ export function CheckinOverview() {
                   type='checkbox'
                   className='checkbox'
                   onClick={toggleAllParticipants}
-                  disabled={record.participants.filter((i) => i.checkedIn).length == record.participants.length}
+                  disabled={record.registrations.filter((i) => i.participated).length == record.registrations.length}
                 />
               </th>
               <th>Name</th>
-              <th className='min-w-[8rem]'>Registered</th>
+              {/* <th className='min-w-[8rem]'>Registered</th> */}
             </tr>
           </thead>
           <tbody>
-            {record.participants.map((participant) => {
+            {record.registrations.map((i) => {
               return (
-                <tr key={participant.address} className='hover' onClick={() => onParticipantChange(participant)}>
+                <tr key={i.id} className='hover' onClick={() => onParticipantChange(i)}>
                   <th>
                     <label>
                       <input
                         type='checkbox'
                         className='checkbox'
-                        disabled={participant.checkedIn}
-                        checked={participant.checkedIn || checkins.includes(participant.address)}
+                        disabled={i.participated}
+                        checked={i.participated || checkins.includes(i.id)}
                         readOnly
                       />
                     </label>
@@ -88,16 +160,16 @@ export function CheckinOverview() {
                     <div className='flex items-center gap-3'>
                       <div className='avatar'>
                         <div className='w-8 rounded-full'>
-                          <img src={participant.profile.avatar} alt={participant.address} />
+                          <img src={i.avatar ?? makeBlockie(i.id)} alt={i.id} />
                         </div>
                       </div>
                       <div>
-                        <div className='font-bold'>{participant.profile.name}</div>
-                        <div className='text-xs opacity-50'>{participant.profile.address}</div>
+                        <div className='font-bold'>{i.name}</div>
+                        <div className='text-xs opacity-50'>{i.id}</div>
                       </div>
                     </div>
                   </td>
-                  <td className='text-xs'>{dayjs(participant.createdAt).format('ddd MMM DD · HH:mm')}</td>
+                  {/* <td className='text-xs'>{dayjs(i.createdAt).format('ddd MMM DD · HH:mm')}</td> */}
                 </tr>
               )
             })}
@@ -131,20 +203,33 @@ export function CheckinOverview() {
               </div>
             </div>
 
-            <div>
-              <button
-                type='button'
-                disabled={eventManagement.loading || checkins.length == 0}
-                onClick={() => eventManagement.Checkin(record.id, checkins)}
-                className='btn btn-accent btn-sm w-full'>
-                {eventManagement.loading && (
-                  <>
-                    Loading
-                    <span className='loading loading-spinner h-4 w-4' />
-                  </>
-                )}
-                {!eventManagement.loading && <>Check-in Attendees</>}
-              </button>
+            <div className='flex flex-col justify-end gap-4 mt-4'>
+              {state.message && <Alert type={state.type as any} message={state.message} />}
+
+              {currentChain && currentChain?.id !== chain?.id && (
+                <button
+                  className='btn btn-accent btn-sm w-full'
+                  disabled={state.isLoading || state.type == 'success'}
+                  onClick={() => switchNetwork({ chainId: eventData.record.conditionModule.chainId as any })}>
+                  Switch Network
+                </button>
+              )}
+
+              {currentChain && currentChain?.id === chain?.id && (
+                <button
+                  type='button'
+                  disabled={state.isLoading || checkins.length == 0}
+                  onClick={Checkin}
+                  className='btn btn-accent btn-sm w-full'>
+                  {state.isLoading && (
+                    <>
+                      Loading
+                      <span className='loading loading-spinner h-4 w-4' />
+                    </>
+                  )}
+                  {!state.isLoading && <>Check-in Attendees</>}
+                </button>
+              )}
             </div>
           </div>
         </ActionDrawer>

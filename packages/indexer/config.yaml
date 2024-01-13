@@ -1,0 +1,40 @@
+name: sup-indexer
+description: Show Up Protocol indexer
+contracts:
+  - name: ShowHub
+    handler: src/EventHandlers.ts
+    events:
+      - event: ConditionModuleWhitelisted(address indexed conditionModule, string name, bool indexed whitelisted, address sender, uint256 timestamp)
+      - event: Created(uint256 indexed id, string contentUri, uint256 endDate, uint256 limit,address indexed conditionModule, bytes data, address sender, uint256 timestamp)
+        isAsync: true
+      - event: Updated(uint256 indexed id, string contentUri, uint256 limit, address owner, address sender, uint256 timestamp)
+        isAsync: true
+      - event: Canceled(uint256 indexed id, string reason, bytes data, address sender, uint256 timestamp)
+        isAsync: true
+      - event: Funded(uint256 indexed id, bytes data, address sender, uint256 timestamp)
+        isAsync: true
+      - event: Registered(uint256 indexed id, address indexed participant, bytes data, address sender, uint256 timestamp)
+        isAsync: true
+      - event: CheckedIn(uint256 indexed id, address[] attendees, bytes data, address sender, uint256 timestamp)
+      - event: Settled(uint256 indexed id, bytes data, address sender, uint256 timestamp)
+networks:
+  - id: 10 # Optimism
+    start_block: 0
+    contracts:
+      - name: ShowHub
+        address: 0x27d81f79D12327370cdB18DdEa03080621AEAadC
+  - id: 8453 # Base
+    start_block: 0
+    contracts:
+      - name: ShowHub
+        address: 0x27d81f79D12327370cdB18DdEa03080621AEAadC
+  - id: 11155111 # Sepolia
+    start_block: 0
+    contracts:
+      - name: ShowHub
+        address: 0x27d81f79D12327370cdB18DdEa03080621AEAadC
+  - id: 84532 # Base Sepolia
+    start_block: 0
+    contracts:
+      - name: ShowHub
+        address: 0x27d81f79D12327370cdB18DdEa03080621AEAadC

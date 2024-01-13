@@ -1,0 +1,86 @@
+type ConditionModule {
+  id: ID! # Address
+  address: String!
+  chainId: Int!
+  createdAt: BigInt!
+  createdBy: Bytes! # address
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+
+  name: String!
+  whitelisted: Boolean! # true
+}
+
+type Record {
+  id: ID! # Chain + Record ID
+  recordId: String!
+  chainId: Int!
+  slug: String!
+  createdAt: BigInt!
+  createdBy: Bytes!
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+
+  endDate: BigInt!
+  limit: BigInt!
+  owner: User!
+  status: Int!
+  message: String
+
+  contentUri: String!
+  metadata: Event
+
+  conditionModule: ConditionModule!
+  conditionModuleData: ConditionModuleData!
+
+  totalRegistrations: BigInt!
+  totalAttendees: BigInt!
+  totalFunded: BigInt!
+  registrations: [Registration!]! @derivedFrom(field: "record")
+}
+
+type Registration {
+  id: ID! # Chain + Record + User address
+  createdAt: BigInt!
+  createdBy: Bytes!
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+
+  participated: Boolean! # false
+  record: Record!
+  user: User!
+}
+
+type User {
+  id: ID! # address
+  name: String!
+  avatar: String
+
+  registrations: [Registration!]! @derivedFrom(field: "user")
+}
+
+type Event {
+  id: ID! # Content Hash
+  appId: String
+  title: String!
+  description: String
+  start: BigInt!
+  end: BigInt!
+  timezone: String!
+  location: String!
+  website: String
+  imageUrl: String
+  visibility: Int!
+}
+
+type ConditionModuleData {
+  id: ID! # Chain + Record + ConditionModule
+  conditionModule: String! # Address
+  depositFee: BigInt!
+  recipient: Bytes
+
+  tokenAddress: Bytes
+  tokenSymbol: String
+  tokenName: String
+  tokenDecimals: Int
+}

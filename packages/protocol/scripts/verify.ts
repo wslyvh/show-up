@@ -1,52 +1,87 @@
 import { ethers, network, run } from 'hardhat'
-import { defaultTokenMint } from '../test/utils/types'
+import deployments from '../deployments.json'
 
 export async function main() {
-    console.log('Deploying Show Up Protocol..')
-    const [owner, attendee1, attendee2, attendee3, attendee4, attendee5] = await ethers.getSigners()
+    console.log('Verifying Show Up Protocol..')
 
     console.log('NETWORK ID', network.config.chainId)
-    // Sepolia + Optimism
-    const registry = await ethers.getContractAt('Registry', '0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2')
-    const basicEtherModule = await ethers.getContractAt('BasicEther', '0x33FF944E8504B674835A5BEd88f10f11bEC92c2c')
-    const basicTokenModule = await ethers.getContractAt('BasicToken', '0x33132fE88fe8316881474b551CA2DDD277A320a0')
-    // No Token deployed..
+    if (!network.config.chainId) {
+        console.error('Invalid Network ID')
+        return
+    }
+
+    const contracts = (deployments as any)[network.config.chainId]
+    const showhub = contracts.ShowHub
+    const recipientEther = contracts.RecipientEther
+    const recipientToken = contracts.RecipientToken
+    const splitEther = contracts.SplitEther
+    const splitToken = contracts.SplitToken
+
+    if (!showhub || !recipientEther || !recipientToken || !splitEther || !splitToken) {
+        console.log('Contracts not found')
+        return
+    }
 
     console.log('Deployment addresses:')
-    console.log('Registry:', registry.address)
-    console.log('BasicEther:', basicEtherModule.address)
-    console.log('BasicToken:', basicTokenModule.address)
+    console.log('showhub:', showhub)
+    console.log('recipientEther:', recipientEther)
+    console.log('recipientToken:', recipientToken)
+    console.log('splitEther:', splitEther)
+    console.log('splitToken:', splitToken)
 
     // no need to verify on localhost or hardhat
     if (network.config.chainId != 31337 && process.env.ETHERSCAN_API_KEY) {
-        console.log('Verifying Registry contract..')
+        console.log('Verifying contracts..')
+
         try {
             run('verify:verify', {
-                address: registry.address,
+                address: showhub,
                 constructorArguments: [],
-                contract: 'contracts/Registry.sol:Registry',
+                contract: 'contracts/ShowHub.sol:ShowHub',
             })
         } catch (e) {
             console.log(e)
         }
 
-        console.log('Verifying BasicEther contract..')
+        console.log('Verifying RecipientEther module..')
         try {
             run('verify:verify', {
-                address: basicEtherModule.address,
-                constructorArguments: [registry.address],
-                contract: 'contracts/conditions/BasicEther.sol:BasicEther',
+                address: recipientEther,
+                constructorArguments: [showhub],
+                contract: 'contracts/conditions/RecipientEther.sol:RecipientEther',
             })
         } catch (e) {
             console.log(e)
         }
 
-        console.log('Verifying BasicToken contract..')
+        console.log('Verifying RecipientToken module..')
         try {
             run('verify:verify', {
-                address: basicTokenModule.address,
-                constructorArguments: [registry.address],
-                contract: 'contracts/conditions/BasicToken.sol:BasicToken',
+                address: recipientToken,
+                constructorArguments: [showhub],
+                contract: 'contracts/conditions/RecipientToken.sol:RecipientToken',
+            })
+        } catch (e) {
+            console.log(e)
+        }
+
+        console.log('Verifying SplitEther module..')
+        try {
+            run('verify:verify', {
+                address: splitEther,
+                constructorArguments: [showhub],
+                contract: 'contracts/conditions/SplitEther.sol:SplitEther',
+            })
+        } catch (e) {
+            console.log(e)
+        }
+
+        console.log('Verifying SplitToken module..')
+        try {
+            run('verify:verify', {
+                address: splitToken,
+                constructorArguments: [showhub],
+                contract: 'contracts/conditions/SplitToken.sol:SplitToken',
             })
         } catch (e) {
             console.log(e)
