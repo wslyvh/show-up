@@ -194,8 +194,9 @@ export async function GetUpcomingEvents() {
         Record(
           limit: 100
           order_by: {metadataObject: {end: desc}}
-          where: {status: {_eq: 0}, metadataObject: {appId: {_eq: "${CONFIG.DEFAULT_APP_ID
-        }"}, end: {_gte: ${dayjs().unix()}}}}
+          where: {status: {_eq: 0}, metadataObject: {appId: {_eq: "${
+            CONFIG.DEFAULT_APP_ID
+          }"}, end: {_gte: ${dayjs().unix()}}}}
         ) {
           ${eventFields}
         }
@@ -223,8 +224,9 @@ export async function GetPastEvents() {
         Record(
           limit: 100
           order_by: {metadataObject: {end: desc}}
-          where: {status: {_eq: 0}, metadataObject: {appId: {_eq: "${CONFIG.DEFAULT_APP_ID
-        }"}, end: {_lte: ${dayjs().unix()}}}}
+          where: {status: {_eq: 0}, metadataObject: {appId: {_eq: "${
+            CONFIG.DEFAULT_APP_ID
+          }"}, end: {_lte: ${dayjs().unix()}}}}
         ) {
           ${eventFields}
         }
