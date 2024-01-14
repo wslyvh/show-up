@@ -49,7 +49,7 @@ export function Settle() {
 
       const data = await waitForTransaction({
         chainId: chain.id,
-        confirmations: 2,
+        confirmations: chain.id === 11155111 ? 2 : 5,
         hash: hash,
       })
 

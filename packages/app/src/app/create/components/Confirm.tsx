@@ -161,7 +161,7 @@ export function Confirm(props: Props) {
 
       const data = await waitForTransaction({
         chainId: conditionModule.chainId,
-        confirmations: 2,
+        confirmations: conditionModule.chainId === 11155111 ? 2 : 5,
         hash: hash,
       })
 
