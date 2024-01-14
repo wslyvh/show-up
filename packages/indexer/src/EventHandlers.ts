@@ -1,9 +1,10 @@
 import {
   ShowHubContract_CheckedIn_handler,
+  ShowHubContract_ConditionModuleWhitelisted_loader,
   ShowHubContract_ConditionModuleWhitelisted_handler,
-  ShowHubContract_Created_handler,
-  ShowHubContract_Funded_handler,
-  ShowHubContract_Registered_handler,
+  ShowHubContract_Created_handlerAsync,
+  ShowHubContract_Funded_handlerAsync,
+  ShowHubContract_Registered_handlerAsync,
   ShowHubContract_Settled_handler,
   ShowHubContract_Canceled_handlerAsync,
   ShowHubContract_Updated_handlerAsync,
@@ -26,6 +27,13 @@ const RecipientEtherDataParams = [{ name: "depositFee", type: "uint256" }, { nam
 const RecipientTokenDataParams = [{ name: "depositFee", type: "uint256" }, { name: "tokenAddress", type: "address" }, { name: "recipient", type: "address" }]
 const SplitEtherDataParams = [{ name: "depositFee", type: "uint256" }]
 const SplitTokenDataParams = [{ name: "depositFee", type: "uint256" }, { name: "tokenAddress", type: "address" }]
+
+ShowHubContract_ConditionModuleWhitelisted_loader(({ event, context }) => {
+  const moduleId = `${event.chainId}-${event.params.conditionModule}`
+  context.log.debug(`Processing ShowHubContract_ConditionModuleWhitelisted @ chain ${event.chainId} | Block # ${event.blockNumber}`)
+
+  context.ConditionModule.load(moduleId)
+})
 
 ShowHubContract_ConditionModuleWhitelisted_handler(({ event, context }) => {
   const chainId = event.chainId
@@ -54,7 +62,7 @@ ShowHubContract_ConditionModuleWhitelisted_handler(({ event, context }) => {
   })
 })
 
-ShowHubContract_Created_handler(async ({ event, context }) => {
+ShowHubContract_Created_handlerAsync(async ({ event, context }) => {
   const chainId = event.chainId
   const eventId = `${chainId}-${event.params.id}`
   const moduleId = `${chainId}-${event.params.conditionModule}`
@@ -259,7 +267,7 @@ ShowHubContract_Canceled_handlerAsync(async ({ event, context }) => {
   })
 })
 
-ShowHubContract_Funded_handler(async ({ event, context }) => {
+ShowHubContract_Funded_handlerAsync(async ({ event, context }) => {
   const chainId = event.chainId
   const eventId = `${chainId}-${event.params.id}`
   context.log.debug(`Processing ShowHubContract_Funded # ${eventId} @ Block # ${event.blockNumber}`)
@@ -294,7 +302,7 @@ ShowHubContract_Funded_handler(async ({ event, context }) => {
   }
 })
 
-ShowHubContract_Registered_handler(async ({ event, context }) => {
+ShowHubContract_Registered_handlerAsync(async ({ event, context }) => {
   const chainId = event.chainId
   const eventId = `${chainId}-${event.params.id}`
   context.log.debug(`Processing ShowHubContract_Registered # ${eventId} @ Block # ${event.blockNumber}`)
