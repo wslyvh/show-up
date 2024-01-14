@@ -387,7 +387,8 @@ export function CreateForm() {
               <input
                 id='depositFee'
                 type='number'
-                step='0.01'
+                step='0.001'
+                min='0'
                 max='1000.00'
                 required
                 className='input input-sm input-bordered w-full'
