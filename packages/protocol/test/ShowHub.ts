@@ -211,9 +211,49 @@ describe('ShowHub', function () {
         .withArgs(0, attendee1.address, attendee1.address, timestamp)
     })
 
+    it('Should allow to settle an event with 100 participants', async function () {
+      const { showhub, nextWeek } = await loadFixture(deployFixture)
+      await loadFixture(createTrueMockFixture)
+
+      const addresses = []
+      for (let i = 0; i < 100; i++) {
+        const address = ethers.Wallet.createRandom().address
+        await showhub.register(0, address, [], { value: defaultDepositFee })
+        addresses.push(address)
+      }
+
+      await showhub.checkin(0, addresses, [])
+
+      // Update timestamp to next week. Can only settle events that have passed their endDate
+      await time.increaseTo(nextWeek)
+
+      const settleTx = await showhub.settle(0, [])
+      expect(settleTx).not.to.be.reverted
+    })
+
     it('Should allow owner to cancel', async function () {
       const { showhub, owner } = await loadFixture(deployFixture)
       await loadFixture(createTrueMockFixture)
+
+      const reason = 'Cancelled by owner'
+      const cancelTx = await showhub.cancel(0, reason, [])
+
+      const timestamp = await time.latest();
+      expect(cancelTx).to.emit(showhub, "Cancelled")
+        .withArgs(0, reason, owner, timestamp)
+    })
+
+    it('Should allow to cancel an event with 500 participants', async function () {
+      const { showhub, owner, tomorrow, trueMockModule, params } = await loadFixture(deployFixture)
+
+      await showhub.create(defaultContentUri, tomorrow, 500, trueMockModule.address, params)
+
+      const addresses = []
+      for (let i = 0; i < 500; i++) {
+        const address = ethers.Wallet.createRandom().address
+        await showhub.register(0, address, [], { value: defaultDepositFee })
+        addresses.push(address)
+      }
 
       const reason = 'Cancelled by owner'
       const cancelTx = await showhub.cancel(0, reason, [])
