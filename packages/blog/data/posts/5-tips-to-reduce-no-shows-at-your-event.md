@@ -1,7 +1,7 @@
 ---
 title: 5 tips to reduce no-shows at your event
 description: Reducing no-shows at events can be challenging, but implementing certain strategies can help improve attendance rates. Follow these tips to minimize no-shows at your next event.
-date: 2024-01-04T15:15:15.138Z
+date: 2024-01-12T15:15:15.138Z
 ---
 
 Reducing no-shows at events can be challenging, but implementing certain strategies can help improve attendance rates.
