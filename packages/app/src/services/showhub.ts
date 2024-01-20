@@ -299,6 +299,36 @@ export async function GetEventsByRegistration(address: string) {
   return data.Record.map((i: any) => mapEventRecord(i)) as Record[]
 }
 
+export async function IsParticipant(eventId: string, address: string) {
+  const response = await fetch(envioBaseUri, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: `{
+        Record(
+          limit: 1
+          where: {
+            slug: { _eq: "${eventId}" }
+            registrations: { user: { _eq: "${address}" }
+          }}
+        ) {
+          slug
+        }
+      }`,
+    }),
+  })
+
+  if (!response.ok) {
+    console.error('Failed to fetch record', response)
+    return false
+  }
+
+  const { data } = await response.json()
+  return data.Record.length > 0
+}
+
 export function ValidateMetadata(event: EventMetadata) {
   if (!event.title || !event.start || !event.end || !event.timezone || !event.location) {
     return false
