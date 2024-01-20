@@ -16,6 +16,7 @@ import { erc20ABI, prepareWriteShowHub, writeShowHub } from '@/abis'
 import { revalidateAll } from '@/app/actions/cache'
 import { waitForTransaction, switchNetwork, prepareWriteContract, writeContract } from '@wagmi/core'
 import { Alert } from '@/components/Alert'
+import { IsParticipant } from '@/services/showhub'
 
 export function Register() {
   const { chain: currentChain } = useNetwork()
@@ -125,7 +126,15 @@ export function Register() {
       })
 
       if (data.status == 'success') {
-        setState({ ...state, isLoading: false, type: 'success', message: 'Successfully registered' })
+        setState({ ...state, isLoading: true, type: 'success', message: 'Successfully registered. Indexing' })
+
+        let isParticipant = await IsParticipant(eventData.record.slug, address)
+        while (!isParticipant) {
+          console.log('Registration is being indexed. Retrying..')
+          await new Promise((r) => setTimeout(r, 3000))
+
+          isParticipant = await IsParticipant(eventData.record.slug, address)
+        }
 
         await notifications.Add({
           created: Date.now(),
@@ -142,6 +151,8 @@ export function Register() {
         await revalidateAll()
         queryClient.invalidateQueries({ queryKey: ['events'] })
         eventData.refetch()
+
+        setState({ ...state, isLoading: false, type: 'success', message: 'Successfully registered. Done.' })
 
         return
       }
@@ -265,7 +276,13 @@ export function Register() {
                 disabled={state.isLoading || eventData.isParticipant}
                 onClick={Register}
                 className='btn btn-accent btn-sm w-full'>
-                <>Register</>
+                {state.isLoading && (
+                  <>
+                    Loading
+                    <span className='loading loading-spinner h-4 w-4' />
+                  </>
+                )}
+                {!state.isLoading && <>Register</>}
               </button>
             )}
         </div>

@@ -3,7 +3,7 @@ import { CONFIG } from '@/utils/config'
 import { SITE_URL } from '@/utils/site'
 import dayjs from 'dayjs'
 
-export const envioBaseUri = 'https://indexer.bigdevenergy.link/0286eb8/v1/graphql' // 'http://localhost:8080/v1/graphql'
+export const envioBaseUri = 'https://indexer.bigdevenergy.link/3387a82/v1/graphql' // 'http://localhost:8080/v1/graphql'
 
 const eventFields = `
   id
