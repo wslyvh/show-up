@@ -17,5 +17,7 @@
     "test": "yarn workspaces -pt run test"
   },
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "knip": "^4.2.1"
+  }
 }
