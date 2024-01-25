@@ -4,6 +4,7 @@ import Link from 'next/link'
 interface Props {
   href: string
   children: ReactNode
+  download?: boolean | string
   ariaLabel?: string
   isExternal?: boolean
   className?: string
@@ -19,6 +20,7 @@ export function LinkComponent(props: Props) {
       <Link
         className={className}
         href={props.href}
+        download={props.download}
         target='_blank'
         rel='noopener noreferrer'
         aria-label={props.ariaLabel}>
@@ -28,7 +30,7 @@ export function LinkComponent(props: Props) {
   }
 
   return (
-    <Link className={className} href={props.href} aria-label={props.ariaLabel}>
+    <Link className={className} href={props.href} download={props.download} aria-label={props.ariaLabel}>
       {props.children}
     </Link>
   )

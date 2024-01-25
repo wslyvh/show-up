@@ -23,6 +23,8 @@ import { marked } from 'marked'
 import Image from 'next/image'
 import dayjs from 'dayjs'
 import makeBlockie from 'ethereum-blockies-base64'
+import { GenerateGoogleCalendarLink, GenerateIcsFileLink } from '@/utils/dates'
+import { Slugify } from '@/utils/format'
 
 export function EventDetails() {
   const pathname = usePathname()
@@ -67,9 +69,25 @@ export function EventDetails() {
 
             <p className='flex flex-row items-center gap-2'>
               <CalendarDaysIcon className='h-5 w-5 text-info shrink-0' />
-              {dayjs(event.start).format(eventData.sameDay ? 'ddd MMM DD · HH:mm' : 'MMM DD · HH:mm')}
-              {' → '}
-              {dayjs(event.end).format(eventData.sameDay ? 'HH:mm' : 'MMM DD · HH:mm')}
+              <div className='dropdown'>
+                <div tabIndex={0} role='button'>
+                  {dayjs(event.start).format(eventData.sameDay ? 'ddd MMM DD · HH:mm' : 'MMM DD · HH:mm')}
+                  {' → '}
+                  {dayjs(event.end).format(eventData.sameDay ? 'HH:mm' : 'MMM DD · HH:mm')}
+                </div>
+                <ul tabIndex={0} className='dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52'>
+                  <li>
+                    <a href={GenerateGoogleCalendarLink(record)} target='_blank'>
+                      Google Calendar
+                    </a>
+                  </li>
+                  <li>
+                    <a href={GenerateIcsFileLink(record)} download={`${Slugify(event.title)}.ics`}>
+                      Your .ICS
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </p>
             {event.end !== record.endDate && (
               <p className='flex flex-row items-center gap-2'>
