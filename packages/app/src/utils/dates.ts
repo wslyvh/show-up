@@ -22,7 +22,7 @@ export function GenerateIcsFileLink(record: Record) {
     `DTSTART:${dateFormat(record.metadata.start)}`,
     `DTEND:${dateFormat(record.metadata.end)}`,
     `SUMMARY:${record.metadata.title}`,
-    `DESCRIPTION:${generateDescription(record)}`,
+    `DESCRIPTION:RSVP - ${getShowUpEventLink(record)}`,
     `LOCATION:${record.metadata.location}`,
     `END:VEVENT`
   )
