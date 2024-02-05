@@ -54,7 +54,15 @@ type Registration {
 type User {
   id: ID! # address
   name: String!
+
   avatar: String
+  description: String
+  website: String
+  email: String
+  twitter: String
+  github: String
+  discord: String
+  telegram: String
 
   registrations: [Registration!]! @derivedFrom(field: "user")
 }

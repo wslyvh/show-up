@@ -21,6 +21,7 @@
     "typescript": "5.2.2"
   },
   "dependencies": {
+    "@ensdomains/ensjs": "^3.4.2",
     "dayjs": "^1.11.10",
     "envio": "0.0.28",
     "ethers": "6.8.0",
