@@ -6,16 +6,17 @@ import { Empty } from '@/components/Empty'
 import { FaDiscord, FaEthereum, FaGithub, FaTelegram, FaTwitter } from 'react-icons/fa6'
 import makeBlockie from 'ethereum-blockies-base64'
 import { LinkComponent } from '@/components/LinkComponent'
+import { useProfile } from '@/hooks/useProfile'
 
 interface Props {
   id: string
 }
 
 export function Profile(props: Props) {
-  const { data, isError } = useMyEvents(props.id)
-  if (!data || isError) return <Empty text={`No events found`} />
-  const owner = data[0]?.owner
-  if (!owner) return <Empty text={`No events found`} />
+  const { data: owner, isError: isOwnerError } = useProfile(props.id)
+  const { data: events, isError: isEventsError } = useMyEvents(props.id)
+  if (!owner) return null // loading
+  if (isOwnerError || isEventsError) return <Empty text={`Unable to fetch profile`} />
 
   const onSelect = (option: string) => {
     // filter
@@ -87,10 +88,10 @@ export function Profile(props: Props) {
       </div> */}
 
       <div className='flex flex-col my-4 gap-2'>
-        {data.map((event) => (
-          <Card key={event.id} event={event} />
-        ))}
+        {events && events.length > 0 && events.map((event) => <Card key={event.id} event={event} />)}
       </div>
+
+      {events && events.length === 0 && <Empty text={`No events found`} />}
     </>
   )
 }

@@ -32,7 +32,6 @@ export function EventDetails() {
   const eventData = useEventData()
   const record = eventData.record
   const event = eventData.event
-  const chain = CONFIG.DEFAULT_CHAINS.find((i) => i.id === record.chainId)
 
   return (
     <>
@@ -60,9 +59,7 @@ export function EventDetails() {
           <div className='flex flex-col mt-4 gap-2'>
             <p className='flex flex-row items-center gap-2'>
               <CheckBadgeIcon className='h-5 w-5 text-info shrink-0' />
-              <LinkComponent
-                className='underline truncate hover:text-white'
-                href={`${chain?.blockExplorers?.default.url}/address/${record.createdBy}`}>
+              <LinkComponent className='underline truncate hover:text-white' href={`/${record.createdBy}`}>
                 {record.owner.name}
               </LinkComponent>
             </p>
