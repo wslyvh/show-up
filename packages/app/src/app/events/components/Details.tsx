@@ -80,7 +80,7 @@ export function EventDetails() {
                   </li>
                   <li>
                     <a href={GenerateIcsFileLink(record)} download={`${Slugify(event.title)}.ics`}>
-                      Your .ICS
+                      Download .ICS
                     </a>
                   </li>
                 </ul>
