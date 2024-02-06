@@ -67,7 +67,7 @@ export function EventDetails() {
             <p className='flex flex-row items-center gap-2'>
               <CalendarDaysIcon className='h-5 w-5 text-info shrink-0' />
               <div className='dropdown'>
-                <div tabIndex={0} role='button'>
+                <div tabIndex={0} role='button' className='underline'>
                   {dayjs(event.start).format(eventData.sameDay ? 'ddd MMM DD · HH:mm' : 'MMM DD · HH:mm')}
                   {' → '}
                   {dayjs(event.end).format(eventData.sameDay ? 'HH:mm' : 'MMM DD · HH:mm')}
