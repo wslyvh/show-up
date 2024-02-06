@@ -62,13 +62,19 @@ export async function GetEnsProfile(address: string) {
         records.texts.find((r) => r.key === "avatar")?.value ?? null;
       const email = records.texts.find((r) => r.key === "email")?.value ?? null;
       const twitter =
-        records.texts.find((r) => r.key === "com.twitter")?.value ?? null;
+        records.texts
+          .find((r) => r.key === "com.twitter")
+          ?.value?.replace("https://twitter.com/", "") ?? null;
       const github =
-        records.texts.find((r) => r.key === "com.github")?.value ?? null;
+        records.texts
+          .find((r) => r.key === "com.github")
+          ?.value?.replace("https://github.com/", "") ?? null;
       const discord =
         records.texts.find((r) => r.key === "com.discord")?.value ?? null;
       const telegram =
-        records.texts.find((r) => r.key === "com.telegram")?.value ?? null;
+        records.texts
+          .find((r) => r.key === "com.telegram")
+          ?.value?.replace("https://t.me/", "") ?? null;
 
       // Parse records
       return {
