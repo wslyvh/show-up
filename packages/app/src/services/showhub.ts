@@ -1,9 +1,9 @@
-import { ConditionModule, CreateEventData, EventMetadata, Record } from '@/utils/types'
+import { ConditionModule, CreateEventData, EventMetadata, Record, UserProfile } from '@/utils/types'
 import { CONFIG } from '@/utils/config'
 import { SITE_URL } from '@/utils/site'
 import dayjs from 'dayjs'
 
-export const envioBaseUri = 'https://indexer.bigdevenergy.link/3387a82/v1/graphql' // 'http://localhost:8080/v1/graphql'
+export const envioBaseUri = 'https://indexer.bigdevenergy.link/d95e0c6/v1/graphql' // 'http://localhost:8080/v1/graphql'
 
 const eventFields = `
   id
@@ -19,6 +19,13 @@ const eventFields = `
     id
     name
     avatar
+    description
+    website
+    email
+    twitter
+    github
+    discord
+    telegram
   }
   status
   message
@@ -327,6 +334,72 @@ export async function IsParticipant(eventId: string, address: string) {
 
   const { data } = await response.json()
   return data.Record.length > 0
+}
+
+export async function GetUser(address: string) {
+  const response = await fetch(envioBaseUri, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: `{
+        User(where: {id: {_eq: "${address}"}}) {
+          id
+          name
+          avatar
+          description
+          website
+          email
+          twitter
+          github
+          discord
+          telegram
+        }
+      }`,
+    }),
+  })
+
+  if (!response.ok) {
+    console.error('Failed to fetch user', response)
+    return false
+  }
+
+  const { data } = await response.json()
+  return data.User[0] as UserProfile
+}
+
+export async function GetUsers() {
+  const response = await fetch(envioBaseUri, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: `{
+        User {
+          id
+          name
+          avatar
+          description
+          website
+          email
+          twitter
+          github
+          discord
+          telegram
+        }
+      }`,
+    }),
+  })
+
+  if (!response.ok) {
+    console.error('Failed to fetch user', response)
+    return false
+  }
+
+  const { data } = await response.json()
+  return data.User as UserProfile[]
 }
 
 export function ValidateMetadata(event: EventMetadata) {

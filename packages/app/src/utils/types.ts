@@ -76,6 +76,14 @@ export interface UserProfile {
   id: string
   name: string
   avatar: string
+
+  description?: string
+  website?: string
+  email?: string
+  twitter?: string
+  github?: string
+  discord?: string
+  telegram?: string
 }
 
 export interface Registration extends UserProfile {

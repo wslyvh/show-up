@@ -9,14 +9,13 @@
     "packages/protocol"
   ],
   "scripts": {
-    "dev": "yarn workspaces -pt run dev",
+    "dev": "yarn workspaces app run dev",
     "deploy": "yarn workspace protocol deploy",
     "run:node": "yarn workspace protocol hardhat node",
     "run:wagmi": "yarn workspace app wagmi",
     "build": "yarn workspaces -pt run build",
     "test": "yarn workspaces -pt run test"
   },
-  "dependencies": {},
   "devDependencies": {
     "knip": "^4.2.1"
   }
