@@ -261,8 +261,13 @@ export async function GetEventsByOwner(owner: string) {
         Record(
           limit: 100
           order_by: {metadataObject: {end: desc}}
-          where: {owner: {_eq: "${owner}"}, metadataObject: {appId: {_eq: "${CONFIG.DEFAULT_APP_ID}"}}}
-        ) {
+          where: {
+            metadataObject: {appId: {_eq: "${CONFIG.DEFAULT_APP_ID}"}}, 
+            _or: [
+              {ownerObject: {name: {_eq: "${owner}"}}},
+              {ownerObject: {id: {_eq: "${owner}"}}}]
+          }
+          ) {
           ${eventFields}
         }
       }`,
@@ -344,7 +349,13 @@ export async function GetUser(address: string) {
     },
     body: JSON.stringify({
       query: `{
-        User(where: {id: {_eq: "${address}"}}) {
+        User(
+          where: {
+            _or: [
+              {name: {_eq: "${address}"}},
+              {id: {_eq: "${address}"}}
+            ]
+          }) {
           id
           name
           avatar

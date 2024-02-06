@@ -59,7 +59,9 @@ export function EventDetails() {
           <div className='flex flex-col mt-4 gap-2'>
             <p className='flex flex-row items-center gap-2'>
               <CheckBadgeIcon className='h-5 w-5 text-info shrink-0' />
-              <LinkComponent className='underline truncate hover:text-white' href={`/${record.createdBy}`}>
+              <LinkComponent
+                className='underline truncate hover:text-white'
+                href={`/${record.owner.name.endsWith('.eth') ? record.owner.name : record.createdBy}`}>
                 {record.owner.name}
               </LinkComponent>
             </p>
