@@ -25,16 +25,15 @@ export async function GetEnsProfile(address: string) {
   }).extend(ensPublicActions);
 
   let name = TruncateMiddle(address);
-  let avatar = null;
   try {
-    console.log("Get ENS Name", address);
+    // console.log("Get ENS Name", address);
     const nameResult = await getName(client, {
       address: address as any,
     });
 
     if (nameResult) {
       name = nameResult.name;
-      console.log("Get records for", name);
+      // console.log("Get records for", name);
       const ensAvatar = await client.getEnsAvatar({
         name: normalize(name),
       });
@@ -56,16 +55,20 @@ export async function GetEnsProfile(address: string) {
       });
 
       // Parse records
-      const description = records.texts.find((r) => r.key === "description")
-        ?.value;
-      const url = records.texts.find((r) => r.key === "url")?.value;
-      const avatar = records.texts.find((r) => r.key === "avatar")?.value;
-      const email = records.texts.find((r) => r.key === "email")?.value;
-      const twitter = records.texts.find((r) => r.key === "com.twitter")?.value;
-      const github = records.texts.find((r) => r.key === "com.github")?.value;
-      const discord = records.texts.find((r) => r.key === "com.discord")?.value;
-      const telegram = records.texts.find((r) => r.key === "com.telegram")
-        ?.value;
+      const description =
+        records.texts.find((r) => r.key === "description")?.value ?? null;
+      const url = records.texts.find((r) => r.key === "url")?.value ?? null;
+      const avatar =
+        records.texts.find((r) => r.key === "avatar")?.value ?? null;
+      const email = records.texts.find((r) => r.key === "email")?.value ?? null;
+      const twitter =
+        records.texts.find((r) => r.key === "com.twitter")?.value ?? null;
+      const github =
+        records.texts.find((r) => r.key === "com.github")?.value ?? null;
+      const discord =
+        records.texts.find((r) => r.key === "com.discord")?.value ?? null;
+      const telegram =
+        records.texts.find((r) => r.key === "com.telegram")?.value ?? null;
 
       // Parse records
       return {
@@ -89,6 +92,13 @@ export async function GetEnsProfile(address: string) {
   return {
     id: address,
     name: name,
-    avatar: avatar,
+    avatar: null,
+    description: null,
+    website: null,
+    email: null,
+    twitter: null,
+    github: null,
+    discord: null,
+    telegram: null,
   };
 }
