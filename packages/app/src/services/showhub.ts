@@ -68,6 +68,8 @@ const eventFields = `
     id
     user
     participated
+    createdAt
+    createdBy
     transactionHash
     userObject {
       id
@@ -469,6 +471,8 @@ function mapEventRecord(data: any) {
       name: i.userObject.name,
       avatar: i.userObject.avatar,
       participated: i.participated,
+      createdAt: dayjs.unix(i.createdAt).toISOString(),
+      createdBy: i.createdBy,
       transactionHash: i.transactionHash,
     })),
   } as Record
