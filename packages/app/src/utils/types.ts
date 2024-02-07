@@ -87,6 +87,8 @@ export interface UserProfile {
 }
 
 export interface Registration extends UserProfile {
+  createdAt: string | number
+  createdBy: string
   participated: boolean
   transactionHash: string
 }

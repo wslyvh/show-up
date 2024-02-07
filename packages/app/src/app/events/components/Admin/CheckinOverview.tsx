@@ -13,6 +13,7 @@ import { useNotifications } from '@/context/Notification'
 import { CONFIG } from '@/utils/config'
 import { Alert } from '@/components/Alert'
 import { useRouter } from 'next/navigation'
+import dayjs from 'dayjs'
 
 export function CheckinOverview() {
   const router = useRouter()
@@ -138,7 +139,7 @@ export function CheckinOverview() {
                 />
               </th>
               <th>Name</th>
-              {/* <th className='min-w-[8rem]'>Registered</th> */}
+              <th className='min-w-[8rem]'>Registered</th>
             </tr>
           </thead>
           <tbody>
@@ -169,7 +170,7 @@ export function CheckinOverview() {
                       </div>
                     </div>
                   </td>
-                  {/* <td className='text-xs'>{dayjs(i.createdAt).format('ddd MMM DD · HH:mm')}</td> */}
+                  <td className='text-xs'>{dayjs(i.createdAt).format('ddd MMM DD · HH:mm')}</td>
                 </tr>
               )
             })}
