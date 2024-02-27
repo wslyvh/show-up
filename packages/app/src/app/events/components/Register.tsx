@@ -48,7 +48,7 @@ export function Register() {
   }
 
   const actionButton = (
-    <button type='button' disabled={eventData.canRegister} className='btn btn-accent btn-outline btn-sm w-full'>
+    <button type='button' className='btn btn-accent btn-outline btn-sm w-full'>
       {buttonText()}
     </button>
   )
