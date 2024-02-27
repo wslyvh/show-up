@@ -19,24 +19,28 @@ const transports: Record<number, Transport> =
         [baseSepolia.id]: http(`https://base-sepolia.g.alchemy.com/v2/${CONFIG.NEXT_PUBLIC_ALCHEMY_KEY_BASE_SEPOLIA}`),
       }
 
-export const WAGMI_CONFIG = createConfig({
+// export const WAGMI_CONFIG = createConfig({
+//   chains: CONFIG.DEFAULT_CHAINS,
+//   transports: transports,
+// })
+
+// Web3Modal config
+export const WAGMI_CONFIG = defaultWagmiConfig({
   chains: CONFIG.DEFAULT_CHAINS,
   transports: transports,
-})
 
-export const WEB3MODAL_CONFIG = defaultWagmiConfig({
   projectId: CONFIG.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
-  chains: CONFIG.DEFAULT_CHAINS,
+  ssr: true,
+  storage: createStorage({
+    storage: cookieStorage,
+  }),
+
   metadata: {
     name: SITE_NAME,
     description: SITE_DESCRIPTION,
     url: SITE_URL,
     icons: [],
   },
-  ssr: true,
-  storage: createStorage({
-    storage: cookieStorage,
-  }),
 })
 
 export function GetNetworkColor(chainId: number) {
