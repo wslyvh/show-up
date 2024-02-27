@@ -1,8 +1,8 @@
 'use client'
 
-import { waitForTransaction } from '@wagmi/core'
+import { WAGMI_CONFIG } from '@/utils/network'
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react'
-import { fetchEnsName } from 'wagmi/actions'
+import { getEnsName, waitForTransactionReceipt } from 'wagmi/actions'
 
 interface Notification {
   created: number
@@ -71,7 +71,7 @@ export function NotificationProvider(props: PropsWithChildren) {
 
   async function waitForTxNotification(hash: string, notification: Notification) {
     try {
-      const data = await waitForTransaction({
+      const data = await waitForTransactionReceipt(WAGMI_CONFIG, {
         hash: notification.data.hash,
       })
 
@@ -114,9 +114,8 @@ export function NotificationProvider(props: PropsWithChildren) {
   async function saveNotification(notification: Notification) {
     if (notification.from) {
       try {
-        const name = await fetchEnsName({
+        const name = await getEnsName(WAGMI_CONFIG, {
           address: notification.from,
-          chainId: 1,
         })
 
         if (name) notification.from = name

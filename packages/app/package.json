@@ -27,9 +27,10 @@
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@pinata/sdk": "^1.2.1",
-    "@tanstack/react-query": "^5.0.5",
+    "@rainbow-me/rainbowkit": "^2.0.1",
+    "@tanstack/react-query": "^5.21.4",
+    "@web3modal/wagmi": "^4.0.10",
     "abitype": "^0.10.1",
-    "connectkit": "^1.5.3",
     "dayjs": "^1.11.10",
     "ethereum-blockies-base64": "^1.0.2",
     "iron-session": "^6.3.1",
@@ -43,8 +44,8 @@
     "react-icons": "^4.11.0",
     "siwe": "^2.1.4",
     "slugify": "^1.6.6",
-    "viem": "^1.16.6",
-    "wagmi": "^1.4.4"
+    "viem": "^2.7.14",
+    "wagmi": "^2.5.7"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.10",
@@ -52,7 +53,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@wagmi/cli": "^1.5.2",
+    "@wagmi/cli": "^2.1.1",
     "autoprefixer": "^10",
     "daisyui": "^4.6.0",
     "eslint": "^8",

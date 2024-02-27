@@ -2,22 +2,22 @@ import { ActionDrawer } from '@/components/ActionDrawer'
 import { useEventData } from '@/context/EventData'
 import { LoadingState } from '@/utils/types'
 import { useState } from 'react'
-import { useAccount, useNetwork } from 'wagmi'
-import { waitForTransaction, switchNetwork } from '@wagmi/core'
-import { prepareWriteShowHub, writeShowHub } from '@/abis'
+import { useAccount } from 'wagmi'
+import { showHubAddress, simulateShowHub, writeShowHub } from '@/abis'
 import { useQueryClient } from '@tanstack/react-query'
 import { useNotifications } from '@/context/Notification'
 import { CONFIG } from '@/utils/config'
 import { revalidateAll } from '@/app/actions/cache'
 import { Alert } from '@/components/Alert'
+import { WAGMI_CONFIG } from '@/utils/network'
+import { switchChain, waitForTransactionReceipt } from 'wagmi/actions'
 
 export function Cancel() {
-  const { chain: currentChain } = useNetwork()
   const eventData = useEventData()
   const notifications = useNotifications()
   const queryClient = useQueryClient()
   const chain = CONFIG.DEFAULT_CHAINS.find((i) => i.id === eventData.record.conditionModule.chainId)
-  const { address } = useAccount()
+  const { address, chainId } = useAccount()
   const [reason, setReason] = useState('')
   const [state, setState] = useState<LoadingState>({
     isLoading: false,
@@ -38,14 +38,24 @@ export function Cancel() {
 
     setState({ ...state, isLoading: true, type: 'info', message: `Cancelling event. Sign transaction` })
 
+    if (chainId !== eventData.chain.id) {
+      try {
+        console.log(`Switching chains ${chainId} -> ${eventData.chain.id}`)
+        await switchChain(WAGMI_CONFIG, { chainId: eventData.chain.id })
+      } catch (e) {
+        console.log('Unable to switch chains', e)
+      }
+    }
+
     try {
-      const txConfig = await prepareWriteShowHub({
-        chainId: chain.id as any,
+      const txConfig = await simulateShowHub(WAGMI_CONFIG, {
+        chainId: eventData.record.conditionModule.chainId,
+        address: showHubAddress,
         functionName: 'cancel',
         args: [eventData.record.recordId, reason, '0x'],
       })
 
-      const { hash } = await writeShowHub(txConfig)
+      const hash = await writeShowHub(WAGMI_CONFIG, txConfig.request)
 
       setState({ ...state, isLoading: true, type: 'info', message: 'Transaction sent. Awaiting confirmation' })
 
@@ -61,11 +71,7 @@ export function Cancel() {
         data: { hash },
       })
 
-      const data = await waitForTransaction({
-        chainId: chain.id,
-        confirmations: chain.id === 11155111 ? 2 : 5,
-        hash: hash,
-      })
+      const data = await waitForTransactionReceipt(WAGMI_CONFIG, { hash: hash })
 
       if (data.status == 'success') {
         setState({ ...state, isLoading: false, type: 'success', message: 'Event cancelled' })
@@ -117,30 +123,19 @@ export function Cancel() {
         <div className='flex flex-col justify-end gap-4 mt-4'>
           {state.message && <Alert type={state.type as any} message={state.message} />}
 
-          {currentChain && currentChain?.id !== chain?.id && (
-            <button
-              className='btn btn-accent btn-sm w-full'
-              disabled={state.isLoading || state.type == 'success'}
-              onClick={() => switchNetwork({ chainId: eventData.record.conditionModule.chainId as any })}>
-              Switch Network
-            </button>
-          )}
-
-          {currentChain && currentChain?.id === chain?.id && (
-            <button
-              type='button'
-              disabled={state.isLoading || !eventData.canCancel}
-              onClick={Cancel}
-              className='btn btn-accent btn-sm w-full'>
-              {state.isLoading && (
-                <>
-                  Loading
-                  <span className='loading loading-spinner h-4 w-4' />
-                </>
-              )}
-              {!state.isLoading && <>Cancel Event</>}
-            </button>
-          )}
+          <button
+            type='button'
+            disabled={state.isLoading || !eventData.canCancel}
+            onClick={Cancel}
+            className='btn btn-accent btn-sm w-full'>
+            {state.isLoading && (
+              <>
+                Loading
+                <span className='loading loading-spinner h-4 w-4' />
+              </>
+            )}
+            {!state.isLoading && <>Cancel Event</>}
+          </button>
         </div>
       </div>
     </ActionDrawer>

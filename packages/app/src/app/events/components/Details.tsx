@@ -6,6 +6,7 @@ import {
   BanknotesIcon,
   CalendarDaysIcon,
   CheckBadgeIcon,
+  LinkIcon,
   MapPinIcon,
   PencilSquareIcon,
   UserIcon,
@@ -16,7 +17,6 @@ import { AdminActions } from './Admin/Actions'
 import { Register } from './Register'
 import { Fund } from './Fund'
 import { useEventData } from '@/context/EventData'
-import { CONFIG } from '@/utils/config'
 import { useAccount } from 'wagmi'
 import { usePathname } from 'next/navigation'
 import { marked } from 'marked'
@@ -125,6 +125,10 @@ export function EventDetails() {
                 </>
               )}{' '}
               deposit fee
+            </p>
+            <p className='flex flex-row items-center gap-2'>
+              <LinkIcon className='h-5 w-5 text-info shrink-0' />
+              <span className='badge badge-accent'>{eventData.chain.name}</span>
             </p>
             {record.totalFunded > 0 && (
               <p className='flex flex-row items-center gap-2'>

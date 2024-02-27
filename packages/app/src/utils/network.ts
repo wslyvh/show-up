@@ -1,5 +1,55 @@
+import { defaultWagmiConfig } from '@web3modal/wagmi'
+import { http, createStorage, cookieStorage, createConfig } from 'wagmi'
+import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from './site'
+import { base, baseSepolia, optimism, sepolia } from 'viem/chains'
+import { CONFIG } from './config'
+import { Transport } from 'viem'
+import { getDefaultConfig } from '@rainbow-me/rainbowkit'
+
 export const AddressZero = '0x0000000000000000000000000000000000000000'
 export const DefaultDepositFee = 0.01
+
+const transports: Record<number, Transport> =
+  CONFIG.NETWORK_ENV === 'main'
+    ? {
+        [optimism.id]: http(`https://optimism-mainnet.infura.io/v3/${CONFIG.NEXT_PUBLIC_INFURA_KEY}`),
+        [base.id]: http(`https://base-mainnet.g.alchemy.com/v2/${CONFIG.NEXT_PUBLIC_ALCHEMY_KEY_BASE}`),
+      }
+    : {
+        [sepolia.id]: http(`https://sepolia.infura.io/v3/${CONFIG.NEXT_PUBLIC_INFURA_KEY}`),
+        [baseSepolia.id]: http(`https://base-sepolia.g.alchemy.com/v2/${CONFIG.NEXT_PUBLIC_ALCHEMY_KEY_BASE_SEPOLIA}`),
+      }
+
+export const WAGMI_CONFIG = createConfig({
+  chains: CONFIG.DEFAULT_CHAINS,
+  transports: transports,
+})
+
+export const RAINBOW_CONFIG = getDefaultConfig({
+  chains: [sepolia, baseSepolia],
+
+  projectId: CONFIG.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+  ssr: true,
+
+  appName: SITE_NAME,
+  appDescription: SITE_DESCRIPTION,
+  appUrl: SITE_URL,
+})
+
+export const WEB3MODAL_CONFIG = defaultWagmiConfig({
+  projectId: CONFIG.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+  chains: CONFIG.DEFAULT_CHAINS,
+  metadata: {
+    name: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    icons: [],
+  },
+  ssr: true,
+  storage: createStorage({
+    storage: cookieStorage,
+  }),
+})
 
 export function GetNetworkColor(chainId: number) {
   if (chainId === 1) return 'green'

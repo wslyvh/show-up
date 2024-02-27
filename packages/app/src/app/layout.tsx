@@ -9,11 +9,10 @@ import {
   SOCIAL_TWITTER,
 } from '@/utils/site'
 import { MobileLayout } from '@/components/MobileLayout'
-import { Web3Provider } from '@/context/Web3'
 import { NotificationProvider } from '@/context/Notification'
 import PlausibleProvider from 'next-plausible'
-import DataProvider from '@/context/Data'
 import '../assets/globals.css'
+import { Web3Provider } from '@/context/Web3'
 
 export const metadata: Metadata = {
   applicationName: SITE_NAME,
@@ -68,9 +67,7 @@ export default function RootLayout(props: PropsWithChildren) {
       <body>
         <Web3Provider>
           <NotificationProvider>
-            <DataProvider>
-              <MobileLayout>{props.children}</MobileLayout>
-            </DataProvider>
+            <MobileLayout>{props.children}</MobileLayout>
           </NotificationProvider>
         </Web3Provider>
       </body>

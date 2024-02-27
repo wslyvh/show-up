@@ -6,10 +6,13 @@ import { EventMetadata, Record, Status } from '@/utils/types'
 import dayjs from 'dayjs'
 import { Alert } from '@/components/Alert'
 import { useEvent } from '@/hooks/useEvent'
+import { Chain } from 'viem/chains'
+import { CONFIG } from '@/utils/config'
 
 interface EventDataContext {
   record: Record
   event: EventMetadata
+  chain: Chain
   sameDay: boolean
   hasEnded: boolean
   hasParticipants: boolean
@@ -29,6 +32,7 @@ interface EventDataContext {
 const defaultState: EventDataContext = {
   record: {} as Record,
   event: {} as EventMetadata,
+  chain: {} as Chain,
   sameDay: false,
   hasEnded: false,
   hasParticipants: false,
@@ -61,8 +65,9 @@ export default function EventDataProvider(props: Props) {
     balanceRequest.token = record.conditionModuleData.tokenAddress
   }
   const { data: balance } = useBalance(balanceRequest)
+  const chain = CONFIG.DEFAULT_CHAINS.find((i) => i.id === record?.conditionModule.chainId)
 
-  if (!record) return null
+  if (!record || !chain) return null
 
   const event = record.metadata!
   const sameDay = dayjs(event.start).isSame(event.end, 'day')
@@ -83,6 +88,7 @@ export default function EventDataProvider(props: Props) {
       value={{
         record: record,
         event: record.metadata!, // metadata should be filtered on the graph client
+        chain: chain,
         sameDay,
         hasEnded,
         hasParticipants: record.registrations.length > 0,

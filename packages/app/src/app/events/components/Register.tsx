@@ -10,21 +10,22 @@ import { TruncateMiddle } from '@/utils/format'
 import { useQueryClient } from '@tanstack/react-query'
 import { LoadingStateData } from '@/utils/types'
 import { formatUnits } from 'viem/utils'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { useState } from 'react'
-import { erc20ABI, prepareWriteShowHub, writeShowHub } from '@/abis'
+import { erc20Abi, showHubAddress, simulateShowHub, writeShowHub } from '@/abis'
 import { revalidateAll } from '@/app/actions/cache'
-import { waitForTransaction, switchNetwork, prepareWriteContract, writeContract } from '@wagmi/core'
+import { simulateContract, writeContract } from '@wagmi/core'
 import { Alert } from '@/components/Alert'
 import { IsParticipant } from '@/services/showhub'
+import { WAGMI_CONFIG } from '@/utils/network'
+import { switchChain, waitForTransactionReceipt } from 'wagmi/actions'
 
 export function Register() {
-  const { chain: currentChain } = useNetwork()
+  const { address: connectedAddress, chainId } = useAccount()
   const eventData = useEventData()
   const queryClient = useQueryClient()
   const notifications = useNotifications()
   const chain = CONFIG.DEFAULT_CHAINS.find((i) => i.id === eventData.record.conditionModule.chainId)
-  const { address: connectedAddress } = useAccount()
   const [address, setAddress] = useState(connectedAddress)
   const [state, setState] = useState<LoadingStateData>({
     isLoading: false,
@@ -42,8 +43,6 @@ export function Register() {
     if (eventData.isCancelled) return 'Event is cancelled'
     if (!eventData.isActive || eventData.hasEnded) return 'Event has ended'
     if (eventData.isParticipant) return 'Already registered'
-    if (!eventData.hasBalance)
-      return `Insufficient ${eventData.record.conditionModuleData.tokenSymbol ?? 'ETH'} balance`
 
     return 'Register'
   }
@@ -61,21 +60,17 @@ export function Register() {
     }
 
     setState({ ...state, isLoading: true, type: 'info', message: `Approving token. Sign transaction` })
-    const approveConfig = await prepareWriteContract({
-      chainId: eventData.record.conditionModule.chainId as any,
+    const approveConfig = await simulateContract(WAGMI_CONFIG, {
       address: eventData.record.conditionModuleData.tokenAddress,
-      abi: erc20ABI,
+      abi: erc20Abi,
       functionName: 'approve',
       args: [eventData.record.conditionModuleId, eventData.record.conditionModuleData.depositFee],
     })
 
-    const { hash } = await writeContract(approveConfig)
+    const hash = await writeContract(WAGMI_CONFIG, approveConfig.request)
     setState({ ...state, isLoading: true, type: 'info', message: 'Transaction sent. Awaiting confirmation' })
 
-    await waitForTransaction({
-      chainId: chain.id,
-      hash: hash,
-    })
+    await waitForTransactionReceipt(WAGMI_CONFIG, { hash: hash })
 
     await notifications.Add({
       created: Date.now(),
@@ -94,20 +89,30 @@ export function Register() {
   }
 
   async function Register() {
-    if (!address || !chain) {
+    if (!address) {
       setState({ ...state, isLoading: false, type: 'error', message: 'Not connected' })
       return
     }
 
     setState({ ...state, isLoading: true, type: 'info', message: `Registering for event. Sign transaction` })
 
+    if (chainId !== eventData.chain.id) {
+      try {
+        console.log(`Switching chains ${chainId} -> ${eventData.chain.id}`)
+        await switchChain(WAGMI_CONFIG, { chainId: eventData.chain.id })
+      } catch (e) {
+        console.log('Unable to switch chains', e)
+      }
+    }
+
     try {
       if (eventData.record.conditionModuleData.tokenAddress) {
         // make sure token is approved before registration first
       }
 
-      const txConfig = await prepareWriteShowHub({
-        chainId: chain.id as any,
+      const txConfig = await simulateShowHub(WAGMI_CONFIG, {
+        chainId: eventData.record.conditionModule.chainId,
+        address: showHubAddress,
         functionName: 'register',
         args: [eventData.record.recordId, address, '0x'],
         value: eventData.record.conditionModuleData.tokenAddress
@@ -115,15 +120,11 @@ export function Register() {
           : BigInt(eventData.record.conditionModuleData.depositFee),
       })
 
-      const { hash } = await writeShowHub(txConfig)
+      const hash = await writeShowHub(WAGMI_CONFIG, txConfig.request)
 
       setState({ ...state, isLoading: true, type: 'info', message: 'Transaction sent. Awaiting confirmation' })
 
-      const data = await waitForTransaction({
-        chainId: chain.id,
-        confirmations: chain.id === 11155111 ? 2 : 5,
-        hash: hash,
-      })
+      const data = await waitForTransactionReceipt(WAGMI_CONFIG, { hash: hash })
 
       if (data.status == 'success') {
         setState({ ...state, isLoading: true, type: 'success', message: 'Successfully registered. Indexing' })
@@ -224,18 +225,7 @@ export function Register() {
             </button>
           )}
 
-          {currentChain && currentChain?.id !== chain?.id && (
-            <button
-              className='btn btn-accent btn-sm w-full'
-              disabled={state.isLoading || state.type == 'success'}
-              onClick={() => switchNetwork({ chainId: eventData.record.conditionModule.chainId as any })}>
-              Switch Network
-            </button>
-          )}
-
-          {currentChain &&
-            currentChain?.id == chain?.id &&
-            allowance < BigInt(eventData.record.conditionModuleData.depositFee) &&
+          {allowance < BigInt(eventData.record.conditionModuleData.depositFee) &&
             (eventData.record.conditionModule.name == 'RecipientToken' ||
               eventData.record.conditionModule.name == 'SplitToken') &&
             !eventData.isParticipant && (
@@ -265,11 +255,9 @@ export function Register() {
               </>
             )}
 
-          {currentChain &&
-            currentChain?.id == chain?.id &&
-            (allowance >= BigInt(eventData.record.conditionModuleData.depositFee) ||
-              eventData.record.conditionModule.name == 'RecipientEther' ||
-              eventData.record.conditionModule.name == 'SplitEther') &&
+          {(allowance >= BigInt(eventData.record.conditionModuleData.depositFee) ||
+            eventData.record.conditionModule.name == 'RecipientEther' ||
+            eventData.record.conditionModule.name == 'SplitEther') &&
             !eventData.isParticipant && (
               <button
                 type='button'

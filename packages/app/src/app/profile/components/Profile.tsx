@@ -10,14 +10,15 @@ import { LinkComponent } from '@/components/LinkComponent'
 import { CalendarIcon, PlusIcon } from '@heroicons/react/24/outline'
 import { useMyEvents } from '@/hooks/useEvents'
 import { TicketBadge } from '@/app/tickets/components/Ticket'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { normalize } from 'viem/ens'
 
 export function Profile() {
   const { address } = useAccount()
   const { disconnect } = useDisconnect()
   const { isConnected } = useAccount()
   const { data: name } = useEnsName({ address, chainId: 1 })
-  const { data: avatar } = useEnsAvatar({ name, chainId: 1 })
+  const { data: avatar } = useEnsAvatar({ name: normalize(name as string), chainId: 1 })
   const { data: events } = useMyEvents(address)
 
   const router = useRouter()

@@ -1,20 +1,28 @@
 import { AddressZero } from '@/utils/network'
-import { erc20ABI, useContractRead } from 'wagmi'
+import { useEffect } from 'react'
+import { erc20Abi } from 'viem'
+import { useBlockNumber, useReadContract } from 'wagmi'
 
 export function useAllowance(owner: string, spender: string, tokenAddress: string = AddressZero) {
+  const { data: blockNumber } = useBlockNumber({ watch: true })
   const {
     data: allowance,
     refetch,
     isLoading,
     isError,
-  } = useContractRead({
+  } = useReadContract({
     address: tokenAddress,
-    abi: erc20ABI,
+    abi: erc20Abi,
     functionName: 'allowance',
     args: [owner, spender],
-    watch: true,
-    enabled: tokenAddress !== AddressZero,
+    query: {
+      enabled: tokenAddress !== AddressZero,
+    },
   })
+
+  useEffect(() => {
+    refetch()
+  }, [blockNumber])
 
   return {
     allowance: BigInt((allowance as string) ?? 0),

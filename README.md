@@ -2,11 +2,9 @@
 
 # Sup 😎👋
 
-Onchain RSVP and Event management that allows you to earn $$ by showing up at events!
+Onchain RSVP and Event management protocol designed to reshape event participation
 
 - https://www.showup.events/
-
-![Nexth Readme Image](./readme.png)
 
 ## Packages 📦
 
@@ -18,19 +16,17 @@ Built using [Nexth](https://github.com/wslyvh/nexth/) starter kit.
 
 ## Protocol
 
-The Smart contracts are deployed to
+The Smart contracts are deployed on
 
-### Optimism
+- Optimism
+- Base
 
-- Registry [0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2](https://sepolia.etherscan.io/address/0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2)
-- BasicEther [0x33FF944E8504B674835A5BEd88f10f11bEC92c2c](https://sepolia.etherscan.io/address/0x33FF944E8504B674835A5BEd88f10f11bEC92c2c)
-- BasicToken [0x33132fE88fe8316881474b551CA2DDD277A320a0](https://sepolia.etherscan.io/address/0x33132fE88fe8316881474b551CA2DDD277A320a0)
+**Testnet**
 
-### Sepolia
+- Sepolia
+- Base Sepolia
 
-- Registry [0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2](https://optimistic.etherscan.io/address/0x7Cc8E0633021b9DF8D2F01d9287C3b8e29f4eDe2)
-- BasicEther [0x33FF944E8504B674835A5BEd88f10f11bEC92c2c](https://optimistic.etherscan.io/address/0x33FF944E8504B674835A5BEd88f10f11bEC92c2c)
-- BasicToken [0x33132fE88fe8316881474b551CA2DDD277A320a0](https://optimistic.etherscan.io/address/0x33132fE88fe8316881474b551CA2DDD277A320a0)
+=> [More details](./packages/protocol/)
 
 ## Development 🛠️
 

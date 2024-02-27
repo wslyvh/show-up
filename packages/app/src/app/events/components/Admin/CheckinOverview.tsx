@@ -2,9 +2,8 @@
 
 import { useState } from 'react'
 import { useEventData } from '@/context/EventData'
-import { useAccount, useNetwork, useQueryClient } from 'wagmi'
-import { waitForTransaction, switchNetwork } from '@wagmi/core'
-import { prepareWriteShowHub, writeShowHub } from '@/abis'
+import { useAccount } from 'wagmi'
+import { showHubAddress, simulateShowHub, writeShowHub } from '@/abis'
 import { revalidateAll } from '@/app/actions/cache'
 import { ActionDrawer } from '@/components/ActionDrawer'
 import { LoadingState, Registration } from '@/utils/types'
@@ -14,17 +13,19 @@ import { CONFIG } from '@/utils/config'
 import { Alert } from '@/components/Alert'
 import { useRouter } from 'next/navigation'
 import dayjs from 'dayjs'
+import { useQueryClient } from '@tanstack/react-query'
+import { WAGMI_CONFIG } from '@/utils/network'
+import { switchChain, waitForTransactionReceipt } from 'wagmi/actions'
 
 export function CheckinOverview() {
   const router = useRouter()
-  const { chain: currentChain } = useNetwork()
   const eventData = useEventData()
   const record = eventData.record
   const event = eventData.event
   const notifications = useNotifications()
   const queryClient = useQueryClient()
   const chain = CONFIG.DEFAULT_CHAINS.find((i) => i.id === eventData.record.conditionModule.chainId)
-  const { address } = useAccount()
+  const { address, chainId } = useAccount()
   const [checkins, setCheckins] = useState<string[]>([])
   const [state, setState] = useState<LoadingState>({
     isLoading: false,
@@ -67,22 +68,28 @@ export function CheckinOverview() {
 
     setState({ ...state, isLoading: true, type: 'info', message: `Check in attendees. Sign transaction` })
 
+    if (chainId !== eventData.chain.id) {
+      try {
+        console.log(`Switching chains ${chainId} -> ${eventData.chain.id}`)
+        await switchChain(WAGMI_CONFIG, { chainId: eventData.chain.id })
+      } catch (e) {
+        console.log('Unable to switch chains', e)
+      }
+    }
+
     try {
-      const txConfig = await prepareWriteShowHub({
-        chainId: chain.id as any,
+      const txConfig = await simulateShowHub(WAGMI_CONFIG, {
+        chainId: eventData.record.conditionModule.chainId,
+        address: showHubAddress,
         functionName: 'checkin',
         args: [eventData.record.recordId, checkins, '0x'],
       })
 
-      const { hash } = await writeShowHub(txConfig)
+      const hash = await writeShowHub(WAGMI_CONFIG, txConfig.request)
 
       setState({ ...state, isLoading: true, type: 'info', message: 'Transaction sent. Awaiting confirmation' })
 
-      const data = await waitForTransaction({
-        chainId: chain.id,
-        confirmations: chain.id === 11155111 ? 2 : 5,
-        hash: hash,
-      })
+      const data = await waitForTransactionReceipt(WAGMI_CONFIG, { hash: hash })
 
       if (data.status == 'success') {
         setState({ ...state, isLoading: false, type: 'success', message: 'Attendees checked in' })
@@ -207,30 +214,19 @@ export function CheckinOverview() {
             <div className='flex flex-col justify-end gap-4 mt-4'>
               {state.message && <Alert type={state.type as any} message={state.message} />}
 
-              {currentChain && currentChain?.id !== chain?.id && (
-                <button
-                  className='btn btn-accent btn-sm w-full'
-                  disabled={state.isLoading || state.type == 'success'}
-                  onClick={() => switchNetwork({ chainId: eventData.record.conditionModule.chainId as any })}>
-                  Switch Network
-                </button>
-              )}
-
-              {currentChain && currentChain?.id === chain?.id && (
-                <button
-                  type='button'
-                  disabled={state.isLoading || checkins.length == 0}
-                  onClick={Checkin}
-                  className='btn btn-accent btn-sm w-full'>
-                  {state.isLoading && (
-                    <>
-                      Loading
-                      <span className='loading loading-spinner h-4 w-4' />
-                    </>
-                  )}
-                  {!state.isLoading && <>Check-in Attendees</>}
-                </button>
-              )}
+              <button
+                type='button'
+                disabled={state.isLoading || checkins.length == 0}
+                onClick={Checkin}
+                className='btn btn-accent btn-sm w-full'>
+                {state.isLoading && (
+                  <>
+                    Loading
+                    <span className='loading loading-spinner h-4 w-4' />
+                  </>
+                )}
+                {!state.isLoading && <>Check-in Attendees</>}
+              </button>
             </div>
           </div>
         </ActionDrawer>

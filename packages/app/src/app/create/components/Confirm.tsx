@@ -5,15 +5,14 @@ import { CreateEventData, EventMetadata, LoadingState } from '@/utils/types'
 import { GetEventBySlug, ValidateConditions, ValidateMetadata } from '@/services/showhub'
 import { LinkComponent } from '@/components/LinkComponent'
 import { Slugify, TruncateMiddle } from '@/utils/format'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { Alert } from '@/components/Alert'
 import { decodeEventLog, encodeAbiParameters } from 'viem/utils'
 import { useState } from 'react'
 import { Store, Upload } from '@/services/storage'
 import { useNotifications } from '@/context/Notification'
-import { switchNetwork, waitForTransaction } from '@wagmi/core'
-import { prepareWriteShowHub, showHubABI, writeShowHub } from '@/abis'
-import { WHITELISTED_TOKENS } from '@/utils/network'
+import { showHubAbi, showHubAddress, simulateShowHub, writeShowHub } from '@/abis'
+import { WAGMI_CONFIG, WHITELISTED_TOKENS } from '@/utils/network'
 import { useCreateEvent } from './CreateEventContext'
 import { useQueryClient } from '@tanstack/react-query'
 import { revalidateAll } from '@/app/actions/cache'
@@ -22,6 +21,7 @@ import { CONFIG } from '@/utils/config'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import tz from 'dayjs/plugin/timezone'
+import { switchChain, waitForTransactionReceipt } from 'wagmi/actions'
 
 dayjs.extend(utc)
 dayjs.extend(tz)
@@ -34,7 +34,6 @@ interface Props {
 
 export function Confirm(props: Props) {
   const router = useRouter()
-  const { chain: currentChain } = useNetwork()
   const { modules } = useCreateEvent()
   const queryClient = useQueryClient()
   const notifications = useNotifications()
@@ -54,7 +53,7 @@ export function Confirm(props: Props) {
       return i.chainId === props.conditions.chainId && i.name == 'SplitToken'
     }
   })
-  const { address } = useAccount()
+  const { address, chainId } = useAccount()
   const [state, setState] = useState<LoadingState>({
     isLoading: false,
     type: '',
@@ -131,9 +130,19 @@ export function Confirm(props: Props) {
 
     setState({ ...state, isLoading: true, type: 'info', message: 'Metadata uploaded. Sign transaction' })
 
+    if (chainId !== chain.id) {
+      try {
+        console.log(`Switching chains ${chainId} -> ${chain.id}`)
+        await switchChain(WAGMI_CONFIG, { chainId: chain.id })
+      } catch (e) {
+        console.log('Unable to switch chains', e)
+      }
+    }
+
     try {
-      const txConfig = await prepareWriteShowHub({
-        chainId: conditionModule.chainId as any,
+      const txConfig = await simulateShowHub(WAGMI_CONFIG, {
+        chainId: conditionModule.chainId,
+        address: showHubAddress,
         functionName: 'create',
         args: [
           contentUrl,
@@ -144,7 +153,7 @@ export function Confirm(props: Props) {
         ],
       })
 
-      const { hash } = await writeShowHub(txConfig)
+      const hash = await writeShowHub(WAGMI_CONFIG, txConfig.request)
 
       setState({ ...state, isLoading: true, type: 'info', message: 'Transaction sent. Awaiting confirmation' })
       await notifications.Add({
@@ -159,19 +168,15 @@ export function Confirm(props: Props) {
         data: { hash },
       })
 
-      const data = await waitForTransaction({
-        chainId: conditionModule.chainId,
-        confirmations: conditionModule.chainId === 11155111 ? 2 : 5,
-        hash: hash,
-      })
+      const data = await waitForTransactionReceipt(WAGMI_CONFIG, { hash: hash })
 
       if (data.status == 'success') {
         setState({ ...state, isLoading: false, type: 'success', message: 'Event Created. Indexing' })
 
         const created = data.logs.length > 0 ? data.logs[0] : null
         if (created) {
-          const topics = decodeEventLog({
-            abi: showHubABI,
+          const topics: any = decodeEventLog({
+            abi: showHubAbi,
             data: created.data,
             topics: created.topics,
           })
@@ -280,29 +285,18 @@ export function Confirm(props: Props) {
             </>
           )}
 
-          {currentChain && currentChain?.id !== conditionModule?.chainId && (
-            <button
-              className='btn btn-accent btn-sm w-full'
-              disabled={!isValid || state.isLoading || state.type == 'success'}
-              onClick={() => switchNetwork({ chainId: conditionModule?.chainId as any })}>
-              Switch Network
-            </button>
-          )}
-
-          {currentChain && currentChain?.id == conditionModule?.chainId && (
-            <button
-              className='btn btn-accent btn-sm w-full'
-              disabled={!isValid || state.isLoading || state.type == 'success'}
-              onClick={() => Create()}>
-              {state.isLoading && (
-                <>
-                  Loading
-                  <span className='loading loading-spinner h-4 w-4' />
-                </>
-              )}
-              {!state.isLoading && <>Create Event</>}
-            </button>
-          )}
+          <button
+            className='btn btn-accent btn-sm w-full'
+            disabled={!isValid || state.isLoading || state.type == 'success'}
+            onClick={() => Create()}>
+            {state.isLoading && (
+              <>
+                Loading
+                <span className='loading loading-spinner h-4 w-4' />
+              </>
+            )}
+            {!state.isLoading && <>Create Event</>}
+          </button>
         </div>
       </div>
     </ActionDrawer>
