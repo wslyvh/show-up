@@ -1,6 +1,5 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit'
 import React from 'react'
 
 export function Connect() {
-  return <ConnectButton />
+  return <w3m-button />
 }

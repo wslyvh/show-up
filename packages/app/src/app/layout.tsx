@@ -11,8 +11,11 @@ import {
 import { MobileLayout } from '@/components/MobileLayout'
 import { NotificationProvider } from '@/context/Notification'
 import PlausibleProvider from 'next-plausible'
-import '../assets/globals.css'
 import { Web3Provider } from '@/context/Web3'
+import { cookieToInitialState } from 'wagmi'
+import { WAGMI_CONFIG } from '@/utils/network'
+import { headers } from 'next/headers'
+import '../assets/globals.css'
 
 export const metadata: Metadata = {
   applicationName: SITE_NAME,
@@ -56,6 +59,8 @@ export const viewport: Viewport = {
 export const revalidate = DEFAULT_REVALIDATE_PERIOD
 
 export default function RootLayout(props: PropsWithChildren) {
+  const initialState = cookieToInitialState(WAGMI_CONFIG, headers().get('cookie'))
+
   return (
     <html lang='en'>
       <head>
@@ -65,7 +70,7 @@ export default function RootLayout(props: PropsWithChildren) {
         <link rel='apple-touch-icon' href='/icons/apple-touch-icon-180x180.png' type='image/png' sizes='any' />
       </head>
       <body>
-        <Web3Provider>
+        <Web3Provider initialState={initialState}>
           <NotificationProvider>
             <MobileLayout>{props.children}</MobileLayout>
           </NotificationProvider>

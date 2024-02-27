@@ -4,7 +4,6 @@ import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from './site'
 import { base, baseSepolia, optimism, sepolia } from 'viem/chains'
 import { CONFIG } from './config'
 import { Transport } from 'viem'
-import { getDefaultConfig } from '@rainbow-me/rainbowkit'
 
 export const AddressZero = '0x0000000000000000000000000000000000000000'
 export const DefaultDepositFee = 0.01
@@ -23,17 +22,6 @@ const transports: Record<number, Transport> =
 export const WAGMI_CONFIG = createConfig({
   chains: CONFIG.DEFAULT_CHAINS,
   transports: transports,
-})
-
-export const RAINBOW_CONFIG = getDefaultConfig({
-  chains: [sepolia, baseSepolia],
-
-  projectId: CONFIG.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
-  ssr: true,
-
-  appName: SITE_NAME,
-  appDescription: SITE_DESCRIPTION,
-  appUrl: SITE_URL,
 })
 
 export const WEB3MODAL_CONFIG = defaultWagmiConfig({
