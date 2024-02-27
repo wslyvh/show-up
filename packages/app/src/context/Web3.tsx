@@ -5,7 +5,7 @@ import { State, WagmiProvider } from 'wagmi'
 import { WAGMI_CONFIG } from '@/utils/network'
 import DataProvider from './Data'
 import { CONFIG } from '@/utils/config'
-import { createWeb3Modal } from '@web3modal/wagmi'
+import { createWeb3Modal } from '@web3modal/wagmi/react'
 
 interface Props extends PropsWithChildren {
   initialState?: State

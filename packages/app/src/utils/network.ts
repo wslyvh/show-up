@@ -1,5 +1,5 @@
-import { defaultWagmiConfig } from '@web3modal/wagmi'
-import { http, createStorage, cookieStorage, createConfig } from 'wagmi'
+import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
+import { http, createStorage, cookieStorage } from 'wagmi'
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from './site'
 import { base, baseSepolia, optimism, sepolia } from 'viem/chains'
 import { CONFIG } from './config'
