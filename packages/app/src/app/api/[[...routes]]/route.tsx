@@ -30,8 +30,12 @@ app.frame('/', (context) => {
   return context.res({
     image: <div style={{ color: 'white', display: 'flex', fontSize: 60 }}>Perform a transaction</div>,
     intents: [
-      <Button.Transaction target='/rsvp'>RSVP</Button.Transaction>,
-      <Button.Link href='https://www.showup.events/'>Show Up</Button.Link>,
+      <Button.Transaction key='rsvp' target='/rsvp'>
+        RSVP
+      </Button.Transaction>,
+      <Button.Link key='link' href='https://www.showup.events/'>
+        Show Up
+      </Button.Link>,
     ],
   })
 })
