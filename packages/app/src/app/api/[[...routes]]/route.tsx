@@ -1,6 +1,6 @@
 /** @jsxImportSource frog/jsx */
 import { showHubAbi, showHubAddress } from '@/abis'
-import { Button, Frog, parseEther } from 'frog'
+import { Button, Frog } from 'frog'
 import { handle } from 'frog/next'
 
 const app = new Frog({

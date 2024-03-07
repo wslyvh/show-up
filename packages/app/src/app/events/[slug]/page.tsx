@@ -4,7 +4,7 @@ import EventDataProvider from '@/context/EventData'
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query'
 import { SITE_NAME, SITE_URL } from '@/utils/site'
 import { CONFIG } from '@/utils/config'
-import { getFrameMetadata } from 'frog'
+import { getFrameMetadata } from 'frog/next'
 
 interface Params {
   params: { slug: string }
