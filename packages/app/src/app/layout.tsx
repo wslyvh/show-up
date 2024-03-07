@@ -70,7 +70,7 @@ export default function RootLayout(props: PropsWithChildren) {
         <link rel='apple-touch-icon' href='/icons/apple-touch-icon-180x180.png' type='image/png' sizes='any' />
       </head>
       <body>
-        <Web3Provider initialState={initialState}>
+        <Web3Provider>
           <NotificationProvider>
             <MobileLayout>{props.children}</MobileLayout>
           </NotificationProvider>

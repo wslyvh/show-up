@@ -31,9 +31,9 @@ export const WAGMI_CONFIG = defaultWagmiConfig({
 
   projectId: CONFIG.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
   ssr: true,
-  storage: createStorage({
-    storage: cookieStorage,
-  }),
+  // storage: createStorage({
+  //   storage: cookieStorage,
+  // }),
 
   metadata: {
     name: SITE_NAME,
