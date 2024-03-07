@@ -4,6 +4,7 @@ import EventDataProvider from '@/context/EventData'
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query'
 import { SITE_NAME, SITE_URL } from '@/utils/site'
 import { CONFIG } from '@/utils/config'
+import { getFrameMetadata } from 'frog'
 
 interface Params {
   params: { slug: string }
@@ -24,7 +25,10 @@ export async function generateMetadata({ params }: Params) {
   const event = await GetEventBySlug(params.slug)
   if (!event?.metadata) return {}
 
+  const url = CONFIG.NODE_ENV === 'development' ? 'http://localhost:3000' : SITE_URL
+  const frameMetadata = await getFrameMetadata(`${url}/api/events/${params.slug}`)
   const baseUri = new URL(`${SITE_URL}/events/${params.slug}`)
+
   return {
     title: event.metadata.title,
     description: event.metadata.description,
@@ -39,6 +43,7 @@ export async function generateMetadata({ params }: Params) {
       description: event.metadata.description,
       images: event.metadata.imageUrl ?? `${baseUri}/opengraph-image`,
     },
+    other: frameMetadata,
   }
 }
 
