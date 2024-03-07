@@ -77,7 +77,7 @@ app.frame('/:id', async (context) => {
     return context.res({
       image: <div style={{ color: 'white', display: 'flex', fontSize: 60 }}>Event not found</div>,
       intents: [
-        <Button value='find' action={`/${event?.slug}`}>
+        <Button key='retry' value='find' action={`/${event?.slug}`}>
           Try again
         </Button>,
       ],
