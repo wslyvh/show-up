@@ -1,46 +1,82 @@
 import {
-  ShowHubContract_CheckedIn_handler,
   ShowHubContract_ConditionModuleWhitelisted_loader,
   ShowHubContract_ConditionModuleWhitelisted_handler,
   ShowHubContract_Created_handlerAsync,
   ShowHubContract_Funded_handlerAsync,
   ShowHubContract_Registered_handlerAsync,
-  ShowHubContract_Settled_handler,
   ShowHubContract_Canceled_handlerAsync,
   ShowHubContract_Updated_handlerAsync,
-} from "../generated/src/Handlers.gen"
-import { conditionModuleDataEntity } from "./src/Types.gen"
+  ShowHubContract_Settled_handlerAsync,
+  ShowHubContract_CheckedIn_handlerAsync,
+} from "../generated/src/Handlers.gen";
+import { conditionModuleDataEntity } from "./src/Types.gen";
 
-import { GetClient, GetEnsProfile } from "./utils/client"
-import { TryFetchIpfsFile } from "./utils/ipfs"
-import { GetStatusId, GetVisibilityId, Slugify } from "./utils/mapping"
-import { decodeAbiParameters } from 'viem'
-import dayjs from 'dayjs'
+import { GetClient, GetEnsProfile } from "./utils/client";
+import { TryFetchIpfsFile } from "./utils/ipfs";
+import { GetStatusId, GetVisibilityId, Slugify } from "./utils/mapping";
+import { decodeAbiParameters } from "viem";
+import dayjs from "dayjs";
 
 const Erc20ABI = [
-  { name: "decimals", type: "function", inputs: [], outputs: [{ name: "", type: "uint8" }] },
-  { name: "symbol", type: "function", inputs: [], outputs: [{ name: "", type: "string" }] },
-  { name: "name", type: "function", inputs: [], outputs: [{ name: "", type: "string" }] },
-]
-const TotalFundedABI = [{ name: 'getTotalFunded', type: 'function', inputs: [{ name: 'id', type: 'uint256' }], outputs: [{ name: '', type: 'uint256' }] }]
-const RecipientEtherDataParams = [{ name: "depositFee", type: "uint256" }, { name: "recipient", type: "address" }]
-const RecipientTokenDataParams = [{ name: "depositFee", type: "uint256" }, { name: "tokenAddress", type: "address" }, { name: "recipient", type: "address" }]
-const SplitEtherDataParams = [{ name: "depositFee", type: "uint256" }]
-const SplitTokenDataParams = [{ name: "depositFee", type: "uint256" }, { name: "tokenAddress", type: "address" }]
+  {
+    name: "decimals",
+    type: "function",
+    inputs: [],
+    outputs: [{ name: "", type: "uint8" }],
+  },
+  {
+    name: "symbol",
+    type: "function",
+    inputs: [],
+    outputs: [{ name: "", type: "string" }],
+  },
+  {
+    name: "name",
+    type: "function",
+    inputs: [],
+    outputs: [{ name: "", type: "string" }],
+  },
+];
+const TotalFundedABI = [
+  {
+    name: "getTotalFunded",
+    type: "function",
+    inputs: [{ name: "id", type: "uint256" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+];
+const RecipientEtherDataParams = [
+  { name: "depositFee", type: "uint256" },
+  { name: "recipient", type: "address" },
+];
+const RecipientTokenDataParams = [
+  { name: "depositFee", type: "uint256" },
+  { name: "tokenAddress", type: "address" },
+  { name: "recipient", type: "address" },
+];
+const SplitEtherDataParams = [{ name: "depositFee", type: "uint256" }];
+const SplitTokenDataParams = [
+  { name: "depositFee", type: "uint256" },
+  { name: "tokenAddress", type: "address" },
+];
 
 ShowHubContract_ConditionModuleWhitelisted_loader(({ event, context }) => {
-  const moduleId = `${event.chainId}-${event.params.conditionModule}`
-  context.log.debug(`Processing ShowHubContract_ConditionModuleWhitelisted @ chain ${event.chainId} | Block # ${event.blockNumber}`)
+  const moduleId = `${event.chainId}-${event.params.conditionModule}`;
+  context.log.debug(
+    `Processing ShowHubContract_ConditionModuleWhitelisted @ chain ${event.chainId} | Block # ${event.blockNumber}`
+  );
 
-  context.ConditionModule.load(moduleId)
-})
+  context.ConditionModule.load(moduleId);
+});
 
 ShowHubContract_ConditionModuleWhitelisted_handler(({ event, context }) => {
-  const chainId = event.chainId
-  const moduleId = `${chainId}-${event.params.conditionModule}`
-  context.log.debug(`Processing ShowHubContract_ConditionModuleWhitelisted @ chain ${chainId} | Block # ${event.blockNumber}`)
+  const chainId = event.chainId;
+  const moduleId = `${chainId}-${event.params.conditionModule}`;
+  context.log.debug(
+    `Processing ShowHubContract_ConditionModuleWhitelisted @ chain ${chainId} | Block # ${event.blockNumber}`
+  );
 
-  let module = context.ConditionModule.get(moduleId)
+  let module = context.ConditionModule.get(moduleId);
   if (module == null) {
     module = {
       id: moduleId,
@@ -53,45 +89,55 @@ ShowHubContract_ConditionModuleWhitelisted_handler(({ event, context }) => {
 
       name: event.params.name,
       whitelisted: event.params.whitelisted,
-    }
+    };
   }
 
   context.ConditionModule.set({
     ...module,
     whitelisted: event.params.whitelisted,
-  })
-})
+  });
+});
 
 ShowHubContract_Created_handlerAsync(async ({ event, context }) => {
-  const chainId = event.chainId
-  const eventId = `${chainId}-${event.params.id}`
-  const moduleId = `${chainId}-${event.params.conditionModule}`
-  const dataId = `${chainId}-${event.params.id}-${event.params.conditionModule}`
-  context.log.debug(`Processing ShowHubContract_Created # ${eventId} @ Block # ${event.blockNumber}`)
+  const chainId = event.chainId;
+  const eventId = `${chainId}-${event.params.id}`;
+  const moduleId = `${chainId}-${event.params.conditionModule}`;
+  const dataId = `${chainId}-${event.params.id}-${event.params.conditionModule}`;
+  context.log.debug(
+    `Processing ShowHubContract_Created # ${eventId} @ Block # ${event.blockNumber}`
+  );
 
-  let entity = await context.Record.get(eventId)
+  let entity = await context.Record.get(eventId);
   if (entity == null) {
     // Process Event metadata
-    let metadataId = null
-    let slug = eventId
-    const contentUri = event.params.contentUri
+    let metadataId = null;
+    let slug = eventId;
+    const contentUri = event.params.contentUri;
 
-    if (contentUri.startsWith('ipfs://')) {
-      const ipfsHash = event.params.contentUri.replace('ipfs://', '')
-      context.log.debug(`Fetch metadata from IPFS ${ipfsHash}`)
+    if (contentUri.startsWith("ipfs://")) {
+      const ipfsHash = event.params.contentUri.replace("ipfs://", "");
+      context.log.debug(`Fetch metadata from IPFS ${ipfsHash}`);
 
-      const metadata = await TryFetchIpfsFile(ipfsHash) as any
+      const metadata = (await TryFetchIpfsFile(ipfsHash)) as any;
       if (metadata) {
-        metadataId = ipfsHash
-        slug = `${Slugify(metadata.title)}_${event.params.id}`
+        metadataId = ipfsHash;
+        slug = `${Slugify(metadata.title)}_${event.params.id}`;
 
         context.Event.set({
           ...metadata,
           id: ipfsHash,
-          start: BigInt(typeof metadata.start === 'string' ? dayjs(metadata.start).unix() : metadata.start),
-          end: BigInt(typeof metadata.end === 'string' ? dayjs(metadata.end).unix() : metadata.end),
+          start: BigInt(
+            typeof metadata.start === "string"
+              ? dayjs(metadata.start).unix()
+              : metadata.start
+          ),
+          end: BigInt(
+            typeof metadata.end === "string"
+              ? dayjs(metadata.end).unix()
+              : metadata.end
+          ),
           visibility: GetVisibilityId(metadata.visibility),
-        })
+        });
       }
     }
 
@@ -105,97 +151,112 @@ ShowHubContract_Created_handlerAsync(async ({ event, context }) => {
       tokenAddress: null,
       tokenSymbol: null,
       tokenName: null,
-      tokenDecimals: null
-    }
+      tokenDecimals: null,
+    };
 
-    const conditionModule = await context.ConditionModule.get(moduleId)
+    const conditionModule = await context.ConditionModule.get(moduleId);
     if (!conditionModule) {
-      context.log.warn(`ConditionModule ${moduleId} not found`)
+      context.log.warn(`ConditionModule ${moduleId} not found`);
     }
 
-    context.log.debug(`Process ConditionModule data ${moduleId} | ${conditionModule?.name}`)
-    if (conditionModule?.name == 'RecipientEther') {
-      const value = decodeAbiParameters(RecipientEtherDataParams, event.params.data as any) as any[]
+    context.log.debug(
+      `Process ConditionModule data ${moduleId} | ${conditionModule?.name}`
+    );
+    if (conditionModule?.name == "RecipientEther") {
+      const value = decodeAbiParameters(
+        RecipientEtherDataParams,
+        event.params.data as any
+      ) as any[];
       data = {
         ...data,
         depositFee: BigInt(value[0]),
         recipient: value[1],
-      }
+      };
     }
 
-    if (conditionModule?.name == 'RecipientToken') {
-      const value = decodeAbiParameters(RecipientTokenDataParams, event.params.data as any) as any[]
+    if (conditionModule?.name == "RecipientToken") {
+      const value = decodeAbiParameters(
+        RecipientTokenDataParams,
+        event.params.data as any
+      ) as any[];
       data = {
         ...data,
         depositFee: BigInt(value[0]),
         tokenAddress: value[1],
         recipient: value[2],
-      }
+      };
     }
 
-    if (conditionModule?.name == 'SplitEther') {
-      const value = decodeAbiParameters(SplitEtherDataParams, event.params.data as any) as any[]
+    if (conditionModule?.name == "SplitEther") {
+      const value = decodeAbiParameters(
+        SplitEtherDataParams,
+        event.params.data as any
+      ) as any[];
       data = {
         ...data,
         depositFee: BigInt(value[0]),
-      }
+      };
     }
 
-    if (conditionModule?.name == 'SplitToken') {
-      const value = decodeAbiParameters(SplitTokenDataParams, event.params.data as any) as any[]
+    if (conditionModule?.name == "SplitToken") {
+      const value = decodeAbiParameters(
+        SplitTokenDataParams,
+        event.params.data as any
+      ) as any[];
       data = {
         ...data,
         depositFee: BigInt(value[0]),
         tokenAddress: value[1],
-      }
+      };
     }
 
     // Process Token Info
     if (data?.tokenAddress) {
       try {
-        const client = GetClient(chainId)
-        const name = await client.readContract({
+        const client = GetClient(chainId);
+        const name = (await client.readContract({
           address: data.tokenAddress as any,
           abi: Erc20ABI,
           functionName: "name",
-          args: []
-        }) as string
+          args: [],
+        })) as string;
 
-        const symbol = await client.readContract({
+        const symbol = (await client.readContract({
           address: data.tokenAddress as any,
           abi: Erc20ABI,
           functionName: "symbol",
-          args: []
-        }) as string
+          args: [],
+        })) as string;
 
-        const decimals = await client.readContract({
+        const decimals = (await client.readContract({
           address: data.tokenAddress as any,
           abi: Erc20ABI,
           functionName: "decimals",
-          args: []
-        }) as number
+          args: [],
+        })) as number;
 
-
-        context.log.debug(`Add Token Info: ${name} | ${symbol} | ${decimals}`)
+        context.log.debug(`Add Token Info: ${name} | ${symbol} | ${decimals}`);
         data = {
           ...data,
           tokenName: name,
           tokenSymbol: symbol,
           tokenDecimals: decimals,
-        }
+        };
       } catch (error) {
-        context.log.error(`Unable to fetch token info ${data.tokenAddress} | Record ${eventId}`)
+        context.log.error(
+          `Unable to fetch token info ${data.tokenAddress} | Record ${eventId}`
+        );
       }
     }
 
     // Add Condition Module Data
-    context.ConditionModuleData.set(data)
+    context.ConditionModuleData.set(data);
 
     // Add Owner ENS Profile
-    const user = await GetEnsProfile(event.params.sender)
-    context.User.set(user)
+    const user = await GetEnsProfile(event.params.sender);
+    context.User.set(user);
 
-    // Add Record Entity 
+    // Add Record Entity
     entity = {
       id: eventId,
       chainId: chainId,
@@ -209,7 +270,7 @@ ShowHubContract_Created_handlerAsync(async ({ event, context }) => {
       endDate: BigInt(event.params.endDate),
       limit: BigInt(event.params.limit),
       owner: event.params.sender,
-      status: GetStatusId('Active'),
+      status: GetStatusId("Active"),
       message: null,
 
       contentUri: event.params.contentUri,
@@ -221,100 +282,112 @@ ShowHubContract_Created_handlerAsync(async ({ event, context }) => {
       totalRegistrations: BigInt(0),
       totalAttendees: BigInt(0),
       totalFunded: BigInt(0),
-    }
+    };
 
-    context.Record.set(entity)
+    context.Record.set(entity);
   }
-})
+});
 
 ShowHubContract_Updated_handlerAsync(async ({ event, context }) => {
-  const chainId = event.chainId
-  const eventId = `${chainId}-${event.params.id}`
-  context.log.debug(`Processing ShowHubContract_Updated # ${eventId} @ Block # ${event.blockNumber}`)
+  const chainId = event.chainId;
+  const eventId = `${chainId}-${event.params.id}`;
+  context.log.debug(
+    `Processing ShowHubContract_Updated # ${eventId} @ Block # ${event.blockNumber}`
+  );
 
-  let entity = await context.Record.get(eventId)
+  let entity = await context.Record.get(eventId);
   if (entity == null) {
-    context.log.error(`Record ${eventId} not found`)
-    return
+    context.log.error(`Record ${eventId} not found`);
+    return;
   }
 
-  const user = await GetEnsProfile(event.params.owner)
-  context.User.set(user)
+  const user = await GetEnsProfile(event.params.owner);
+  context.User.set(user);
 
   context.Record.set({
     ...entity,
     contentUri: event.params.contentUri,
     limit: BigInt(event.params.limit),
     owner: event.params.owner,
-  })
-})
+  });
+});
 
 ShowHubContract_Canceled_handlerAsync(async ({ event, context }) => {
-  const chainId = event.chainId
-  const eventId = `${chainId}-${event.params.id}`
-  context.log.debug(`Processing ShowHubContract_Canceled # ${eventId} @ Block # ${event.blockNumber}`)
+  const chainId = event.chainId;
+  const eventId = `${chainId}-${event.params.id}`;
+  context.log.debug(
+    `Processing ShowHubContract_Canceled # ${eventId} @ Block # ${event.blockNumber}`
+  );
 
-  let entity = await context.Record.get(eventId)
+  let entity = await context.Record.get(eventId);
   if (entity == null) {
-    context.log.error(`Record ${eventId} not found`)
-    return
+    context.log.error(`Record ${eventId} not found`);
+    return;
   }
 
   context.Record.set({
     ...entity,
-    status: GetStatusId('Cancelled'),
+    status: GetStatusId("Cancelled"),
     message: event.params.reason,
-  })
-})
+  });
+});
 
 ShowHubContract_Funded_handlerAsync(async ({ event, context }) => {
-  const chainId = event.chainId
-  const eventId = `${chainId}-${event.params.id}`
-  context.log.debug(`Processing ShowHubContract_Funded # ${eventId} @ Block # ${event.blockNumber}`)
+  const chainId = event.chainId;
+  const eventId = `${chainId}-${event.params.id}`;
+  context.log.debug(
+    `Processing ShowHubContract_Funded # ${eventId} @ Block # ${event.blockNumber}`
+  );
 
-  let entity = await context.Record.get(eventId)
+  let entity = await context.Record.get(eventId);
   if (entity == null) {
-    context.log.error(`Record ${eventId} not found`)
-    return
+    context.log.error(`Record ${eventId} not found`);
+    return;
   }
 
-  let conditionModule = await context.ConditionModule.get(entity.conditionModule)
+  let conditionModule = await context.ConditionModule.get(
+    entity.conditionModule
+  );
   if (conditionModule == null) {
-    context.log.error(`ConditionModule ${entity.conditionModule} not found`)
-    return
+    context.log.error(`ConditionModule ${entity.conditionModule} not found`);
+    return;
   }
 
   try {
-    const client = GetClient(chainId)
-    const funded = await client.readContract({
+    const client = GetClient(chainId);
+    const funded = (await client.readContract({
       address: conditionModule.address as any,
       abi: TotalFundedABI,
       functionName: "getTotalFunded",
       args: [event.params.id],
-    }) as string
+    })) as string;
 
     context.Record.set({
       ...entity,
       totalFunded: BigInt(funded ?? 0),
-    })
+    });
   } catch (error) {
-    context.log.error(`Unable to fetch total funded ${entity.conditionModule} | Record ${eventId}`)
+    context.log.error(
+      `Unable to fetch total funded ${entity.conditionModule} | Record ${eventId}`
+    );
   }
-})
+});
 
 ShowHubContract_Registered_handlerAsync(async ({ event, context }) => {
-  const chainId = event.chainId
-  const eventId = `${chainId}-${event.params.id}`
-  context.log.debug(`Processing ShowHubContract_Registered # ${eventId} @ Block # ${event.blockNumber}`)
+  const chainId = event.chainId;
+  const eventId = `${chainId}-${event.params.id}`;
+  context.log.debug(
+    `Processing ShowHubContract_Registered # ${eventId} @ Block # ${event.blockNumber}`
+  );
 
-  let entity = await context.Record.get(eventId)
+  let entity = await context.Record.get(eventId);
   if (entity == null) {
-    context.log.error(`Record ${eventId} not found`)
-    return
+    context.log.error(`Record ${eventId} not found`);
+    return;
   }
 
-  const user = await GetEnsProfile(event.params.participant)
-  context.User.set(user)
+  const user = await GetEnsProfile(event.params.participant);
+  context.User.set(user);
 
   const registration = {
     id: `${eventId}-${event.params.participant}`,
@@ -326,61 +399,68 @@ ShowHubContract_Registered_handlerAsync(async ({ event, context }) => {
     participated: false,
     record: eventId,
     user: user.id,
-  }
+  };
 
-  context.log.debug(`Create Event Registration ${registration.id}`)
-  context.Registration.set(registration)
+  context.log.debug(`Create Event Registration ${registration.id}`);
+  context.Registration.set(registration);
 
-  context.log.debug(`Update Total Registrations ${entity.id}`)
+  context.log.debug(`Update Total Registrations ${entity.id}`);
   context.Record.set({
     ...entity,
     totalRegistrations: entity.totalRegistrations + BigInt(1),
-  })
-})
+  });
+});
 
-ShowHubContract_CheckedIn_handler(({ event, context }) => {
-  const chainId = event.chainId
-  const eventId = `${chainId}-${event.params.id}`
-  context.log.debug(`Processing ShowHubContract_CheckedIn # ${eventId} @ Block # ${event.blockNumber}`)
+ShowHubContract_CheckedIn_handlerAsync(async ({ event, context }) => {
+  const chainId = event.chainId;
+  const eventId = `${chainId}-${event.params.id}`;
+  context.log.debug(
+    `Processing ShowHubContract_CheckedIn # ${eventId} @ Block # ${event.blockNumber}`
+  );
 
-  const entity = context.Record.get(eventId)
+  const entity = await context.Record.get(eventId);
   if (entity == null) {
-    context.log.error(`Record ${eventId} not found`)
-    return
+    context.log.error(`Record ${eventId} not found`);
+    return;
   }
 
   for (let i = 0; i < event.params.attendees.length; i++) {
     const attendee = event.params.attendees[i];
-    const registration = context.Registration.get(`${eventId}-${attendee}`)
+    const registration = await context.Registration.get(
+      `${eventId}-${attendee}`
+    );
 
     if (registration) {
-      context.log.debug(`Checkin attendee ${attendee}`)
+      context.log.debug(`Checkin attendee ${attendee}`);
       context.Registration.set({
         ...registration,
         participated: true,
-      })
+      });
     }
   }
 
   context.Record.set({
     ...entity,
-    totalAttendees: entity.totalAttendees + BigInt(event.params.attendees.length),
-  })
-})
+    totalAttendees:
+      entity.totalAttendees + BigInt(event.params.attendees.length),
+  });
+});
 
-ShowHubContract_Settled_handler(({ event, context }) => {
-  const chainId = event.chainId
-  const eventId = `${chainId}-${event.params.id}`
-  context.log.debug(`Processing ShowHubContract_Settled # ${eventId} @ Block # ${event.blockNumber}`)
+ShowHubContract_Settled_handlerAsync(async ({ event, context }) => {
+  const chainId = event.chainId;
+  const eventId = `${chainId}-${event.params.id}`;
+  context.log.debug(
+    `Processing ShowHubContract_Settled # ${eventId} @ Block # ${event.blockNumber}`
+  );
 
-  let entity = context.Record.get(eventId)
+  let entity = await context.Record.get(eventId);
   if (entity == null) {
-    context.log.error(`Record ${eventId} not found`)
-    return
+    context.log.error(`Record ${eventId} not found`);
+    return;
   }
 
   context.Record.set({
     ...entity,
-    status: GetStatusId('Settled'),
-  })
-})
+    status: GetStatusId("Settled"),
+  });
+});
