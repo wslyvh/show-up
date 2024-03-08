@@ -16,7 +16,9 @@ contracts:
       - event: Registered(uint256 indexed id, address indexed participant, bytes data, address sender, uint256 timestamp)
         isAsync: true
       - event: CheckedIn(uint256 indexed id, address[] attendees, bytes data, address sender, uint256 timestamp)
+        isAsync: true
       - event: Settled(uint256 indexed id, bytes data, address sender, uint256 timestamp)
+        isAsync: true
 networks:
   - id: 10 # Optimism
     start_block: 0
