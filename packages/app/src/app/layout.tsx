@@ -12,9 +12,6 @@ import { MobileLayout } from '@/components/MobileLayout'
 import { NotificationProvider } from '@/context/Notification'
 import PlausibleProvider from 'next-plausible'
 import { Web3Provider } from '@/context/Web3'
-import { cookieToInitialState } from 'wagmi'
-import { WAGMI_CONFIG } from '@/utils/network'
-import { headers } from 'next/headers'
 import '../assets/globals.css'
 
 export const metadata: Metadata = {
@@ -59,8 +56,6 @@ export const viewport: Viewport = {
 export const revalidate = DEFAULT_REVALIDATE_PERIOD
 
 export default function RootLayout(props: PropsWithChildren) {
-  const initialState = cookieToInitialState(WAGMI_CONFIG, headers().get('cookie'))
-
   return (
     <html lang='en'>
       <head>
