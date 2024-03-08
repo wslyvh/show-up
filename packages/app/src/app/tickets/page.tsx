@@ -2,6 +2,7 @@ import { Protected } from '@/components/Protected'
 import { Overview } from './components/Overview'
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query'
 import { GetEventsByRegistration } from '@/services/showhub'
+import { Suspense } from 'react'
 
 export default async function TicketsPage() {
   const queryClient = new QueryClient()
@@ -15,7 +16,9 @@ export default async function TicketsPage() {
   return (
     <Protected>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <Overview />
+        <Suspense>
+          <Overview />
+        </Suspense>
       </HydrationBoundary>
     </Protected>
   )
