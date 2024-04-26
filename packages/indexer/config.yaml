@@ -19,6 +19,7 @@ contracts:
         isAsync: true
       - event: Settled(uint256 indexed id, bytes data, address sender, uint256 timestamp)
         isAsync: true
+unordered_multichain_mode: true
 networks:
   - id: 10 # Optimism
     start_block: 0
