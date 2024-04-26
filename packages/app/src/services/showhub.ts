@@ -4,6 +4,7 @@ import { SITE_URL } from '@/utils/site'
 import dayjs from 'dayjs'
 
 export const envioBaseUri = 'https://indexer.bigdevenergy.link/75e46e1/v1/graphql' // 'http://localhost:8080/v1/graphql'
+export const excludeIds = ['8453-5'] // Exclude events by ID
 
 const eventFields = `
   id
@@ -189,7 +190,7 @@ export async function GetAllEvents() {
   }
 
   const { data } = await response.json()
-  return data.Record.map((i: any) => mapEventRecord(i)) as Record[]
+  return data.Record.filter((i: any) => !excludeIds.includes(i.id)).map((i: any) => mapEventRecord(i)) as Record[]
 }
 
 export async function GetUpcomingEvents() {
@@ -219,7 +220,7 @@ export async function GetUpcomingEvents() {
   }
 
   const { data } = await response.json()
-  return data.Record.map((i: any) => mapEventRecord(i)) as Record[]
+  return data.Record.filter((i: any) => !excludeIds.includes(i.id)).map((i: any) => mapEventRecord(i)) as Record[]
 }
 
 export async function GetPastEvents() {
@@ -249,7 +250,7 @@ export async function GetPastEvents() {
   }
 
   const { data } = await response.json()
-  return data.Record.map((i: any) => mapEventRecord(i)) as Record[]
+  return data.Record.filter((i: any) => !excludeIds.includes(i.id)).map((i: any) => mapEventRecord(i)) as Record[]
 }
 
 export async function GetEventsByOwner(owner: string) {
