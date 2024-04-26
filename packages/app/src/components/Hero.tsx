@@ -16,7 +16,7 @@ export function Hero() {
             <h1 className='mb-5 text-5xl font-bold'>
               {SITE_SHORT_NAME} {SITE_EMOJI}
             </h1>
-            <h2 className='text-2xl text-accent mb-2'>Onchain RSVP and Event management</h2>
+            <h2 className='text-2xl text-accent mb-2'>Onchain Events & RSVP</h2>
             <p className='mb-5'>Increase event participation. Reward attendees.</p>
           </div>
           <div className='flex justify-center gap-4'>
