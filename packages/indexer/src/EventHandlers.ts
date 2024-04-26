@@ -62,7 +62,7 @@ const SplitTokenDataParams = [
 
 ShowHubContract_ConditionModuleWhitelisted_loader(({ event, context }) => {
   const moduleId = `${event.chainId}-${event.params.conditionModule}`;
-  context.log.debug(
+  context.log.info(
     `Processing ShowHubContract_ConditionModuleWhitelisted @ chain ${event.chainId} | Block # ${event.blockNumber}`
   );
 
@@ -72,7 +72,7 @@ ShowHubContract_ConditionModuleWhitelisted_loader(({ event, context }) => {
 ShowHubContract_ConditionModuleWhitelisted_handler(({ event, context }) => {
   const chainId = event.chainId;
   const moduleId = `${chainId}-${event.params.conditionModule}`;
-  context.log.debug(
+  context.log.info(
     `Processing ShowHubContract_ConditionModuleWhitelisted @ chain ${chainId} | Block # ${event.blockNumber}`
   );
 
@@ -103,7 +103,7 @@ ShowHubContract_Created_handlerAsync(async ({ event, context }) => {
   const eventId = `${chainId}-${event.params.id}`;
   const moduleId = `${chainId}-${event.params.conditionModule}`;
   const dataId = `${chainId}-${event.params.id}-${event.params.conditionModule}`;
-  context.log.debug(
+  context.log.info(
     `Processing ShowHubContract_Created # ${eventId} @ Block # ${event.blockNumber}`
   );
 
@@ -116,7 +116,7 @@ ShowHubContract_Created_handlerAsync(async ({ event, context }) => {
 
     if (contentUri.startsWith("ipfs://")) {
       const ipfsHash = event.params.contentUri.replace("ipfs://", "");
-      context.log.debug(`Fetch metadata from IPFS ${ipfsHash}`);
+      context.log.info(`Fetch metadata from IPFS ${ipfsHash}`);
 
       const metadata = (await TryFetchIpfsFile(ipfsHash)) as any;
       if (metadata) {
@@ -159,7 +159,7 @@ ShowHubContract_Created_handlerAsync(async ({ event, context }) => {
       context.log.warn(`ConditionModule ${moduleId} not found`);
     }
 
-    context.log.debug(
+    context.log.info(
       `Process ConditionModule data ${moduleId} | ${conditionModule?.name}`
     );
     if (conditionModule?.name == "RecipientEther") {
@@ -235,7 +235,7 @@ ShowHubContract_Created_handlerAsync(async ({ event, context }) => {
           args: [],
         })) as number;
 
-        context.log.debug(`Add Token Info: ${name} | ${symbol} | ${decimals}`);
+        context.log.info(`Add Token Info: ${name} | ${symbol} | ${decimals}`);
         data = {
           ...data,
           tokenName: name,
@@ -291,7 +291,7 @@ ShowHubContract_Created_handlerAsync(async ({ event, context }) => {
 ShowHubContract_Updated_handlerAsync(async ({ event, context }) => {
   const chainId = event.chainId;
   const eventId = `${chainId}-${event.params.id}`;
-  context.log.debug(
+  context.log.info(
     `Processing ShowHubContract_Updated # ${eventId} @ Block # ${event.blockNumber}`
   );
 
@@ -315,7 +315,7 @@ ShowHubContract_Updated_handlerAsync(async ({ event, context }) => {
 ShowHubContract_Canceled_handlerAsync(async ({ event, context }) => {
   const chainId = event.chainId;
   const eventId = `${chainId}-${event.params.id}`;
-  context.log.debug(
+  context.log.info(
     `Processing ShowHubContract_Canceled # ${eventId} @ Block # ${event.blockNumber}`
   );
 
@@ -335,7 +335,7 @@ ShowHubContract_Canceled_handlerAsync(async ({ event, context }) => {
 ShowHubContract_Funded_handlerAsync(async ({ event, context }) => {
   const chainId = event.chainId;
   const eventId = `${chainId}-${event.params.id}`;
-  context.log.debug(
+  context.log.info(
     `Processing ShowHubContract_Funded # ${eventId} @ Block # ${event.blockNumber}`
   );
 
@@ -376,7 +376,7 @@ ShowHubContract_Funded_handlerAsync(async ({ event, context }) => {
 ShowHubContract_Registered_handlerAsync(async ({ event, context }) => {
   const chainId = event.chainId;
   const eventId = `${chainId}-${event.params.id}`;
-  context.log.debug(
+  context.log.info(
     `Processing ShowHubContract_Registered # ${eventId} @ Block # ${event.blockNumber}`
   );
 
@@ -401,10 +401,10 @@ ShowHubContract_Registered_handlerAsync(async ({ event, context }) => {
     user: user.id,
   };
 
-  context.log.debug(`Create Event Registration ${registration.id}`);
+  context.log.info(`Create Event Registration ${registration.id}`);
   context.Registration.set(registration);
 
-  context.log.debug(`Update Total Registrations ${entity.id}`);
+  context.log.info(`Update Total Registrations ${entity.id}`);
   context.Record.set({
     ...entity,
     totalRegistrations: entity.totalRegistrations + BigInt(1),
@@ -414,7 +414,7 @@ ShowHubContract_Registered_handlerAsync(async ({ event, context }) => {
 ShowHubContract_CheckedIn_handlerAsync(async ({ event, context }) => {
   const chainId = event.chainId;
   const eventId = `${chainId}-${event.params.id}`;
-  context.log.debug(
+  context.log.info(
     `Processing ShowHubContract_CheckedIn # ${eventId} @ Block # ${event.blockNumber}`
   );
 
@@ -431,7 +431,7 @@ ShowHubContract_CheckedIn_handlerAsync(async ({ event, context }) => {
     );
 
     if (registration) {
-      context.log.debug(`Checkin attendee ${attendee}`);
+      context.log.info(`Checkin attendee ${attendee}`);
       context.Registration.set({
         ...registration,
         participated: true,
@@ -449,7 +449,7 @@ ShowHubContract_CheckedIn_handlerAsync(async ({ event, context }) => {
 ShowHubContract_Settled_handlerAsync(async ({ event, context }) => {
   const chainId = event.chainId;
   const eventId = `${chainId}-${event.params.id}`;
-  context.log.debug(
+  context.log.info(
     `Processing ShowHubContract_Settled # ${eventId} @ Block # ${event.blockNumber}`
   );
 
