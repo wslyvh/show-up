@@ -5,7 +5,7 @@ import { LinkComponent } from './LinkComponent'
 export function Hero() {
   return (
     <div
-      className='hero bg-cover bg-center bg-bottom  rounded-2xl'
+      className='hero bg-cover bg-center bg-bottom rounded-2xl'
       style={{
         backgroundImage: 'url(images/stage.jpg)',
       }}>
