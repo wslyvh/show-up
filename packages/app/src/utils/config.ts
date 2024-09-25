@@ -2,7 +2,7 @@ import { sepolia, baseSepolia, optimism, base, Chain } from 'viem/chains'
 
 const networkEnv = process.env.NEXT_PUBLIC_NETWORK_ENV ?? 'test'
 const chains: [Chain, ...Chain[]] = networkEnv === 'main' ? [optimism, base] : [sepolia]
-const appId = process.env.NEXT_PUBLIC_DEFAULT_APP_ID ?? networkEnv === 'main' ? 'showup-events' : 'showup-test'
+const appId = (process.env.NEXT_PUBLIC_DEFAULT_APP_ID ?? networkEnv === 'main') ? 'showup-events' : 'showup-test'
 
 export const CONFIG = {
   NODE_ENV: process.env.NODE_ENV || 'development',
