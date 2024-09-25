@@ -77,11 +77,11 @@ app.frame('/:id', async (context) => {
   if (!event?.metadata) {
     return context.res({
       image: <div style={{ color: 'white', display: 'flex', fontSize: 60 }}>Event not found</div>,
-      intents: [
+      intents: (
         <Button value='find' action={`/${event?.slug}`}>
           Try again
-        </Button>,
-      ],
+        </Button>
+      ),
     })
   }
 
@@ -124,6 +124,7 @@ app.frame('/:id', async (context) => {
       </div>
     ),
     intents: [
+      // eslint-disable-next-line react/jsx-key
       <Button.Transaction target={`/${event?.slug}/rsvp`}>
         RSVP (
         {event?.conditionModuleData.depositFee == BigInt(0)
@@ -131,6 +132,7 @@ app.frame('/:id', async (context) => {
           : `${event?.conditionModuleData.depositFee.toString()} ETH`}
         )
       </Button.Transaction>,
+      // eslint-disable-next-line react/jsx-key
       <Button.Link href={`https://www.showup.events/events/${event?.slug}`}>Event Details</Button.Link>,
     ],
   })
