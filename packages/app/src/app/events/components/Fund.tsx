@@ -33,7 +33,7 @@ export function Fund() {
   })
   const { allowance, refetch } = useAllowance(
     address,
-    eventData.record.conditionModuleId,
+    eventData.record.conditionModuleId.replace(`${chainId}-`, ''),
     eventData.record.conditionModuleData.tokenAddress
   )
 
@@ -60,7 +60,7 @@ export function Fund() {
       abi: erc20Abi,
       functionName: 'approve',
       args: [
-        eventData.record.conditionModuleId,
+        eventData.record.conditionModuleId.replace(`${chainId}-`, ''),
         BigInt(fundingAmount * 10 ** (eventData.record.conditionModuleData.tokenDecimals ?? 18)),
       ],
     })
