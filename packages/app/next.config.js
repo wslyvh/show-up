@@ -14,7 +14,7 @@ const nextConfig = {
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: '*.showup.events' },
-      { protocol: 'https', hostname: 'cloudflare-ipfs.com' },
+      { protocol: 'https', hostname: 'ipfs.io' },
     ],
   },
 }
