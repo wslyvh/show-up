@@ -12,6 +12,7 @@ import dayjs from 'dayjs'
 const app = new Frog<{
   Variables: NeynarVariables
 }>({
+  title: 'ShowUp Events',
   basePath: '/api/events',
   browserLocation: '/events/:id',
   secret: process.env.FROG_SECRET,
