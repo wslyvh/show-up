@@ -78,7 +78,7 @@ app.frame('/:id', async (context) => {
     return context.res({
       image: <div style={{ color: 'white', display: 'flex', fontSize: 60 }}>Event not found</div>,
       intents: [
-        <Button key='retry' value='find' action={`/${event?.slug}`}>
+        <Button value='find' action={`/${event?.slug}`}>
           Try again
         </Button>,
       ],
@@ -124,16 +124,14 @@ app.frame('/:id', async (context) => {
       </div>
     ),
     intents: [
-      <Button.Transaction key='rsvp' target={`/${event?.slug}/rsvp`}>
+      <Button.Transaction target={`/${event?.slug}/rsvp`}>
         RSVP (
         {event?.conditionModuleData.depositFee == BigInt(0)
           ? 'free'
           : `${event?.conditionModuleData.depositFee.toString()} ETH`}
         )
       </Button.Transaction>,
-      <Button.Link key='link' href={`https://www.showup.events/events/${event?.slug}`}>
-        Event Details
-      </Button.Link>,
+      <Button.Link href={`https://www.showup.events/events/${event?.slug}`}>Event Details</Button.Link>,
     ],
   })
 })
