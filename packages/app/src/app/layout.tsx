@@ -8,8 +8,8 @@ import {
   SITE_URL,
   SOCIAL_TWITTER,
 } from '@/utils/site'
-import { MobileLayout } from '@/components/MobileLayout'
 import { NotificationProvider } from '@/context/Notification'
+import { LandingLayout } from '@/components/Landing'
 import PlausibleProvider from 'next-plausible'
 import { Web3Provider } from '@/context/Web3'
 import '../assets/globals.css'
@@ -67,7 +67,7 @@ export default function RootLayout(props: PropsWithChildren) {
       <body>
         <Web3Provider>
           <NotificationProvider>
-            <MobileLayout>{props.children}</MobileLayout>
+            <LandingLayout>{props.children}</LandingLayout>
           </NotificationProvider>
         </Web3Provider>
       </body>

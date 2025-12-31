@@ -13,6 +13,7 @@ export const BLOG_URL = `https://${BLOG_DOMAIN}`
 
 export const SOCIAL_TWITTER = 'wslyvh'
 export const SOCIAL_GITHUB = 'wslyvh/show-up'
+export const CONTACT_EMAIL = 'showup@wes.email'
 
 export const DEFAULT_REVALIDATE_PERIOD = 600 // in seconds // 600 = 10 mins // 3600 = 1 hour
 export const DEFAULT_STALE_TIME = 60 * 1000 // in milliseconds // 60 * 1000 = 1 min

@@ -1,20 +1,25 @@
-import { GetUpcomingEvents } from '@/services/showhub'
-import { Overview } from './components/Overview'
-import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query'
-import { Hero } from '@/components/Hero'
+import { Landing } from '@/components/Landing'
+// import { GetUpcomingEvents } from '@/services/showhub'
+// import { Overview } from './components/Overview'
+// import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query'
+// import { Hero } from '@/components/Hero'
 
-export default async function Home() {
-  const queryClient = new QueryClient()
+// export default async function Home() {
+//   const queryClient = new QueryClient()
 
-  await queryClient.prefetchQuery({
-    queryKey: ['events', 'upcoming'],
-    queryFn: GetUpcomingEvents,
-  })
+//   await queryClient.prefetchQuery({
+//     queryKey: ['events', 'upcoming'],
+//     queryFn: GetUpcomingEvents,
+//   })
 
-  return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <Hero />
-      <Overview />
-    </HydrationBoundary>
-  )
+//   return (
+//     <HydrationBoundary state={dehydrate(queryClient)}>
+//       <Hero />
+//       <Overview />
+//     </HydrationBoundary>
+//   )
+// }
+
+export default function Home() {
+  return <Landing />
 }
