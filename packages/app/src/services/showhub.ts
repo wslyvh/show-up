@@ -81,6 +81,8 @@ const eventFields = `
 `
 
 export async function GetConditionModules() {
+  return []
+
   const response = await fetch(envioBaseUri, {
     method: 'POST',
     headers: {
@@ -115,6 +117,8 @@ export async function GetConditionModules() {
 }
 
 export async function GetEventById(id: string) {
+  return null
+
   const response = await fetch(envioBaseUri, {
     method: 'POST',
     headers: {
@@ -139,6 +143,8 @@ export async function GetEventById(id: string) {
 }
 
 export async function GetEventBySlug(slug: string) {
+  return null
+
   const response = await fetch(envioBaseUri, {
     method: 'POST',
     headers: {
@@ -166,6 +172,8 @@ export async function GetEventBySlug(slug: string) {
 }
 
 export async function GetAllEvents() {
+  return []
+
   const response = await fetch(envioBaseUri, {
     method: 'POST',
     headers: {
@@ -194,6 +202,8 @@ export async function GetAllEvents() {
 }
 
 export async function GetUpcomingEvents() {
+  return []
+
   const response = await fetch(envioBaseUri, {
     method: 'POST',
     headers: {
@@ -224,6 +234,8 @@ export async function GetUpcomingEvents() {
 }
 
 export async function GetPastEvents() {
+  return []
+
   const response = await fetch(envioBaseUri, {
     method: 'POST',
     headers: {
@@ -254,6 +266,8 @@ export async function GetPastEvents() {
 }
 
 export async function GetEventsByOwner(owner: string) {
+  return []
+
   const response = await fetch(envioBaseUri, {
     method: 'POST',
     headers: {
@@ -287,6 +301,8 @@ export async function GetEventsByOwner(owner: string) {
 }
 
 export async function GetEventsByRegistration(address: string) {
+  return []
+
   const response = await fetch(envioBaseUri, {
     method: 'POST',
     headers: {
@@ -315,6 +331,8 @@ export async function GetEventsByRegistration(address: string) {
 }
 
 export async function IsParticipant(eventId: string, address: string) {
+  return false
+
   const response = await fetch(envioBaseUri, {
     method: 'POST',
     headers: {
@@ -345,6 +363,8 @@ export async function IsParticipant(eventId: string, address: string) {
 }
 
 export async function GetUser(address: string) {
+  return null
+
   const response = await fetch(envioBaseUri, {
     method: 'POST',
     headers: {
@@ -384,6 +404,8 @@ export async function GetUser(address: string) {
 }
 
 export async function GetUsers() {
+  return []
+
   const response = await fetch(envioBaseUri, {
     method: 'POST',
     headers: {
